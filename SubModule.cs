@@ -117,7 +117,7 @@ namespace EncyclopediaExtender
         }
     }
 
-    [ViewModelMixin("Refresh")]
+    [ViewModelMixin("RefreshValues", true)]
     public class CustomEncyclopediaHeroPageVM : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
 
@@ -235,7 +235,7 @@ namespace EncyclopediaExtender
         }
     }
 
-    [ViewModelMixin("Refresh")]
+    [ViewModelMixin("RefreshValues", true)]
     public class CustomEncyclopediaClanPageVM : BaseViewModelMixin<EncyclopediaClanPageVM>
     {
         public CustomEncyclopediaClanPageVM(EncyclopediaClanPageVM vm) : base(vm)
@@ -276,7 +276,7 @@ namespace EncyclopediaExtender
         public String File => "FactionPagePatch";
     }
 
-    [ViewModelMixin("Refresh")]
+    [ViewModelMixin("RefreshValues", true)]
     public class CustomEncyclopediaFactionPageVM : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
         [DataSourceProperty]
