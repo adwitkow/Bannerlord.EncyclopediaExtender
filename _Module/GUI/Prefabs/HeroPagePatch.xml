@@ -3,7 +3,7 @@
 
     <!-- Marriage Dowry stuff -->
 
-    <EncyclopediaDivider MarginTop="20" Parameter.Title="Dowry Price" Parameter.ItemList="..\DowryGrid"/>
+    <EncyclopediaDivider MarginTop="20" Parameter.Title="@DowryPricesText" Parameter.ItemList="..\DowryGrid"/>
     <GridWidget Id="DowryGrid" DataSource="{MarriagePrices}" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "CoverChildren" DefaultCellWidth="300" DefaultCellHeight="30" HorizontalAlignment="Left" ColumnCount="2" MarginTop="10" MarginLeft="15">
         <ItemTemplate>
 
@@ -23,7 +23,7 @@
 
     <!-- Equipment -->
 
-    <EncyclopediaDivider MarginTop="20" Parameter.Title="Equipment" Parameter.ItemList="..\EquipmentContainer"/>
+    <EncyclopediaDivider MarginTop="20" Parameter.Title="@EquipmentText" Parameter.ItemList="..\EquipmentContainer"/>
     <Widget Id="EquipmentContainer" MarginTop="15" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent">
         <Children>
             <ListPanel Id="EquipmentList" DataSource="{HeroItems}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">

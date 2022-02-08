@@ -1,6 +1,6 @@
 <DummyRoot>
 
-    <EncyclopediaDivider MarginTop="30" Parameter.Title="Kingdom Wealth" Parameter.ItemList="..\WealthInfoContainer"/>
+    <EncyclopediaDivider MarginTop="30" Parameter.Title="@KingdomWealthText" Parameter.ItemList="..\WealthInfoContainer"/>
     <Widget Id="WealthInfoContainer" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent">
         <Children>
             <GridWidget Id="WealthInfoGrid" DataSource="{WealthInfo}" WidthSizePolicy = "CoverChildren" HeightSizePolicy = "CoverChildren" DefaultCellWidth="300" DefaultCellHeight="30" HorizontalAlignment="Left" ColumnCount="2" MarginTop="10" MarginLeft="15">

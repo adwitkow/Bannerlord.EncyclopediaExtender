@@ -135,10 +135,24 @@ namespace EncyclopediaExtender
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
             PerksPerSkill = new MBBindingList<PerksForSkillVM>();
+
+            DowryPricesText = "";
+            EquipmentText = "";
+            PerksText = "";
         }
 
+        [DataSourceProperty]
+        public string DowryPricesText { get; set; }
+        [DataSourceProperty]
+        public string EquipmentText { get; set; }
+        [DataSourceProperty]
+        public string PerksText { get; set; }
         public override void OnRefresh()
         {
+            DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
+            EquipmentText = GameTexts.FindText("str_equipment", null).ToString();
+            PerksText = new TextObject("{=fVmG6YTtQai}Perks").ToString();
+
             MarriagePrices.Clear();
             HeroItems.Clear();
             PerksPerSkill.Clear();
@@ -151,11 +165,17 @@ namespace EncyclopediaExtender
                 // This is for compatibility with old UiExtender which ran OnRefresh more than once per refresh
                 if (vm.Stats.Count <= 4)
                 {
-                    vm.Stats.Add(new StringPairItemVM("Level:", hero.Level.ToString()));
-                    vm.Stats.Add(new StringPairItemVM("Equipment sale value:", MyUtil.EquipmentValue(hero).ToString("N0")));
+                    TextObject levelText = GameTexts.FindText("str_level", null);
+                    vm.Stats.Add(new StringPairItemVM(levelText.ToString() + ':', hero.Level.ToString()));
+                    TextObject equipmentSaleValueText = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
+                    vm.Stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), MyUtil.EquipmentValue(hero).ToString("N0")));
 
-                    vm.Stats.Add(new StringPairItemVM("Prisoner:", hero.IsPrisoner ? hero.PartyBelongedToAsPrisoner.Name.ToString() : "Free"));
-                    vm.Stats.Add(new StringPairItemVM("Army:", hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null ? hero.PartyBelongedTo.Army.Name.ToString() : "None"));
+                    TextObject prisonerText = new TextObject("{=MUOPLUL4Fru}Prisoner:");
+                    TextObject freeText = new TextObject("{=EfO4DVzClVp}Free:");
+                    vm.Stats.Add(new StringPairItemVM(prisonerText.ToString(), hero.IsPrisoner ? hero.PartyBelongedToAsPrisoner.Name.ToString() : freeText.ToString()));
+                    TextObject armyText = new TextObject("{=2LlrWkeotbJ}Army:");
+                    TextObject noneText = new TextObject("{=nBA38eYcLkV}Not in Army");
+                    vm.Stats.Add(new StringPairItemVM(armyText.ToString(), hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null ? hero.PartyBelongedTo.Army.Name.ToString() : noneText.ToString()));
                 }
 
                 {
@@ -164,7 +184,8 @@ namespace EncyclopediaExtender
                     {
                         // PERSUATION DOWRY
                         MarriageBarterable mb1 = new MarriageBarterable(Hero.MainHero, PartyBase.MainParty, hero, Hero.MainHero);
-                        MarriagePrices.Add(new StringPairItemVM("Persuasion dowry:", (-mb1.GetUnitValueForFaction(hero.Clan)).ToString("N0")));
+                        TextObject persuasionDowryText = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
+                        MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(hero.Clan)).ToString("N0")));
 
                         // BARTER DOWRY
                         MarriageBarterable mb2 = new MarriageBarterable(Hero.MainHero, PartyBase.MainParty, Hero.MainHero, hero);
@@ -174,7 +195,8 @@ namespace EncyclopediaExtender
                         int personal_relation = hero.GetRelation(Hero.MainHero);
                         dowry -= personal_relation * 1000;
                         */
-                        MarriagePrices.Add(new StringPairItemVM("Barter dowry:", dowry.ToString("N0")));
+                        TextObject barterDowryText = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
+                        MarriagePrices.Add(new StringPairItemVM(barterDowryText.ToString(), dowry.ToString("N0")));
                     }
                 }
 
@@ -251,16 +273,18 @@ namespace EncyclopediaExtender
                 if (vm.ClanInfo.Count <= 3)
                 {
                     vm.ClanInfo.Add(new StringPairItemVM("", ""));
-                    vm.ClanInfo.Add(new StringPairItemVM("Cash:", clan.Leader.Gold.ToString("N0")));
-                    vm.ClanInfo.Add(new StringPairItemVM("Debt:", clan.DebtToKingdom.ToString()));
+                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=beBL5H1u2fu}Cash:").ToString(), clan.Leader.Gold.ToString("N0")));
+                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=C1SUFxYrMXk}Debt:").ToString(), clan.DebtToKingdom.ToString()));
                     var kingdom = clan.Kingdom;
                     int kingdom_wealth = 0;
                     if (kingdom != null && !clan.IsMinorFaction)
                     {
                         kingdom_wealth = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
-                        vm.ClanInfo.Add(new StringPairItemVM("Share of Kingdom wealth:", kingdom_wealth.ToString("N0")));
+                        vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=a2uZeyyIdQX}Share of Kingdom Wealth:").ToString(),
+                            kingdom_wealth.ToString("N0")));
                     }
-                    vm.ClanInfo.Add(new StringPairItemVM("Nominal Total Wealth:", (clan.Leader.Gold + kingdom_wealth - clan.DebtToKingdom).ToString("N0")));
+                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=nAr2HzgGiVn}Nominal Total Wealth:").ToString(),
+                        (clan.Leader.Gold + kingdom_wealth - clan.DebtToKingdom).ToString("N0")));
                 }
 
             }
@@ -284,23 +308,28 @@ namespace EncyclopediaExtender
         public CustomEncyclopediaFactionPageVM(EncyclopediaFactionPageVM vm) : base(vm)
         {
             WealthInfo = new MBBindingList<StringPairItemVM>();
+            KingdomWealthText = "";
         }
+        [DataSourceProperty]
+        public String KingdomWealthText { get; set; }
         public override void OnRefresh()
         {
+            KingdomWealthText = new TextObject("{=VidmvRvXecq}Kingdom Wealth").ToString();
             WealthInfo.Clear();
             var vm = base.ViewModel;
             if (vm != null)
             {
                 var kingdom = Traverse.Create(vm).Field("_faction").GetValue<Kingdom>();
 
-                WealthInfo.Add(new StringPairItemVM("Kingdom Bank:", kingdom.KingdomBudgetWallet.ToString("N0")));
+                var kingdomBankText = new TextObject("");
+                WealthInfo.Add(new StringPairItemVM(new TextObject("{=z4z97KSX12m}Kingdom Bank:").ToString(), kingdom.KingdomBudgetWallet.ToString("N0")));
                 int clans_wealth = 0;
                 foreach (var clan in kingdom.Clans)
                 {
                     if (clan.IsUnderMercenaryService || clan.IsMinorFaction) continue;
                     clans_wealth += clan.Leader.Gold - clan.DebtToKingdom;
                 }
-                WealthInfo.Add(new StringPairItemVM("Sum of Clan Wealth:", clans_wealth.ToString("N0")));
+                WealthInfo.Add(new StringPairItemVM(new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:").ToString(), clans_wealth.ToString("N0")));
             }
         }
     }
@@ -314,7 +343,7 @@ namespace EncyclopediaExtender
             if (list != null)
             {
                 var tr = Traverse.Create(list[4]).Field("Filters").GetValue<List<EncyclopediaFilterItem>>();
-                tr.Add(new EncyclopediaFilterItem(new TextObject("Clan Leader", null), (object hero) =>
+                tr.Add(new EncyclopediaFilterItem(new TextObject("{=dkQJzg3erHZ}Clan Leader", null), (object hero) =>
                 {
                     Hero h = (Hero)hero;
                     return h.Clan != null && !h.Clan.IsMinorFaction && h.Clan.Leader == h;

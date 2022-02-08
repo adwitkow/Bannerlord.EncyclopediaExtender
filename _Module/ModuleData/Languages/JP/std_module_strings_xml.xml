@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="日本語" />
+  </tags>
+  <strings>
+    <string id="oSsmAi5ejuy" text="設備の売買価格:" />
+    <string id="MUOPLUL4Fru" text="捕虜:" />
+    <string id="EfO4DVzClVp" text="自由" />
+    <string id="2LlrWkeotbJ" text="軍隊:" />
+    <string id="nBA38eYcLkV" text="自由行動" />
+    <string id="vKsoAjVZRxL" text="持参金" />
+    <string id="d6gwqE9RW1q" text="説得あり:" />
+    <string id="EJ8BsdSHZTv" text="説得なし:" />
+    <!--string id="fVmG6YTtQai" /-->
+  </strings>
+</base>

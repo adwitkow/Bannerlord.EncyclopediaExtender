@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="oSsmAi5ejuy" text="Equipment Sale Value:" />
+    <string id="MUOPLUL4Fru" text="Prisoner:" />
+    <string id="EfO4DVzClVp" text="Free" />
+    <string id="2LlrWkeotbJ" text="Army:" />
+    <string id="nBA38eYcLkV" text="Not in Army" />
+    <string id="vKsoAjVZRxL" text="Dowry Prices" />
+    <string id="d6gwqE9RW1q" text="Persuasion Dowry:" />
+    <string id="EJ8BsdSHZTv" text="Barter Dowry:" />
+    <string id="fVmG6YTtQai" text="Perks" />
+    <string id="beBL5H1u2fu" text="Cash:" />
+    <string id="C1SUFxYrMXk" text="Debt:" />
+    <string id="a2uZeyyIdQX" text="Share of Kingdom Wealth:" />
+    <string id="nAr2HzgGiVn" text="Nominal Total Wealth:" />
+    <string id="VidmvRvXecq" text="Kingdom Wealth" />
+    <string id="z4z97KSX12m" text="Kingdom Bank:" />
+    <string id="Ks1B7PO9DjP" text="Sum of Clan Wealth:" />
+    <string id="dkQJzg3erHZ" text="Clan Leader" />
+  </strings>
+</base>
