@@ -68,9 +68,56 @@ namespace EncyclopediaExtender
         public String File => "HeroPagePerksPatch";
     }
 
-    public class MyUtil
+    public class PerksForSkillVM : ViewModel
     {
-        public static List<EquipmentElement> Equipment(Hero x)
+        [DataSourceProperty]
+        public string SkillName { get; set; }
+
+        [DataSourceProperty]
+        public MBBindingList<StringPairItemVM> Perks { get; set; }
+        public PerksForSkillVM(SkillObject skill, List<PerkObject> perks)
+        {
+            SkillName = skill.ToString();
+            Perks = new MBBindingList<StringPairItemVM>();
+            foreach (var perk in perks.OrderBy((PerkObject p) => p.RequiredSkillValue))
+            {
+                Perks.Add(new StringPairItemVM(perk.RequiredSkillValue.ToString() + ':', perk.ToString() + ", " + perk.PrimaryDescription));
+            }
+        }
+    }
+
+    [ViewModelMixin("RefreshValues", true)]
+    public class ExtendEncyclopediaHeroPageVM : BaseViewModelMixin<EncyclopediaHeroPageVM>
+    {
+        [DataSourceProperty]
+        public MBBindingList<StringPairItemVM> MarriagePrices { get; set; }
+
+        [DataSourceProperty]
+        public MBBindingList<SPItemVM> HeroItems { get; set; }
+
+        [DataSourceProperty]
+        public MBBindingList<PerksForSkillVM> PerksPerSkill { get; set; }
+
+        public ExtendEncyclopediaHeroPageVM(EncyclopediaHeroPageVM vm) : base(vm)
+        {
+            MarriagePrices = new MBBindingList<StringPairItemVM>();
+            HeroItems = new MBBindingList<SPItemVM>();
+            PerksPerSkill = new MBBindingList<PerksForSkillVM>();
+
+            DowryPricesText = "";
+            EquipmentText = "";
+            PerksText = "";
+        }
+
+        [DataSourceProperty]
+        public string DowryPricesText { get; set; }
+        [DataSourceProperty]
+        public string EquipmentText { get; set; }
+        [DataSourceProperty]
+        public string PerksText { get; set; }
+
+
+        public static List<EquipmentElement> HeroEquipment(Hero x)
         {
             var equipment = new List<EquipmentElement>();
             for (int i = 0; i < 12; i++)
@@ -91,62 +138,15 @@ namespace EncyclopediaExtender
             return equipment;
         }
 
-        public static int EquipmentValue(Hero h)
+        public static int HeroEquipmentValue(Hero h)
         {
-            var equipment = Equipment(h);
+            var equipment = HeroEquipment(h);
             int equipment_value = 0;
             Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
             equipment.ForEach((EquipmentElement e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
             return equipment_value;
         }
-    }
-    public class PerksForSkillVM : ViewModel
-    {
-        [DataSourceProperty]
-        public string SkillName { get; set; }
 
-        [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> Perks { get; set; }
-        public PerksForSkillVM(SkillObject skill, List<PerkObject> perks)
-        {
-            SkillName = skill.ToString();
-            Perks = new MBBindingList<StringPairItemVM>();
-            foreach (var perk in perks.OrderBy((PerkObject p) => p.RequiredSkillValue))
-            {
-                Perks.Add(new StringPairItemVM(perk.RequiredSkillValue.ToString() + ':', perk.ToString() + ", " + perk.PrimaryDescription));
-            }
-        }
-    }
-
-    [ViewModelMixin("RefreshValues", true)]
-    public class CustomEncyclopediaHeroPageVM : BaseViewModelMixin<EncyclopediaHeroPageVM>
-    {
-        [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> MarriagePrices { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<SPItemVM> HeroItems { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<PerksForSkillVM> PerksPerSkill { get; set; }
-
-        public CustomEncyclopediaHeroPageVM(EncyclopediaHeroPageVM vm) : base(vm)
-        {
-            MarriagePrices = new MBBindingList<StringPairItemVM>();
-            HeroItems = new MBBindingList<SPItemVM>();
-            PerksPerSkill = new MBBindingList<PerksForSkillVM>();
-
-            DowryPricesText = "";
-            EquipmentText = "";
-            PerksText = "";
-        }
-
-        [DataSourceProperty]
-        public string DowryPricesText { get; set; }
-        [DataSourceProperty]
-        public string EquipmentText { get; set; }
-        [DataSourceProperty]
-        public string PerksText { get; set; }
         public override void OnRefresh()
         {
             DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
@@ -168,7 +168,7 @@ namespace EncyclopediaExtender
                 TextObject levelText = GameTexts.FindText("str_level", null);
                 vm.Stats.Add(new StringPairItemVM(levelText.ToString() + ':', hero.Level.ToString()));
                 TextObject equipmentSaleValueText = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
-                vm.Stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), MyUtil.EquipmentValue(hero).ToString("N0")));
+                vm.Stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), HeroEquipmentValue(hero).ToString("N0")));
 
                 TextObject prisonerText = new TextObject("{=MUOPLUL4Fru}Prisoner:");
                 TextObject freeText = new TextObject("{=EfO4DVzClVp}Free");
@@ -203,7 +203,7 @@ namespace EncyclopediaExtender
             {
                 Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
 
-                var equipment = MyUtil.Equipment(hero);
+                var equipment = HeroEquipment(hero);
 
                 var itemRoster = new ItemRoster();
                 var inventoryLogic = new InventoryLogic(null);
@@ -257,9 +257,9 @@ namespace EncyclopediaExtender
     }
 
     [ViewModelMixin("RefreshValues", true)]
-    public class CustomEncyclopediaClanPageVM : BaseViewModelMixin<EncyclopediaClanPageVM>
+    public class ExtendEncyclopediaClanPageVM : BaseViewModelMixin<EncyclopediaClanPageVM>
     {
-        public CustomEncyclopediaClanPageVM(EncyclopediaClanPageVM vm) : base(vm)
+        public ExtendEncyclopediaClanPageVM(EncyclopediaClanPageVM vm) : base(vm)
         {
 
         }
@@ -300,11 +300,11 @@ namespace EncyclopediaExtender
     }
 
     [ViewModelMixin("RefreshValues", true)]
-    public class CustomEncyclopediaFactionPageVM : BaseViewModelMixin<EncyclopediaFactionPageVM>
+    public class ExtendEncyclopediaFactionPageVM : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> WealthInfo { get; set; }
-        public CustomEncyclopediaFactionPageVM(EncyclopediaFactionPageVM vm) : base(vm)
+        public ExtendEncyclopediaFactionPageVM(EncyclopediaFactionPageVM vm) : base(vm)
         {
             WealthInfo = new MBBindingList<StringPairItemVM>();
             KingdomWealthText = "";
@@ -334,7 +334,7 @@ namespace EncyclopediaExtender
     }
 
     [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeFilterItems")]
-    class FilterPatch
+    class HeroPageFilterPatch
     {
         static void Postfix(IEnumerable<EncyclopediaFilterGroup> __result)
         {
