@@ -44,10 +44,9 @@ namespace EncyclopediaExtender
             {
                 if (instruction.opcode == OpCodes.Callvirt && instruction.operand == (object)refresh)
                 {
-                    yield return new CodeInstruction(OpCodes.Callvirt, (object)refreshValues);
-                } else {
-                    yield return instruction;
+                    instruction.operand = (object)refreshValues;
                 }
+                yield return instruction;
             }
         }
     }
