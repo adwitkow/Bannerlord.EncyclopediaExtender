@@ -241,6 +241,12 @@ namespace EncyclopediaExtender
                     Hero h = (Hero)hero;
                     return h.Clan != null && !h.Clan.IsMinorFaction && h.Clan.Leader == h;
                 }));
+                List<EncyclopediaFilterItem> prisonerList = new List<EncyclopediaFilterItem>();
+                prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=visGHcNwvj7}Not Prisoner", null),
+                    (object h) => ((Hero)h).PartyBelongedToAsPrisoner == null));
+                prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=E9b41bY9PnC}Prisoner", null),
+                    (object h) => ((Hero)h).PartyBelongedToAsPrisoner != null));
+                list.Add(new EncyclopediaFilterGroup(prisonerList, new TextObject("{=ggFT1tTOMeK}Prisoner Status", null)));
             }
         }
     }

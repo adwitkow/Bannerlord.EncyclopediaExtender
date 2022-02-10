@@ -21,5 +21,8 @@
     <string id="z4z97KSX12m" text="Kingdom Bank:" />
     <string id="Ks1B7PO9DjP" text="Sum of Clan Wealth:" />
     <string id="dkQJzg3erHZ" text="Clan Leader" />
+	<string id="ggFT1tTOMeK" text="Prisoner Status" />
+	<string id="visGHcNwvj7" text="Not Prisoner" />
+	<string id="E9b41bY9PnC" text="Prisoner" />
   </strings>
 </base>
