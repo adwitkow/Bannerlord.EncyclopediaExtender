@@ -63,6 +63,8 @@ namespace EncyclopediaExtender
             CapturedHeroesText = new TextObject("{=FwJELs27ac7}Captured Heroes").ToString();
             ImprisonedHeroesText = new TextObject("{=1CYZYNXTfN9}Imprisoned Heroes").ToString();
             WealthInfo.Clear();
+            CapturedHeroes.Clear();
+            ImprisonedHeroes.Clear();
             var vm = base.ViewModel;
             if (vm != null)
             {

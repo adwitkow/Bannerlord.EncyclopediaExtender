@@ -38,6 +38,15 @@ namespace EncyclopediaExtender
         [PrefabExtensionFileName(true)]
         public String File => "HeroPagePerksPatch";
     }
+    
+    [PrefabExtension("EncyclopediaHeroPage", "descendant::TextWidget[@Text='@SkillsText']")]
+    public sealed class HeroPageAttributesPatch : PrefabExtensionInsertPatch
+    {
+        public override InsertType Type => InsertType.Prepend;
+
+        [PrefabExtensionFileName(true)]
+        public String File => "HeroPageAttributesPatch";
+    }
 
     public class PerksForSkillVM : ViewModel
     {
@@ -57,6 +66,19 @@ namespace EncyclopediaExtender
         }
     }
 
+    public class ExtenderAttributeVM : ViewModel
+    {
+        public ExtenderAttributeVM(Hero hero, CharacterAttribute att)
+        {
+            Name = att.Abbreviation.ToString();
+            AttributeValue = hero.GetAttributeValue(att);
+        }
+        [DataSourceProperty]
+        public String Name { get; set; }
+        [DataSourceProperty]
+        public int AttributeValue { get; set; }
+    }
+
     [ViewModelMixin("RefreshValues", true)]
     public class ExtendEncyclopediaHeroPageVM : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
@@ -69,15 +91,22 @@ namespace EncyclopediaExtender
         [DataSourceProperty]
         public MBBindingList<PerksForSkillVM> PerksPerSkill { get; set; }
 
+
+        [DataSourceProperty]
+        public string AttributesText { get; set; }
+        [DataSourceProperty]
+        public MBBindingList<ExtenderAttributeVM> Attributes { get; set; }
         public ExtendEncyclopediaHeroPageVM(EncyclopediaHeroPageVM vm) : base(vm)
         {
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
             PerksPerSkill = new MBBindingList<PerksForSkillVM>();
+            Attributes = new MBBindingList<ExtenderAttributeVM>();
 
             DowryPricesText = "";
             EquipmentText = "";
             PerksText = "";
+            AttributesText = "";
         }
 
         [DataSourceProperty]
@@ -86,7 +115,6 @@ namespace EncyclopediaExtender
         public string EquipmentText { get; set; }
         [DataSourceProperty]
         public string PerksText { get; set; }
-
 
         public static List<EquipmentElement> HeroEquipment(Hero x)
         {
@@ -123,10 +151,12 @@ namespace EncyclopediaExtender
             DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
             EquipmentText = GameTexts.FindText("str_equipment", null).ToString();
             PerksText = new TextObject("{=fVmG6YTtQai}Perks").ToString();
+            AttributesText = GameTexts.FindText("str_attributes", null).ToString();
 
             MarriagePrices.Clear();
             HeroItems.Clear();
             PerksPerSkill.Clear();
+            Attributes.Clear();
 
             var vm = base.ViewModel;
             if (vm == null) return;
@@ -222,6 +252,12 @@ namespace EncyclopediaExtender
                 foreach (var skill in perks_per_skill)
                 {
                     PerksPerSkill.Add(new PerksForSkillVM(skill.Key, skill.Value));
+                }
+            }
+            {
+                foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Attributes.All)
+                {
+                    Attributes.Add(new ExtenderAttributeVM(hero, att));
                 }
             }
         }
