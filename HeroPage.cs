@@ -183,21 +183,42 @@ namespace EncyclopediaExtender
                 var res = new MBBindingList<StringPairItemVM>();
                 if (hero.Clan != null)
                 {
-                    // PERSUATION DOWRY
-                    MarriageBarterable mb1 = new MarriageBarterable(Hero.MainHero, PartyBase.MainParty, hero, Hero.MainHero);
-                    TextObject persuasionDowryText = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
-                    MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(hero.Clan)).ToString("N0")));
+                    var mh = Hero.MainHero;
+                    if (hero.CanMarry())
+                    {
+                        if (Campaign.Current.Models.MarriageModel.IsCoupleSuitableForMarriage(mh, hero))
+                        {
+                            // PERSUATION DOWRY
+                            MarriageBarterable mb1 = new MarriageBarterable(mh, PartyBase.MainParty, hero, mh);
+                            TextObject persuasionDowryText = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
+                            MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(hero.Clan)).ToString("N0")));
 
-                    // BARTER DOWRY
-                    MarriageBarterable mb2 = new MarriageBarterable(Hero.MainHero, PartyBase.MainParty, Hero.MainHero, hero);
-                    int dowry = -mb2.GetUnitValueForFaction(hero.Clan);
-                    /*
-                    // Normalize prices to 0 relation
-                    int personal_relation = hero.GetRelation(Hero.MainHero);
-                    dowry -= personal_relation * 1000;
-                    */
-                    TextObject barterDowryText = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
-                    MarriagePrices.Add(new StringPairItemVM(barterDowryText.ToString(), dowry.ToString("N0")));
+                            // BARTER DOWRY
+                            MarriageBarterable mb2 = new MarriageBarterable(mh, PartyBase.MainParty, mh, hero);
+                            int dowry = -mb2.GetUnitValueForFaction(hero.Clan);
+                            /*
+                            // Normalize prices to 0 relation
+                            int personal_relation = hero.GetRelation(mh);
+                            dowry -= personal_relation * 1000;
+                            */
+                            TextObject barterDowryText = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
+                            MarriagePrices.Add(new StringPairItemVM(barterDowryText.ToString(), dowry.ToString("N0")));
+                        }
+                        {
+                            RomanceModel romanceModel = Campaign.Current.Models.RomanceModel;
+                            foreach (var clanHero in Hero.MainHero.Clan.Lords)
+                            {       
+                                if (clanHero != mh && romanceModel.CourtshipPossibleBetweenNPCs(clanHero, hero))
+                                {
+                                    MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, hero);
+                                    int dowry = -mb3.GetUnitValueForFaction(hero.Clan);
+                                    MarriagePrices.Add(new StringPairItemVM(
+                                        String.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroTextShort(clanHero, mh)),
+                                        dowry.ToString("N0")));
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
