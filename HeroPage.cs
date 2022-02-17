@@ -245,7 +245,7 @@ namespace EncyclopediaExtender
                 foreach (var e in itemRoster)
                 {
                     var item_vm = new SPItemVM(inventoryLogic, hero.IsFemale, true, InventoryMode.Default, e,
-                        InventoryLogic.InventorySide.PlayerInventory, "", "",
+                        InventoryLogic.InventorySide.OtherInventory, "", "",
                         town.GetItemPrice(e.EquipmentElement, MobileParty.MainParty, true));
 
                     HeroItems.Add(item_vm);
