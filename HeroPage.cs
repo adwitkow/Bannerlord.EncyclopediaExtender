@@ -61,7 +61,8 @@ namespace EncyclopediaExtender
             Perks = new MBBindingList<StringPairItemVM>();
             foreach (var perk in perks.OrderBy((PerkObject p) => p.RequiredSkillValue))
             {
-                Perks.Add(new StringPairItemVM(perk.RequiredSkillValue.ToString() + ':', perk.ToString() + ", " + perk.PrimaryDescription));
+                Perks.Add(new StringPairItemVM(perk.RequiredSkillValue.ToString() + ':', perk.ToString(),
+                    new BasicTooltipViewModel(() => CampaignUIHelper.GetPerkEffectText(perk, false))));
             }
         }
     }
@@ -89,8 +90,10 @@ namespace EncyclopediaExtender
         public MBBindingList<SPItemVM> HeroItems { get; set; }
 
         [DataSourceProperty]
-        public MBBindingList<PerksForSkillVM> PerksPerSkill { get; set; }
-
+        public MBBindingList<PerksForSkillVM> PerksPerSkillLeftSide { get; set; }
+        [DataSourceProperty]
+        public MBBindingList<PerksForSkillVM> PerksPerSkillRightSide { get; set; }
+        int rows_left_side = 0, rows_right_side = 0;
 
         [DataSourceProperty]
         public string AttributesText { get; set; }
@@ -100,7 +103,8 @@ namespace EncyclopediaExtender
         {
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
-            PerksPerSkill = new MBBindingList<PerksForSkillVM>();
+            PerksPerSkillLeftSide = new MBBindingList<PerksForSkillVM>();
+            PerksPerSkillRightSide = new MBBindingList<PerksForSkillVM>();
             Attributes = new MBBindingList<ExtenderAttributeVM>();
 
             DowryPricesText = "";
@@ -155,7 +159,9 @@ namespace EncyclopediaExtender
 
             MarriagePrices.Clear();
             HeroItems.Clear();
-            PerksPerSkill.Clear();
+            PerksPerSkillLeftSide.Clear();
+            PerksPerSkillRightSide.Clear();
+            rows_left_side = rows_right_side = 0;
             Attributes.Clear();
 
             var vm = base.ViewModel;
@@ -272,7 +278,16 @@ namespace EncyclopediaExtender
                 });
                 foreach (var skill in perks_per_skill)
                 {
-                    PerksPerSkill.Add(new PerksForSkillVM(skill.Key, skill.Value));
+                    var skill_vm = new PerksForSkillVM(skill.Key, skill.Value);
+                    int rows = skill_vm.Perks.Count + 1;
+                    if (rows_left_side <= rows_right_side) {
+                        PerksPerSkillLeftSide.Add(skill_vm);
+                        rows_left_side += rows;
+                    } else
+                    {
+                        PerksPerSkillRightSide.Add(skill_vm);
+                        rows_right_side += rows;
+                    }
                 }
             }
             {

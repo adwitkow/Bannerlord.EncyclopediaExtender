@@ -1,19 +1,19 @@
 <DummyRoot>
     <EncyclopediaDivider MarginTop="20" Parameter.Title="@PerksText" Parameter.ItemList="..\PerksContainer"/>
-    <Widget Id="PerksContainer" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginBottom="50">
+    <ListPanel Id="PerksContainer" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginBottom="50">
         <Children>
-            <ListPanel Id="PerksPerSkill" DataSource="{PerksPerSkill}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+            <ListPanel Id="PerksPerSkill" DataSource="{PerksPerSkillLeftSide}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
                 <ItemTemplate>
                     <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
                         <Children>
                             <AutoHideRichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@SkillName" MarginRight="5"/>
                             <ListPanel DataSource="{Perks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
                                 <ItemTemplate>
-
-                                    <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="StretchToParent" MarginLeft="15" MarginTop="3">
+                                    <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" MarginLeft="15" MarginTop="3" DoNotPassEventsToChildren="true">
                                         <Children>
-                                            <AutoHideRichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@Definition" MarginRight="5"/>
-                                            <AutoHideRichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.ValueText" Text="@Value" PositionYOffset="2" />
+                                            <RichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@Definition" MarginRight="5"/>
+                                            <RichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.ValueText" Text="@Value" PositionYOffset="2" />
+                                            <HintWidget DataSource="{Hint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
                                         </Children>
                                     </ListPanel>
                                 </ItemTemplate>
@@ -22,6 +22,31 @@
                     </ListPanel>
                 </ItemTemplate>
             </ListPanel>
+
+            <!-- This would be a vertical divider for the perk list columns. I wasn't able to get the height correct. StretchToParent doesn't work here or something. So this is disabled. -->
+            <!--Widget WidthSizePolicy="Fixed" SuggestedWidth="2" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Top" Color="#D3994988" Sprite="BlankWhiteSquare" MarginRight="15" /-->
+
+            <ListPanel Id="PerksPerSkill" DataSource="{PerksPerSkillRightSide}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" MarginLeft="25">
+                <ItemTemplate>
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                        <Children>
+                            <AutoHideRichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@SkillName" MarginRight="5"/>
+                            <ListPanel DataSource="{Perks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                <ItemTemplate>
+                                    <ListPanel HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" MarginLeft="15" MarginTop="3" DoNotPassEventsToChildren="true">
+                                        <Children>
+                                            <RichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@Definition" MarginRight="5"/>
+                                            <RichTextWidget HeightSizePolicy ="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.ValueText" Text="@Value" PositionYOffset="2" />
+                                            <HintWidget DataSource="{Hint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
+                                        </Children>
+                                    </ListPanel>
+                                </ItemTemplate>
+                            </ListPanel>
+                        </Children>
+                    </ListPanel>
+                </ItemTemplate>
+            </ListPanel>
+
         </Children>
-    </Widget>
+    </ListPanel>
 </DummyRoot>
