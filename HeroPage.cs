@@ -322,4 +322,44 @@ namespace EncyclopediaExtender
             }
         }
     }
+
+    [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeSortControllers")]
+    class HeroPageSortControllerPatch
+    {
+        static void Postfix(IEnumerable<EncyclopediaSortController> __result)
+        {
+            var list = __result as List<EncyclopediaSortController>;
+            if (list != null)
+            {
+                TextObject LevelText = GameTexts.FindText("str_level", null);
+
+                list.Add(new EncyclopediaSortController(LevelText, new ListLevelComparer()));
+            }
+        }
+    }
+
+    class ListLevelComparer : DefaultEncyclopediaHeroPage.EncyclopediaListHeroComparer
+    {
+        // Token: 0x060044AA RID: 17578 RVA: 0x0013088D File Offset: 0x0012EA8D
+        public override int Compare(EncyclopediaListItem x, EncyclopediaListItem y)
+        {
+            return base.CompareHeroes(x, y, _comparison);
+        }
+
+        // Token: 0x060044AB RID: 17579 RVA: 0x0013089C File Offset: 0x0012EA9C
+        public override string GetComparedValueText(EncyclopediaListItem item)
+        {
+            Hero? hero = item.Object as Hero;
+            if (hero == null)
+            {
+                Debug.FailedAssert("Unable to get the hero level.", "EncyclopediaExtender\\HeroPage.cs", "GetComparedValueText", 355);
+                return "";
+            }
+            return hero.Level.ToString();
+        }
+
+        // Token: 0x040017B5 RID: 6069
+        private static Func<Hero, Hero, int> _comparison = (Hero h1, Hero h2) => h1.Level.CompareTo(h2.Level);
+    }
+
 }
