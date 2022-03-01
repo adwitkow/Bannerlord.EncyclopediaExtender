@@ -307,18 +307,32 @@ namespace EncyclopediaExtender
             var list = __result as List<EncyclopediaFilterGroup>;
             if (list != null)
             {
-                var tr = Traverse.Create(list[4]).Field("Filters").GetValue<List<EncyclopediaFilterItem>>();
-                tr.Add(new EncyclopediaFilterItem(new TextObject("{=dkQJzg3erHZ}Clan Leader", null), (object hero) =>
                 {
-                    Hero h = (Hero)hero;
-                    return h.Clan != null && !h.Clan.IsMinorFaction && h.Clan.Leader == h;
-                }));
-                List<EncyclopediaFilterItem> prisonerList = new List<EncyclopediaFilterItem>();
-                prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=visGHcNwvj7}Not Prisoner", null),
-                    (object h) => ((Hero)h).PartyBelongedToAsPrisoner == null));
-                prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=E9b41bY9PnC}Prisoner", null),
-                    (object h) => ((Hero)h).PartyBelongedToAsPrisoner != null));
-                list.Add(new EncyclopediaFilterGroup(prisonerList, new TextObject("{=ggFT1tTOMeK}Prisoner Status", null)));
+                    var tr = Traverse.Create(list[4]).Field("Filters").GetValue<List<EncyclopediaFilterItem>>();
+                    tr.Add(new EncyclopediaFilterItem(new TextObject("{=dkQJzg3erHZ}Clan Leader", null), (object hero) =>
+                    {
+                        Hero h = (Hero)hero;
+                        return h.Clan != null && !h.Clan.IsMinorFaction && h.Clan.Leader == h;
+                    }));
+                }
+                {
+                    List<EncyclopediaFilterItem> prisonerList = new List<EncyclopediaFilterItem>();
+                    prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=visGHcNwvj7}Not Prisoner", null),
+                        (object h) => ((Hero)h).PartyBelongedToAsPrisoner == null));
+                    prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=E9b41bY9PnC}Prisoner", null),
+                        (object h) => ((Hero)h).PartyBelongedToAsPrisoner != null));
+                    list.Add(new EncyclopediaFilterGroup(prisonerList, new TextObject("{=ggFT1tTOMeK}Prisoner Status", null)));
+                }
+                {
+                    List<EncyclopediaFilterItem> clanStatusList = new List<EncyclopediaFilterItem>();
+                    
+                    clanStatusList.Add(new EncyclopediaFilterItem(GameTexts.FindText("str_other"),
+                        (object h) => ((Hero)h).Clan != Clan.PlayerClan));
+                    clanStatusList.Add(new EncyclopediaFilterItem(new TextObject("{=1kouok0blVC}Player Clan", null),
+                        (object h) => ((Hero)h).Clan == Clan.PlayerClan));
+
+                    list.Add(new EncyclopediaFilterGroup(clanStatusList, GameTexts.FindText("str_clan", null)));
+                }
             }
         }
     }
@@ -340,13 +354,11 @@ namespace EncyclopediaExtender
 
     class ListLevelComparer : DefaultEncyclopediaHeroPage.EncyclopediaListHeroComparer
     {
-        // Token: 0x060044AA RID: 17578 RVA: 0x0013088D File Offset: 0x0012EA8D
         public override int Compare(EncyclopediaListItem x, EncyclopediaListItem y)
         {
             return base.CompareHeroes(x, y, _comparison);
         }
 
-        // Token: 0x060044AB RID: 17579 RVA: 0x0013089C File Offset: 0x0012EA9C
         public override string GetComparedValueText(EncyclopediaListItem item)
         {
             Hero? hero = item.Object as Hero;
@@ -358,7 +370,6 @@ namespace EncyclopediaExtender
             return hero.Level.ToString();
         }
 
-        // Token: 0x040017B5 RID: 6069
         private static Func<Hero, Hero, int> _comparison = (Hero h1, Hero h2) => h1.Level.CompareTo(h2.Level);
     }
 
