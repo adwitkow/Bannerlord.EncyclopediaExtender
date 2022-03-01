@@ -333,6 +333,18 @@ namespace EncyclopediaExtender
 
                     list.Add(new EncyclopediaFilterGroup(clanStatusList, GameTexts.FindText("str_clan", null)));
                 }
+                {
+                    List<EncyclopediaFilterItem> KingdomList = new List<EncyclopediaFilterItem>();
+
+                    foreach (var k in Kingdom.All)
+                    {
+                        var cond = (Clan c) => c != null && c.Kingdom == k;
+                        KingdomList.Add(new EncyclopediaFilterItem(k.Name,
+                        (object h) => cond(((Hero)h).Clan)));
+                    }
+
+                    list.Add(new EncyclopediaFilterGroup(KingdomList, GameTexts.FindText("str_kingdom", null)));
+                }
             }
         }
     }
