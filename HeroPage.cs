@@ -150,6 +150,11 @@ namespace EncyclopediaExtender
             return equipment_value;
         }
 
+        public bool MyCanMarry(Hero maidenOrSuitor)
+        {
+            return maidenOrSuitor.IsAlive && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsNoble
+                && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate;
+        }
         public override void OnRefresh()
         {
             DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
@@ -190,9 +195,9 @@ namespace EncyclopediaExtender
                 if (hero.Clan != null)
                 {
                     var mh = Hero.MainHero;
-                    if (hero.CanMarry())
+                    if (MyCanMarry(hero))
                     {
-                        if (Campaign.Current.Models.MarriageModel.IsCoupleSuitableForMarriage(mh, hero))
+                        if (MyCanMarry(mh) && mh.IsFemale != hero.IsFemale)
                         {
                             // PERSUATION DOWRY
                             MarriageBarterable mb1 = new MarriageBarterable(mh, PartyBase.MainParty, hero, mh);
@@ -214,7 +219,7 @@ namespace EncyclopediaExtender
                             RomanceModel romanceModel = Campaign.Current.Models.RomanceModel;
                             foreach (var clanHero in Hero.MainHero.Clan.Lords)
                             {       
-                                if (clanHero != mh && romanceModel.CourtshipPossibleBetweenNPCs(clanHero, hero))
+                                if (clanHero != mh && MyCanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
                                 {
                                     MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, hero);
                                     int dowry = -mb3.GetUnitValueForFaction(hero.Clan);
