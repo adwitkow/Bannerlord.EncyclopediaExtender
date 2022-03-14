@@ -6,9 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Barterables;
+using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Encyclopedia;
 using TaleWorlds.CampaignSystem.Encyclopedia.Pages;
+using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia;
 using TaleWorlds.Core;
@@ -296,7 +302,7 @@ namespace EncyclopediaExtender
                 }
             }
             {
-                foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Attributes.All)
+                foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Extensions.Attributes.All)
                 {
                     Attributes.Add(new ExtenderAttributeVM(hero, att));
                 }
