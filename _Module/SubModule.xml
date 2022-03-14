@@ -10,11 +10,11 @@
   <DependedModules>
     <DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.2.0"/>
     <DependedModule Id="Bannerlord.UIExtenderEx" DependentVersion="v2.1.13"/>
-    <DependedModule Id="Native" DependentVersion="e1.7.0"/>
-    <DependedModule Id="SandBoxCore" DependentVersion="e1.7.0"/>
-    <DependedModule Id="Sandbox" DependentVersion="e1.7.0"/>
-    <DependedModule Id="StoryMode" DependentVersion="e1.7.0"/>
-    <DependedModule Id="CustomBattle" DependentVersion="e1.7.0"/>
+    <DependedModule Id="Native" DependentVersion="e1.7.2"/>
+    <DependedModule Id="SandBoxCore" DependentVersion="e1.7.2"/>
+    <DependedModule Id="Sandbox" DependentVersion="e1.7.2"/>
+    <DependedModule Id="StoryMode" DependentVersion="e1.7.2"/>
+    <DependedModule Id="CustomBattle" DependentVersion="e1.7.2"/>
   </DependedModules>
   <SubModules>
     <SubModule>
