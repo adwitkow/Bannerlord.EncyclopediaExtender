@@ -1,6 +1,6 @@
 <DummyRoot>
     <EncyclopediaDivider MarginTop="20" Parameter.Title="@PerksText" Parameter.ItemList="..\PerksContainer"/>
-    <ListPanel Id="PerksContainer" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginBottom="50">
+    <ListPanel Id="PerksContainer" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginBottom="50" MarginLeft="20">
         <Children>
             <ListPanel Id="PerksPerSkill" DataSource="{PerksPerSkillLeftSide}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
                 <ItemTemplate>

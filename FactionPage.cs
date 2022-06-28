@@ -3,12 +3,11 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
-using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia;
-using TaleWorlds.Core.ViewModelCollection;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
+using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -22,7 +21,7 @@ namespace EncyclopediaExtender
         [PrefabExtensionFileName(true)]
         public String File => "FactionPageWealthPatch";
     }
-    [PrefabExtension("EncyclopediaFactionPage", "descendant::GridWidget[@Id='EnemiesGrid']")]
+    [PrefabExtension("EncyclopediaFactionPage", "descendant::NavigatableGridWidget[@Id='EnemiesGrid']")]
     public class FactionPagePrisonerPatch : PrefabExtensionInsertPatch
     {
         public override InsertType Type => InsertType.Append;

@@ -16,9 +16,11 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
-using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
-using TaleWorlds.Core.ViewModelCollection;
+using TaleWorlds.Core.ViewModelCollection.Generic;
+using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -36,7 +38,7 @@ namespace EncyclopediaExtender
     }
 
 
-    [PrefabExtension("EncyclopediaHeroPage", "descendant::GridWidget[@Id='FamilyGrid']")]
+    [PrefabExtension("EncyclopediaHeroPage", "descendant::NavigatableGridWidget[@Id='FamilyGrid']")]
     public sealed class HeroPagePerksPatch : PrefabExtensionInsertPatch
     {
         public override InsertType Type => InsertType.Append;
@@ -44,7 +46,7 @@ namespace EncyclopediaExtender
         [PrefabExtensionFileName(true)]
         public String File => "HeroPagePerksPatch";
     }
-    
+
     [PrefabExtension("EncyclopediaHeroPage", "descendant::TextWidget[@Text='@SkillsText']")]
     public sealed class HeroPageAttributesPatch : PrefabExtensionInsertPatch
     {
@@ -158,8 +160,9 @@ namespace EncyclopediaExtender
 
         public bool MyCanMarry(Hero maidenOrSuitor)
         {
-            return maidenOrSuitor.IsAlive && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsNoble
-                && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate;
+            return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord &&
+                !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate &&
+                maidenOrSuitor.CharacterObject.Age >= 18;
         }
         public override void OnRefresh()
         {
@@ -224,13 +227,13 @@ namespace EncyclopediaExtender
                         {
                             RomanceModel romanceModel = Campaign.Current.Models.RomanceModel;
                             foreach (var clanHero in Hero.MainHero.Clan.Lords)
-                            {       
+                            {
                                 if (clanHero != mh && MyCanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
                                 {
                                     MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, hero);
                                     int dowry = -mb3.GetUnitValueForFaction(hero.Clan);
                                     MarriagePrices.Add(new StringPairItemVM(
-                                        String.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroTextShort(clanHero, mh)),
+                                        String.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mh, false)),
                                         dowry.ToString("N0")));
                                 }
                             }
@@ -291,10 +294,12 @@ namespace EncyclopediaExtender
                 {
                     var skill_vm = new PerksForSkillVM(skill.Key, skill.Value);
                     int rows = skill_vm.Perks.Count + 1;
-                    if (rows_left_side <= rows_right_side) {
+                    if (rows_left_side <= rows_right_side)
+                    {
                         PerksPerSkillLeftSide.Add(skill_vm);
                         rows_left_side += rows;
-                    } else
+                    }
+                    else
                     {
                         PerksPerSkillRightSide.Add(skill_vm);
                         rows_right_side += rows;
@@ -336,7 +341,7 @@ namespace EncyclopediaExtender
                 }
                 {
                     List<EncyclopediaFilterItem> clanStatusList = new List<EncyclopediaFilterItem>();
-                    
+
                     clanStatusList.Add(new EncyclopediaFilterItem(GameTexts.FindText("str_other"),
                         (object h) => ((Hero)h).Clan != Clan.PlayerClan));
                     clanStatusList.Add(new EncyclopediaFilterItem(new TextObject("{=1kouok0blVC}Player Clan", null),
