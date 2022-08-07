@@ -201,7 +201,7 @@ namespace EncyclopediaExtender
 
             {
                 var res = new MBBindingList<StringPairItemVM>();
-                if (hero.Clan != null)
+                if (hero.Clan != null && hero.Clan.Leader != null)
                 {
                     var mh = Hero.MainHero;
                     if (MyCanMarry(hero))
