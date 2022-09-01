@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="Français" />
+  </tags>
+  <strings>
+    <string id="oSsmAi5ejuy" text="Coût de l'équipement:" />
+    <string id="MUOPLUL4Fru" text="Captif:" />
+    <string id="EfO4DVzClVp" text="Libre:" />
+    <string id="2LlrWkeotbJ" text="Armée:" />
+    <string id="nBA38eYcLkV" text="Pas dans l'armée" />
+    <string id="vKsoAjVZRxL" text="Prix de la dot" />
+    <string id="d6gwqE9RW1q" text="Prix de la dotte après persuasion:" />
+    <string id="EJ8BsdSHZTv" text="Prix de la dot avec du troc:" />
+    <string id="fVmG6YTtQai" text="Aptitudes" />
+    <string id="beBL5H1u2fu" text="Races:" />
+    <string id="C1SUFxYrMXk" text="Dette:" />
+    <string id="a2uZeyyIdQX" text="Part de la richesse du royaume:" />
+    <string id="nAr2HzgGiVn" text="Richesse totale nominale:" />
+    <string id="VidmvRvXecq" text="Richesse du royaume" />
+    <string id="z4z97KSX12m" text="Banque du royaume:" />
+    <string id="Ks1B7PO9DjP" text="Somme de la richesse du clan:" />
+    <string id="dkQJzg3erHZ" text="Leader du clan" />
+	<string id="ggFT1tTOMeK" text="Statut de prisonnier" />
+	<string id="visGHcNwvj7" text="Non emprisonné" />
+	<string id="E9b41bY9PnC" text="Prisonnier" />
+	<string id="FwJELs27ac7" text="Héros capturés" />
+    <string id="1CYZYNXTfN9" text="Héros emprisonés" />
+	<string id="1kouok0blVC" text="Clan du joueur" />
+	<string id="uj3CXxKYK03" text="Rédition" />
+	<string id="mfaNceRHqRk" text="Prix de la rédition:" />
+	<string id="vMSUkkSBqeO" text="Argent requis pour persuader:" />
+	<string id="0w5RZCxnZ3B" text="Chance de rédition journalière:" />
+	<string id="9QU7uyLxhXJ" text="Heureux avec le dirigeant actuel" />
+  </strings>
+</base>
