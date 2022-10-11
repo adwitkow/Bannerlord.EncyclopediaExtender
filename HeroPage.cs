@@ -241,7 +241,6 @@ namespace EncyclopediaExtender
                     }
                 }
             }
-
             {
                 Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
 
@@ -249,7 +248,9 @@ namespace EncyclopediaExtender
 
                 var itemRoster = new ItemRoster();
                 var inventoryLogic = new InventoryLogic(null);
-                inventoryLogic.Initialize(itemRoster, MobileParty.MainParty, false, true, CharacterObject.PlayerCharacter, InventoryManager.InventoryCategoryType.None, town.MarketData, false, new TaleWorlds.Localization.TextObject("nothingburger"));
+                inventoryLogic.Initialize(itemRoster, MobileParty.MainParty, false, true,
+                                          CharacterObject.PlayerCharacter, InventoryManager.InventoryCategoryType.None,
+                                          town.MarketData, false);
 
                 foreach (var e in equipment)
                 {
