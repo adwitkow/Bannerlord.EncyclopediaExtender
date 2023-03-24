@@ -1,16 +1,13 @@
 ﻿using Bannerlord.UIExtenderEx.Attributes;
-using Bannerlord.UIExtenderEx.Prefabs2;
 using Bannerlord.UIExtenderEx.ViewModels;
+using EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.Encyclopedia;
-using TaleWorlds.CampaignSystem.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -20,76 +17,13 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection.Generic;
-using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-
-namespace EncyclopediaExtender
+namespace EncyclopediaExtender.EncyclopediaHeroPage
 {
-
-    [PrefabExtension("EncyclopediaHeroPage", "descendant::Widget[@Id='InfoContainer']")]
-    public sealed class HeroPagePatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Append;
-
-        [PrefabExtensionFileName(true)]
-        public String File => "HeroPagePatch";
-    }
-
-
-    [PrefabExtension("EncyclopediaHeroPage", "descendant::NavigatableGridWidget[@Id='FamilyGrid']")]
-    public sealed class HeroPagePerksPatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Append;
-
-        [PrefabExtensionFileName(true)]
-        public String File => "HeroPagePerksPatch";
-    }
-
-    [PrefabExtension("EncyclopediaHeroPage", "descendant::TextWidget[@Text='@SkillsText']")]
-    public sealed class HeroPageAttributesPatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Prepend;
-
-        [PrefabExtensionFileName(true)]
-        public String File => "HeroPageAttributesPatch";
-    }
-
-    public class PerksForSkillVM : ViewModel
-    {
-        [DataSourceProperty]
-        public string SkillName { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> Perks { get; set; }
-        public PerksForSkillVM(SkillObject skill, List<PerkObject> perks)
-        {
-            SkillName = skill.ToString();
-            Perks = new MBBindingList<StringPairItemVM>();
-            foreach (var perk in perks.OrderBy((PerkObject p) => p.RequiredSkillValue))
-            {
-                Perks.Add(new StringPairItemVM(perk.RequiredSkillValue.ToString() + ':', perk.ToString(),
-                    new BasicTooltipViewModel(() => CampaignUIHelper.GetPerkEffectText(perk, false))));
-            }
-        }
-    }
-
-    public class ExtenderAttributeVM : ViewModel
-    {
-        public ExtenderAttributeVM(Hero hero, CharacterAttribute att)
-        {
-            Name = att.Abbreviation.ToString();
-            AttributeValue = hero.GetAttributeValue(att);
-        }
-        [DataSourceProperty]
-        public String Name { get; set; }
-        [DataSourceProperty]
-        public int AttributeValue { get; set; }
-    }
-
     [ViewModelMixin("RefreshValues", true)]
-    public class ExtendEncyclopediaHeroPageVM : BaseViewModelMixin<EncyclopediaHeroPageVM>
+    public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> MarriagePrices { get; set; }
@@ -107,7 +41,7 @@ namespace EncyclopediaExtender
         public string AttributesText { get; set; }
         [DataSourceProperty]
         public MBBindingList<ExtenderAttributeVM> Attributes { get; set; }
-        public ExtendEncyclopediaHeroPageVM(EncyclopediaHeroPageVM vm) : base(vm)
+        public EncyclopediaHeroPageVMMixin(EncyclopediaHeroPageVM vm) : base(vm)
         {
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
@@ -143,8 +77,8 @@ namespace EncyclopediaExtender
                 }
             }
 
-            Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
-            equipment = equipment.OrderBy((EquipmentElement e) => -town.GetItemPrice(e, MobileParty.MainParty, true)).ToList();
+            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            equipment = equipment.OrderBy((e) => -town.GetItemPrice(e, MobileParty.MainParty, true)).ToList();
 
             return equipment;
         }
@@ -153,8 +87,8 @@ namespace EncyclopediaExtender
         {
             var equipment = HeroEquipment(h);
             int equipment_value = 0;
-            Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
-            equipment.ForEach((EquipmentElement e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
+            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            equipment.ForEach((e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
             return equipment_value;
         }
 
@@ -178,7 +112,7 @@ namespace EncyclopediaExtender
             rows_left_side = rows_right_side = 0;
             Attributes.Clear();
 
-            var vm = base.ViewModel;
+            var vm = ViewModel;
             if (vm == null) return;
             var hero = Traverse.Create(vm).Field("_hero").GetValue<Hero>();
             if (hero == null) return;
@@ -233,7 +167,7 @@ namespace EncyclopediaExtender
                                     MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, hero);
                                     int dowry = -mb3.GetUnitValueForFaction(hero.Clan);
                                     MarriagePrices.Add(new StringPairItemVM(
-                                        String.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mh, false)),
+                                        string.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mh, false)),
                                         dowry.ToString("N0")));
                                 }
                             }
@@ -242,7 +176,7 @@ namespace EncyclopediaExtender
                 }
             }
             {
-                Town town = Settlement.FindFirst((Settlement z) => z.IsTown).Town;
+                Town town = Settlement.FindFirst((z) => z.IsTown).Town;
 
                 var equipment = HeroEquipment(hero);
 
@@ -268,7 +202,7 @@ namespace EncyclopediaExtender
             }
             {
                 Dictionary<SkillObject, List<PerkObject>> perks_per_skill = new Dictionary<SkillObject, List<PerkObject>>();
-                Traverse.IterateFields(Campaign.Current.DefaultPerks, (Traverse tr) =>
+                Traverse.IterateFields(Campaign.Current.DefaultPerks, (tr) =>
                 {
                     var uncasted = tr.GetValue();
                     var val = uncasted as PerkObject;
@@ -314,92 +248,6 @@ namespace EncyclopediaExtender
                 }
             }
         }
-    }
-
-    [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeFilterItems")]
-    class HeroPageFilterPatch
-    {
-        static void Postfix(IEnumerable<EncyclopediaFilterGroup> __result)
-        {
-            var list = __result as List<EncyclopediaFilterGroup>;
-            if (list != null)
-            {
-                {
-                    var tr = Traverse.Create(list[4]).Field("Filters").GetValue<List<EncyclopediaFilterItem>>();
-                    tr.Add(new EncyclopediaFilterItem(new TextObject("{=dkQJzg3erHZ}Clan Leader", null), (object hero) =>
-                    {
-                        Hero h = (Hero)hero;
-                        return h.Clan != null && !h.Clan.IsMinorFaction && h.Clan.Leader == h;
-                    }));
-                }
-                {
-                    List<EncyclopediaFilterItem> prisonerList = new List<EncyclopediaFilterItem>();
-                    prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=visGHcNwvj7}Not Prisoner", null),
-                        (object h) => ((Hero)h).PartyBelongedToAsPrisoner == null));
-                    prisonerList.Add(new EncyclopediaFilterItem(new TextObject("{=E9b41bY9PnC}Prisoner", null),
-                        (object h) => ((Hero)h).PartyBelongedToAsPrisoner != null));
-                    list.Add(new EncyclopediaFilterGroup(prisonerList, new TextObject("{=ggFT1tTOMeK}Prisoner Status", null)));
-                }
-                {
-                    List<EncyclopediaFilterItem> clanStatusList = new List<EncyclopediaFilterItem>();
-
-                    clanStatusList.Add(new EncyclopediaFilterItem(GameTexts.FindText("str_other"),
-                        (object h) => ((Hero)h).Clan != Clan.PlayerClan));
-                    clanStatusList.Add(new EncyclopediaFilterItem(new TextObject("{=1kouok0blVC}Player Clan", null),
-                        (object h) => ((Hero)h).Clan == Clan.PlayerClan));
-
-                    list.Add(new EncyclopediaFilterGroup(clanStatusList, GameTexts.FindText("str_clan", null)));
-                }
-                {
-                    List<EncyclopediaFilterItem> KingdomList = new List<EncyclopediaFilterItem>();
-
-                    foreach (var k in Kingdom.All)
-                    {
-                        var cond = (Clan c) => c != null && c.Kingdom == k;
-                        KingdomList.Add(new EncyclopediaFilterItem(k.Name,
-                        (object h) => cond(((Hero)h).Clan)));
-                    }
-
-                    list.Add(new EncyclopediaFilterGroup(KingdomList, GameTexts.FindText("str_kingdom", null)));
-                }
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeSortControllers")]
-    class HeroPageSortControllerPatch
-    {
-        static void Postfix(IEnumerable<EncyclopediaSortController> __result)
-        {
-            var list = __result as List<EncyclopediaSortController>;
-            if (list != null)
-            {
-                TextObject LevelText = GameTexts.FindText("str_level", null);
-
-                list.Add(new EncyclopediaSortController(LevelText, new ListLevelComparer()));
-            }
-        }
-    }
-
-    class ListLevelComparer : DefaultEncyclopediaHeroPage.EncyclopediaListHeroComparer
-    {
-        public override int Compare(EncyclopediaListItem x, EncyclopediaListItem y)
-        {
-            return base.CompareHeroes(x, y, _comparison);
-        }
-
-        public override string GetComparedValueText(EncyclopediaListItem item)
-        {
-            Hero? hero = item.Object as Hero;
-            if (hero == null)
-            {
-                Debug.FailedAssert("Unable to get the hero level.", "EncyclopediaExtender\\HeroPage.cs", "GetComparedValueText", 355);
-                return "";
-            }
-            return hero.Level.ToString();
-        }
-
-        private static Func<Hero, Hero, int> _comparison = (Hero h1, Hero h2) => h1.Level.CompareTo(h2.Level);
     }
 
 }

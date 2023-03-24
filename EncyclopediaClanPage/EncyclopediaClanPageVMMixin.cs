@@ -1,37 +1,28 @@
-﻿using Bannerlord.UIExtenderEx.Attributes;
-using Bannerlord.UIExtenderEx.Prefabs2;
-using Bannerlord.UIExtenderEx.ViewModels;
-using HarmonyLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TaleWorlds.CampaignSystem;
+using Bannerlord.UIExtenderEx.Attributes;
+using HarmonyLib;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
-using TaleWorlds.Core;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.Generic;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using Bannerlord.UIExtenderEx.ViewModels;
 
-namespace EncyclopediaExtender
+namespace EncyclopediaExtender.EncyclopediaClanPage
 {
-    [PrefabExtension("EncyclopediaClanPage", "descendant::ListPanel[@Id='Leader']")]
-    public class ClanDefectionPatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Append;
-
-        [PrefabExtensionFileName(true)]
-        public string File => "ClanPageDefectionPatch";
-    }
-
     [ViewModelMixin("RefreshValues", true)]
-    public class ExtendEncyclopediaClanPageVM : BaseViewModelMixin<EncyclopediaClanPageVM>
+    public class EncyclopediaClanPageVMMixin : BaseViewModelMixin<EncyclopediaClanPageVM>
     {
-        public ExtendEncyclopediaClanPageVM(EncyclopediaClanPageVM vm) : base(vm)
+        public EncyclopediaClanPageVMMixin(EncyclopediaClanPageVM vm) : base(vm)
         {
             DefectionText = "";
             DefectionInfo = new MBBindingList<StringPairItemVM>();
         }
+
         [DataSourceProperty]
         public String DefectionText { get; set; }
 
@@ -105,7 +96,7 @@ namespace EncyclopediaExtender
                 {
                     var leader = clan.Leader;
 
-                    if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService 
+                    if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService
                         && clan.MapFaction != Hero.MainHero.MapFaction)
                     {
                         var barter_val = -(new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(clan));
@@ -113,7 +104,7 @@ namespace EncyclopediaExtender
                         DefectionInfo.Add(new StringPairItemVM(new TextObject("{=mfaNceRHqRk}Defection Price:").ToString(), barter_val.ToString("N0")));
                         string cash_requirement = barter_val > 2000000f ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
                             : Math.Max(0, barter_val * 3 - 750000).ToString("N0");
-                        
+
                         DefectionInfo.Add(new StringPairItemVM(new TextObject("{=vMSUkkSBqeO}Cash required to persuade:").ToString(), cash_requirement));
                     }
 
@@ -126,7 +117,7 @@ namespace EncyclopediaExtender
                     }
 
                     GameTexts.SetVariable("NUMBER", (defections / (float)iterations * 100).ToString("N1"));
-                    
+
                     DefectionInfo.Add(new StringPairItemVM(new TextObject("{=0w5RZCxnZ3B}Daily defection chance:").ToString(),
                         GameTexts.FindText("str_NUMBER_percent", null).ToString()));
                 }

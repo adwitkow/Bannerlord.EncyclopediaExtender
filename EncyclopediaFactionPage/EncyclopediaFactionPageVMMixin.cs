@@ -1,39 +1,21 @@
-﻿using Bannerlord.UIExtenderEx.Attributes;
-using Bannerlord.UIExtenderEx.Prefabs2;
+﻿using System;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
-using System;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using Bannerlord.UIExtenderEx.Attributes;
 
-namespace EncyclopediaExtender
+namespace EncyclopediaExtender.EncyclopediaFactionPage
 {
-    [PrefabExtension("EncyclopediaFactionPage", "descendant::EncyclopediaSubPageElement[@Id='Leader']")]
-    public class FactionPageWealthPatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Append;
-
-        [PrefabExtensionFileName(true)]
-        public String File => "FactionPageWealthPatch";
-    }
-    [PrefabExtension("EncyclopediaFactionPage", "descendant::NavigatableGridWidget[@Id='EnemiesGrid']")]
-    public class FactionPagePrisonerPatch : PrefabExtensionInsertPatch
-    {
-        public override InsertType Type => InsertType.Append;
-
-        [PrefabExtensionFileName(true)]
-        public String File =>   "FactionPagePrisonerPatch";
-    }
-
     [ViewModelMixin("RefreshValues", true)]
-    public class ExtendEncyclopediaFactionPageVM : BaseViewModelMixin<EncyclopediaFactionPageVM>
+    public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
-        public ExtendEncyclopediaFactionPageVM(EncyclopediaFactionPageVM vm) : base(vm)
+        public EncyclopediaFactionPageVMMixin(EncyclopediaFactionPageVM vm) : base(vm)
         {
             WealthInfo = new MBBindingList<StringPairItemVM>();
             CapturedHeroes = new MBBindingList<HeroVM>();
@@ -46,7 +28,7 @@ namespace EncyclopediaExtender
         public String KingdomWealthText { get; set; }
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> WealthInfo { get; set; }
-        
+
 
         [DataSourceProperty]
         public string CapturedHeroesText { get; set; }
