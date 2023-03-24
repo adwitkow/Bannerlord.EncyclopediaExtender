@@ -5,7 +5,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encyclopedia;
 using TaleWorlds.CampaignSystem.Encyclopedia.Pages;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
 namespace EncyclopediaExtender.EncyclopediaHeroPage.Patches
@@ -13,10 +12,9 @@ namespace EncyclopediaExtender.EncyclopediaHeroPage.Patches
     [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeSortControllers")]
     class HeroPageSortControllerPatch
     {
-        static void Postfix(IEnumerable<EncyclopediaSortController> __result)
+        public static void Postfix(IEnumerable<EncyclopediaSortController> __result)
         {
-            var list = __result as List<EncyclopediaSortController>;
-            if (list != null)
+            if (__result is List<EncyclopediaSortController> list)
             {
                 TextObject LevelText = GameTexts.FindText("str_level", null);
 
@@ -24,7 +22,7 @@ namespace EncyclopediaExtender.EncyclopediaHeroPage.Patches
             }
         }
 
-        class ListLevelComparer : DefaultEncyclopediaHeroPage.EncyclopediaListHeroComparer
+        private sealed class ListLevelComparer : DefaultEncyclopediaHeroPage.EncyclopediaListHeroComparer
         {
             public override int Compare(EncyclopediaListItem x, EncyclopediaListItem y)
             {
@@ -33,16 +31,14 @@ namespace EncyclopediaExtender.EncyclopediaHeroPage.Patches
 
             public override string GetComparedValueText(EncyclopediaListItem item)
             {
-                Hero? hero = item.Object as Hero;
-                if (hero == null)
+                if (item.Object is not Hero hero)
                 {
-                    Debug.FailedAssert("Unable to get the hero level.", "EncyclopediaExtender\\HeroPage.cs", "GetComparedValueText", 355);
-                    return "";
+                    return string.Empty;
                 }
                 return hero.Level.ToString();
             }
 
-            private static Func<Hero, Hero, int> _comparison = (h1, h2) => h1.Level.CompareTo(h2.Level);
+            private static readonly Func<Hero, Hero, int> _comparison = (h1, h2) => h1.Level.CompareTo(h2.Level);
         }
     }
 }

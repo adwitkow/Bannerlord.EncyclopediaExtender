@@ -32,33 +32,32 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
         int SimulateConsiderDefection(Clan clan, List<Clan> e)
         {
             if (MBRandom.RandomFloat >= 0.2f) return 0;
-            Clan randomElement2 = e.GetRandomElement<Clan>();
+            var randomClan = e.GetRandomElement();
+            var num = 0;
+
+            while (randomClan.Kingdom == null || clan.Kingdom == randomClan.Kingdom || randomClan.IsEliminated)
             {
-                int num = 0;
-                while (randomElement2.Kingdom == null || clan.Kingdom == randomElement2.Kingdom || randomElement2.IsEliminated)
+                randomClan = e.GetRandomElement();
+                num++;
+                if (num >= 20)
                 {
-                    randomElement2 = e.GetRandomElement<Clan>();
-                    num++;
-                    if (num >= 20)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
-            if (randomElement2.Kingdom != null && clan.Kingdom != randomElement2.Kingdom && randomElement2.MapFaction.IsKingdomFaction && !randomElement2.IsEliminated && randomElement2 != Clan.PlayerClan && randomElement2.MapFaction.Leader != Hero.MainHero)
-            {
-                var kingdom = randomElement2.Kingdom;
 
-                JoinKingdomAsClanBarterable joinKingdomAsClanBarterable = new JoinKingdomAsClanBarterable(clan.Leader, kingdom);
-                int valueForFaction = joinKingdomAsClanBarterable.GetValueForFaction(clan);
-                int valueForFaction2 = joinKingdomAsClanBarterable.GetValueForFaction(kingdom);
-                int num = valueForFaction + valueForFaction2;
-                int num2 = 0;
-                if (valueForFaction < 0)
+            if (randomClan.Kingdom != null && clan.Kingdom != randomClan.Kingdom && randomClan.MapFaction.IsKingdomFaction && !randomClan.IsEliminated && randomClan != Clan.PlayerClan && randomClan.MapFaction.Leader != Hero.MainHero)
+            {
+                var kingdom = randomClan.Kingdom;
+
+                var joinKingdomAsClanBarterable = new JoinKingdomAsClanBarterable(clan.Leader, kingdom);
+                var clanValue = joinKingdomAsClanBarterable.GetValueForFaction(clan);
+                var kingdomValue = joinKingdomAsClanBarterable.GetValueForFaction(kingdom);
+                var valueSum = clanValue + kingdomValue;
+                if (clanValue < 0)
                 {
-                    num2 = -valueForFaction;
+                    clanValue = -clanValue;
                 }
-                if (num > 0 && (float)num2 <= (float)kingdom.Leader.Gold * 0.5f)
+                if (valueSum > 0 && (float)clanValue <= (float)kingdom.Leader.Gold * 0.5f)
                 {
                     return 1;
                 }
@@ -109,8 +108,8 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
                     }
 
                     List<Clan> e = Enumerable.ToList<Clan>(Clan.NonBanditFactions);
-                    int iterations = 0;
                     int defections = 0;
+                    int iterations;
                     for (iterations = 0; iterations < 5000; iterations++)
                     {
                         defections += SimulateConsiderDefection(clan, e);

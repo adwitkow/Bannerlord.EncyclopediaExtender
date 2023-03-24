@@ -9,13 +9,15 @@ using TaleWorlds.Library;
 
 namespace EncyclopediaExtender
 {
-    internal class DCCCompatibility
+    internal static class DCCCompatibility
     {
         static void FailedToPatchMessage(string m)
         {
             InformationManager.DisplayMessage(new InformationMessage("Encyclopedia Extender failed to patch Detailed Character Creation, " + m));
         }
+
         internal static readonly Color Orange = Color.FromUint(0x00F16D26);
+
         public static void DCCPatcher(Harmony harmony)
         {
             if (!Utilities.GetModulesNames().Contains("zzCharacterCreation")) return;

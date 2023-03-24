@@ -6,8 +6,9 @@ namespace EncyclopediaExtender
 {
     public class SubModule : MBSubModuleBase
     {
-        private UIExtender _extender = new UIExtender("EncyclopediaExtender");
-        Harmony _harmony = new Harmony("EncyclopediaExtender");
+        private readonly UIExtender _extender = new UIExtender("EncyclopediaExtender");
+        private readonly Harmony _harmony = new Harmony("EncyclopediaExtender");
+
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -16,11 +17,6 @@ namespace EncyclopediaExtender
 
             _extender.Register(typeof(SubModule).Assembly);
             _extender.Enable();
-        }
-
-        protected override void OnSubModuleUnloaded()
-        {
-            base.OnSubModuleUnloaded();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()

@@ -51,21 +51,17 @@ namespace EncyclopediaExtender.EncyclopediaFactionPage
             if (vm != null)
             {
                 var kingdom = Traverse.Create(vm).Field("_faction").GetValue<Kingdom>();
+                WealthInfo.Add(new StringPairItemVM(new TextObject("{=z4z97KSX12m}Kingdom Bank:").ToString(), kingdom.KingdomBudgetWallet.ToString("N0")));
+                int clans_wealth = 0;
+                foreach (var clan in kingdom.Clans)
                 {
-                    var kingdomBankText = new TextObject("");
-                    WealthInfo.Add(new StringPairItemVM(new TextObject("{=z4z97KSX12m}Kingdom Bank:").ToString(), kingdom.KingdomBudgetWallet.ToString("N0")));
-                    int clans_wealth = 0;
-                    foreach (var clan in kingdom.Clans)
-                    {
-                        if (clan.IsUnderMercenaryService || clan.IsMinorFaction) continue;
-                        clans_wealth += clan.Leader.Gold - clan.DebtToKingdom;
-                    }
-                    WealthInfo.Add(new StringPairItemVM(new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:").ToString(), clans_wealth.ToString("N0")));
+                    if (clan.IsUnderMercenaryService || clan.IsMinorFaction) continue;
+                    clans_wealth += clan.Leader.Gold - clan.DebtToKingdom;
                 }
-                {
-                    CapturedHeroes = GetHeroesCapturedBy(kingdom);
-                    ImprisonedHeroes = GetHeroesImprisoned(kingdom);
-                }
+                WealthInfo.Add(new StringPairItemVM(new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:").ToString(), clans_wealth.ToString("N0")));
+
+                CapturedHeroes = GetHeroesCapturedBy(kingdom);
+                ImprisonedHeroes = GetHeroesImprisoned(kingdom);
             }
         }
         public static MBBindingList<HeroVM> GetHeroesCapturedBy(IFaction capturerFaction)
@@ -76,7 +72,7 @@ namespace EncyclopediaExtender.EncyclopediaFactionPage
                 if (hero.IsPrisoner)
                 {
                     PartyBase partyBelongedToAsPrisoner = hero.PartyBelongedToAsPrisoner;
-                    if (((partyBelongedToAsPrisoner != null) ? partyBelongedToAsPrisoner.MapFaction : null) == capturerFaction)
+                    if (partyBelongedToAsPrisoner?.MapFaction == capturerFaction)
                     {
                         list.Add(new HeroVM(hero));
                     }
