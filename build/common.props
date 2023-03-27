@@ -35,7 +35,7 @@
         <ModuleId>Bannerlord.EncyclopediaExtender</ModuleId>
         <ModuleName>$(ModuleId)</ModuleName>
         <DisplayName>Encyclopedia Extender Reforged</DisplayName>
-        <RootNamespace>$(DisplayName)</RootNamespace>
+        <RootNamespace>$(ModuleId)</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>

@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 
-namespace EncyclopediaExtender
+namespace Bannerlord.EncyclopediaExtender
 {
     internal static class DCCCompatibility
     {
@@ -42,7 +42,7 @@ namespace EncyclopediaExtender
             {
                 if (instruction.opcode == OpCodes.Callvirt && instruction.operand == (object)refresh)
                 {
-                    instruction.operand = (object)refreshValues;
+                    instruction.operand = refreshValues;
                 }
                 yield return instruction;
             }
