@@ -6,8 +6,10 @@ namespace Bannerlord.EncyclopediaExtender
 {
     public class SubModule : MBSubModuleBase
     {
-        private readonly UIExtender _extender = new UIExtender("EncyclopediaExtender");
-        private readonly Harmony _harmony = new Harmony("EncyclopediaExtender");
+        private const string ModuleId = "Bannerlord.EncyclopediaExtender";
+
+        private readonly UIExtender _extender = new UIExtender(ModuleId);
+        private readonly Harmony _harmony = new Harmony(ModuleId);
 
         protected override void OnSubModuleLoad()
         {
