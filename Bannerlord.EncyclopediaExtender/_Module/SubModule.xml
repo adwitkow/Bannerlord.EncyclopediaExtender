@@ -34,6 +34,12 @@
       <DLLName value="$modulename$.dll" />
       <SubModuleClassType value="$modulename$.SubModule" />
       <Tags />
+      <Name value="Bannerlord Module Loader" />
+      <DLLName value="Bannerlord.ModuleLoader.$modulename$.dll" />
+      <SubModuleClassType value="Bannerlord.ModuleLoader.Bannerlord_EncyclopediaExtender" />
+      <Tags>
+        <Tag key="LoaderFilter" value ="$modulename$.*.dll" />
+      </Tags>
     </SubModule>
   </SubModules>
 </Module>

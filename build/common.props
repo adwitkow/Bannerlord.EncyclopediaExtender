@@ -1,0 +1,112 @@
+<Project>
+
+    <!--Module Version-->
+    <PropertyGroup>
+        <Version>0.2.2</Version>
+        <GameVersion>1.0.0</GameVersion>
+    </PropertyGroup>
+
+    <!-- Versions of Major Dependencies (For Package References & SubModule.xml Substitution) -->
+    <PropertyGroup>
+        <!--BuildResources Version-->
+        <BuildResourcesVersion>1.0.1.89</BuildResourcesVersion>
+        <!--Harmony Version-->
+        <HarmonyVersion>2.2.2</HarmonyVersion>
+        <!--ButterLib Version-->
+        <ButterLibVersion>2.6.3</ButterLibVersion>
+        <!--MCM Version-->
+        <MCMVersion>5.5.5</MCMVersion>
+        <!--UIExtenderEx Version-->
+        <UIExtenderExVersion>2.6.0</UIExtenderExVersion>
+        <!--BUTRShared Version-->
+        <BUTRSharedVersion>3.0.0.130</BUTRSharedVersion>
+        <!--BUTRModuleManager Version-->
+        <BUTRModuleManagerVersion>5.0.198</BUTRModuleManagerVersion>
+        <!--ModuleLoader Version-->
+        <BUTRModuleLoaderVersion>1.0.1.44</BUTRModuleLoaderVersion>
+        <!--Harmony Extensions Version-->
+        <HarmonyExtensionsVersion>3.2.0.73</HarmonyExtensionsVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <Platforms>x64</Platforms>
+        <LangVersion>10.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <ModuleId>Bannerlord.EncyclopediaExtender</ModuleId>
+        <ModuleName>$(ModuleId)</ModuleName>
+        <DisplayName>Encyclopedia Extender Reforged</DisplayName>
+        <RootNamespace>$(DisplayName)</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsMinimal>true</IsMinimal>
+        <IsMinimal Condition="$(Configuration.Contains('Minimal'))">true</IsMinimal>
+        <IsStable>false</IsStable>
+        <IsStable Condition="$(Configuration.Contains('Stable'))">true</IsStable>
+        <IsBeta>false</IsBeta>
+        <IsBeta Condition="$(Configuration.Contains('Beta'))">true</IsBeta>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SGVFile>$([System.IO.File]::ReadAllText($(MSBuildThisFileDirectory)/../supported-game-versions.txt))</SGVFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <SGVItem Include="$([System.Text.RegularExpressions.Regex]::Split($(SGVFile), `\r\n|\r|\n`))" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="$(OverrideGameVersion) == ''">
+        <!-- Parsing  supported-game-versions.txt -->
+        <SGVLineCount>$([System.Text.RegularExpressions.Regex]::Split($(SGVFile), `\r\n|\r|\n`).Length)</SGVLineCount>
+        <SGVLastEntryIndex>$([MSBuild]::Subtract($(SGVLineCount), 1))</SGVLastEntryIndex>
+        <!-- First enrty is Beta, second Stable, last Minimal -->
+        <FirstLine  Condition="'$(SGVLineCount)' &gt; 0">$([System.Text.RegularExpressions.Regex]::Split($(SGVFile), `\r\n|\r|\n`)[0])</FirstLine>
+        <SecondLine Condition="'$(SGVLineCount)' &gt; 1">$([System.Text.RegularExpressions.Regex]::Split($(SGVFile), `\r\n|\r|\n`)[1])</SecondLine>
+        <LastLine   Condition="'$(SGVLineCount)' &gt; 0">$([System.Text.RegularExpressions.Regex]::Split($(SGVFile), `\r\n|\r|\n`)[$(SGVLastEntryIndex)])</LastLine>
+        <!-- -->
+        <SecondLine Condition="'$(SecondLine)' == ''">$(FirstLine)</SecondLine>
+        <LastLine Condition="'$(LastLine)' == ''">$(SecondLine)</LastLine>
+        <!-- -->
+        <GameBetaVersion>$(FirstLine)</GameBetaVersion>
+        <GameStableVersion>$(SecondLine)</GameStableVersion>
+        <GameMinimalVersion>$(LastLine)</GameMinimalVersion>
+        <!-- -->
+        <GameVersionWithPrefix>v1.0.0</GameVersionWithPrefix>
+        <GameVersionWithPrefix Condition="$(IsMinimal)">$(GameMinimalVersion)</GameVersionWithPrefix>
+        <GameVersionWithPrefix Condition="$(IsStable)">$(GameStableVersion)</GameVersionWithPrefix>
+        <GameVersionWithPrefix Condition="$(IsBeta)">$(GameBetaVersion)</GameVersionWithPrefix>
+        <!-- -->
+        <GameVersion>$(GameVersionWithPrefix.Substring(1))</GameVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(OverrideGameVersion) != ''">
+        <GameVersionWithPrefix>$(OverrideGameVersion)</GameVersionWithPrefix>
+        <GameVersion>$(GameVersionWithPrefix.Substring(1))</GameVersion>
+    </PropertyGroup>
+
+    <!-- Game Folder(s) -->
+    <PropertyGroup>
+        <!--Bannerlord's Root Folder. Leave empty if you want it to be tried to be autoresolved.-->
+        <GameFolder Condition="$(IsStable)">$(BANNERLORD_STABLE_DIR)</GameFolder>
+        <GameFolder Condition="$(IsBeta)">$(BANNERLORD_BETA_DIR)</GameFolder>
+        <GameFolder Condition="$(GameFolder) == ''">$(BANNERLORD_GAME_DIR)</GameFolder>
+    </PropertyGroup>
+
+    <!-- Automatic Game Folder Resolution -->
+    <PropertyGroup>
+        <!--Windows-->
+        <!--Get from Registry (not working with dotnet right now)-->
+        <GameFolder Condition="!Exists($(GameFolder)) AND $(OS) == 'Windows_NT'">$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 261550@InstallLocation)</GameFolder>
+        <!--Set a default value if registry value is missing-->
+        <GameFolder Condition="!Exists($(GameFolder)) AND $(OS) == 'Windows_NT'">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+        <!--Unix-->
+        <GameFolder Condition="!Exists($(GameFolder)) AND $(OS) == 'Unix'">~/.steam/root/steamapps/common/Mount &amp; Blade II Bannerlord</GameFolder>
+    </PropertyGroup>
+
+    <!--CI Builds-->
+    <ItemGroup Condition="$(TargetFramework) == 'net472' AND $(OS) != 'Windows_NT'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

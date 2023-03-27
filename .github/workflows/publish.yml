@@ -1,0 +1,61 @@
+name: Publish
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+    branches:
+      - 'release/**'
+      
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        
+      - name: Get version
+        id: get-version
+        shell: pwsh
+        run: |
+          $version = (Select-Xml -Path build/common.props -XPath //Version | Select-Object -First 1).Node.InnerXml
+          Write-Output "::set-output name=version::$version"
+          Write-Output "::set-output name=release-name::Release $version"
+          
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow_conclusion: success
+          
+      - name: List all files before compressing
+        run: ls -R
+        
+      - name: Compress build
+        shell: pwsh
+        run: |
+          Compress-Archive -Path Build/* -DestinationPath Release-${{ steps.get-version.outputs.version }}.zip
+
+      - name: Create release
+        id: create-release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.get-version.outputs.version }}
+          release_name: ${{ steps.get-version.outputs.release-name }}
+          body: ${{ steps.get-version.outputs.release-name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./Release-${{ steps.get-version.outputs.version }}.zip
+          asset_name: Release-${{ steps.get-version.outputs.version }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
