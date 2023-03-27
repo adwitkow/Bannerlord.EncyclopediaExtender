@@ -29,11 +29,8 @@
   </DependedModuleMetadatas>
   <!-- Community Dependency Metadata -->
   <SubModules>
+    <!-- Bannerlord Module Loader. Do not change the name! -->
     <SubModule>
-      <Name value="$modulename$" />
-      <DLLName value="$modulename$.dll" />
-      <SubModuleClassType value="$modulename$.SubModule" />
-      <Tags />
       <Name value="Bannerlord Module Loader" />
       <DLLName value="Bannerlord.ModuleLoader.$modulename$.dll" />
       <SubModuleClassType value="Bannerlord.ModuleLoader.Bannerlord_EncyclopediaExtender" />
