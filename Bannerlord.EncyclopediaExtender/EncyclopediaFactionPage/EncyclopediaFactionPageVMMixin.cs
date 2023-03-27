@@ -10,7 +10,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using Bannerlord.UIExtenderEx.Attributes;
 
-namespace EncyclopediaExtender.EncyclopediaFactionPage
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 {
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
@@ -25,7 +25,7 @@ namespace EncyclopediaExtender.EncyclopediaFactionPage
             ImprisonedHeroesText = "";
         }
         [DataSourceProperty]
-        public String KingdomWealthText { get; set; }
+        public string KingdomWealthText { get; set; }
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> WealthInfo { get; set; }
 
@@ -47,7 +47,7 @@ namespace EncyclopediaExtender.EncyclopediaFactionPage
             WealthInfo.Clear();
             CapturedHeroes.Clear();
             ImprisonedHeroes.Clear();
-            var vm = base.ViewModel;
+            var vm = ViewModel;
             if (vm != null)
             {
                 var kingdom = Traverse.Create(vm).Field("_faction").GetValue<Kingdom>();

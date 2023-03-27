@@ -12,7 +12,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using Bannerlord.UIExtenderEx.ViewModels;
 
-namespace EncyclopediaExtender.EncyclopediaClanPage
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 {
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaClanPageVMMixin : BaseViewModelMixin<EncyclopediaClanPageVM>
@@ -24,7 +24,7 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
         }
 
         [DataSourceProperty]
-        public String DefectionText { get; set; }
+        public string DefectionText { get; set; }
 
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> DefectionInfo { get; set; }
@@ -57,7 +57,7 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
                 {
                     clanValue = -clanValue;
                 }
-                if (valueSum > 0 && (float)clanValue <= (float)kingdom.Leader.Gold * 0.5f)
+                if (valueSum > 0 && clanValue <= kingdom.Leader.Gold * 0.5f)
                 {
                     return 1;
                 }
@@ -70,7 +70,7 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
             DefectionText = new TextObject("{=uj3CXxKYK03}Defection").ToString();
             DefectionInfo.Clear();
 
-            var vm = base.ViewModel;
+            var vm = ViewModel;
             if (vm != null)
             {
                 var clan = Traverse.Create(vm).Field("_clan").GetValue<Clan>();
@@ -98,7 +98,7 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
                     if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService
                         && clan.MapFaction != Hero.MainHero.MapFaction)
                     {
-                        var barter_val = -(new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(clan));
+                        var barter_val = -new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(clan);
 
                         DefectionInfo.Add(new StringPairItemVM(new TextObject("{=mfaNceRHqRk}Defection Price:").ToString(), barter_val.ToString("N0")));
                         string cash_requirement = barter_val > 2000000f ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
@@ -107,7 +107,7 @@ namespace EncyclopediaExtender.EncyclopediaClanPage
                         DefectionInfo.Add(new StringPairItemVM(new TextObject("{=vMSUkkSBqeO}Cash required to persuade:").ToString(), cash_requirement));
                     }
 
-                    List<Clan> e = Enumerable.ToList<Clan>(Clan.NonBanditFactions);
+                    List<Clan> e = Clan.NonBanditFactions.ToList();
                     int defections = 0;
                     int iterations;
                     for (iterations = 0; iterations < 5000; iterations++)

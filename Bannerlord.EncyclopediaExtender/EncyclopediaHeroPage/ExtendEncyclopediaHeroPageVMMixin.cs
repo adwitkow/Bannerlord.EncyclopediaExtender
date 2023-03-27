@@ -1,6 +1,6 @@
-﻿using Bannerlord.UIExtenderEx.Attributes;
+﻿using Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
+using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
-using EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace EncyclopediaExtender.EncyclopediaHeroPage
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 {
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>

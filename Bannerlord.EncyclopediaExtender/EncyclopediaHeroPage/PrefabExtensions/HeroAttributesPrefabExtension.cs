@@ -3,7 +3,7 @@ using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
-namespace EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 {
     [PrefabExtension("EncyclopediaHeroPage", "descendant::TextWidget[@Text='@SkillsText']")]
     public class HeroAttributesPrefabExtension : PrefabExtensionInsertPatch

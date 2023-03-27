@@ -2,7 +2,7 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
-namespace EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 {
     [PrefabExtension("EncyclopediaHeroPage", "descendant::NavigatableGridWidget[@Id='FamilyGrid']")]
     public class HeroPerksPrefabExtension : PrefabExtensionInsertPatch

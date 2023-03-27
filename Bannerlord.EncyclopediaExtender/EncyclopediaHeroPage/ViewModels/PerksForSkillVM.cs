@@ -7,7 +7,7 @@ using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 
-namespace EncyclopediaExtender.EncyclopediaHeroPage.ViewModels
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.ViewModels
 {
     public class PerksForSkillVM : ViewModel
     {

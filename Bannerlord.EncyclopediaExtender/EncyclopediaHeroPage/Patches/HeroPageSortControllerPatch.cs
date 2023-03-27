@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem.Encyclopedia.Pages;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace EncyclopediaExtender.EncyclopediaHeroPage.Patches
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.Patches
 {
     [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeSortControllers")]
     class HeroPageSortControllerPatch

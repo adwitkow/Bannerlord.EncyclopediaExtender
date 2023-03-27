@@ -2,7 +2,7 @@
 using TaleWorlds.MountAndBlade;
 using HarmonyLib;
 
-namespace EncyclopediaExtender
+namespace Bannerlord.EncyclopediaExtender
 {
     public class SubModule : MBSubModuleBase
     {
@@ -22,7 +22,7 @@ namespace EncyclopediaExtender
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
-            DCCCompatibility.DCCPatcher(_harmony);
+            //DCCCompatibility.DCCPatcher(_harmony);
         }
     }
 }

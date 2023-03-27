@@ -2,7 +2,7 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
-namespace EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensions
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensions
 {
     [PrefabExtension("EncyclopediaFactionPage", "descendant::EncyclopediaSubPageElement[@Id='Leader']")]
     public class FactionWealthPrefabExtension : PrefabExtensionInsertPatch

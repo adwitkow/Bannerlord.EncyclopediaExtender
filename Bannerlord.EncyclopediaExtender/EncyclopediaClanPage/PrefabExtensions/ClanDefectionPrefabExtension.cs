@@ -1,7 +1,7 @@
 ﻿using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
-namespace EncyclopediaExtender.EncyclopediaClanPage.PrefabExtensions
+namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage.PrefabExtensions
 {
     [PrefabExtension("EncyclopediaClanPage", "descendant::ListPanel[@Id='Leader']")]
     public class ClanDefectionPrefabExtension : PrefabExtensionInsertPatch
