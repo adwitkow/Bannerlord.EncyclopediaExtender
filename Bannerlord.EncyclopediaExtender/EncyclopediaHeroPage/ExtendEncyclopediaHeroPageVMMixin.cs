@@ -7,7 +7,6 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -25,6 +24,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
+        private Hero? _hero;
+
         [DataSourceProperty]
         public string AttributesText { get; set; }
 
@@ -54,6 +55,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         public EncyclopediaHeroPageVMMixin(EncyclopediaHeroPageVM vm) : base(vm)
         {
+            _hero = vm.Obj as Hero;
+
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
             PerksPerSkillLeftSide = new MBBindingList<PerksForSkillVM>();
@@ -79,45 +82,43 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             PerksPerSkillRightSide.Clear();
             Attributes.Clear();
 
-            var vm = ViewModel;
-            if (vm == null) return;
-            var hero = Traverse.Create(vm).Field("_hero").GetValue<Hero>();
-            if (hero == null) return;
-
-            // This is for compatibility with old UiExtender which ran OnRefresh more than once per refresh
-            if (vm.Stats.Count <= 4)
+            if (_hero is null || ViewModel is null)
             {
-                TextObject levelText = GameTexts.FindText("str_level", null);
-                vm.Stats.Add(new StringPairItemVM(levelText.ToString() + ':', hero.Level.ToString()));
-                TextObject equipmentSaleValueText = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
-                vm.Stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), HeroEquipmentValue(hero).ToString("N0")));
-
-                TextObject prisonerText = new TextObject("{=MUOPLUL4Fru}Prisoner:");
-                TextObject freeText = new TextObject("{=EfO4DVzClVp}Free");
-                vm.Stats.Add(new StringPairItemVM(prisonerText.ToString(), hero.IsPrisoner ? hero.PartyBelongedToAsPrisoner.Name.ToString() : freeText.ToString()));
-                TextObject armyText = new TextObject("{=2LlrWkeotbJ}Army:");
-                TextObject noneText = new TextObject("{=nBA38eYcLkV}Not in Army");
-                vm.Stats.Add(new StringPairItemVM(armyText.ToString(), hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null ? hero.PartyBelongedTo.Army.Name.ToString() : noneText.ToString()));
+                return;
             }
 
-            if (hero.Clan != null && hero.Clan.Leader != null)
+            var stats = ViewModel.Stats;
+
+            TextObject levelText = GameTexts.FindText("str_level", null);
+            stats.Add(new StringPairItemVM(levelText.ToString() + ':', _hero.Level.ToString()));
+            TextObject equipmentSaleValueText = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
+            stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), HeroEquipmentValue(_hero).ToString("N0")));
+
+            TextObject prisonerText = new TextObject("{=MUOPLUL4Fru}Prisoner:");
+            TextObject freeText = new TextObject("{=EfO4DVzClVp}Free");
+            stats.Add(new StringPairItemVM(prisonerText.ToString(), _hero.IsPrisoner ? _hero.PartyBelongedToAsPrisoner.Name.ToString() : freeText.ToString()));
+            TextObject armyText = new TextObject("{=2LlrWkeotbJ}Army:");
+            TextObject noneText = new TextObject("{=nBA38eYcLkV}Not in Army");
+            stats.Add(new StringPairItemVM(armyText.ToString(), _hero.PartyBelongedTo != null && _hero.PartyBelongedTo.Army != null ? _hero.PartyBelongedTo.Army.Name.ToString() : noneText.ToString()));
+
+            if (_hero.Clan != null && _hero.Clan.Leader != null)
             {
                 var mh = Hero.MainHero;
-                if (MyCanMarry(hero))
+                if (MyCanMarry(_hero))
                 {
-                    if (MyCanMarry(mh) && mh.IsFemale != hero.IsFemale)
+                    if (MyCanMarry(mh) && mh.IsFemale != _hero.IsFemale)
                     {
                         // PERSUATION DOWRY
-                        MarriageBarterable mb1 = new MarriageBarterable(mh, PartyBase.MainParty, hero, mh);
+                        MarriageBarterable mb1 = new MarriageBarterable(mh, PartyBase.MainParty, _hero, mh);
                         TextObject persuasionDowryText = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
-                        MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(hero.Clan)).ToString("N0")));
+                        MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(_hero.Clan)).ToString("N0")));
 
                         // BARTER DOWRY
-                        MarriageBarterable mb2 = new MarriageBarterable(mh, PartyBase.MainParty, mh, hero);
-                        int dowry = -mb2.GetUnitValueForFaction(hero.Clan);
+                        MarriageBarterable mb2 = new MarriageBarterable(mh, PartyBase.MainParty, mh, _hero);
+                        int dowry = -mb2.GetUnitValueForFaction(_hero.Clan);
                         /*
                         // Normalize prices to 0 relation
-                        int personal_relation = hero.GetRelation(mh);
+                        int personal_relation = _hero.GetRelation(mh);
                         dowry -= personal_relation * 1000;
                         */
                         TextObject barterDowryText = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
@@ -126,10 +127,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
                     foreach (var clanHero in Hero.MainHero.Clan.Lords)
                     {
-                        if (clanHero != mh && MyCanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
+                        if (clanHero != mh && MyCanMarry(clanHero) && clanHero.IsFemale != _hero.IsFemale)
                         {
-                            MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, hero);
-                            int dowry = -mb3.GetUnitValueForFaction(hero.Clan);
+                            MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, _hero);
+                            int dowry = -mb3.GetUnitValueForFaction(_hero.Clan);
                             MarriagePrices.Add(new StringPairItemVM(
                                 string.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mh, false)),
                                 dowry.ToString("N0")));
@@ -140,7 +141,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             Town town = Settlement.FindFirst((z) => z.IsTown).Town;
 
-            var equipment = HeroEquipment(hero);
+            var equipment = HeroEquipment(_hero);
 
             var itemRoster = new ItemRoster();
             var inventoryLogic = new InventoryLogic(null);
@@ -155,7 +156,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             foreach (var e in itemRoster)
             {
-                var item_vm = new SPItemVM(inventoryLogic, hero.IsFemale, true, InventoryMode.Default, e,
+                var item_vm = new SPItemVM(inventoryLogic, _hero.IsFemale, true, InventoryMode.Default, e,
                     InventoryLogic.InventorySide.OtherInventory, "", "",
                     town.GetItemPrice(e.EquipmentElement, MobileParty.MainParty, true));
 
@@ -167,7 +168,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             {
                 var uncasted = tr.GetValue();
 
-                if (uncasted is PerkObject perk && hero.GetPerkValue(perk))
+                if (uncasted is PerkObject perk && _hero.GetPerkValue(perk))
                 {
                     List<PerkObject> skill_group;
                     if (perks_per_skill.ContainsKey(perk.Skill))
@@ -204,7 +205,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Extensions.Attributes.All)
             {
-                Attributes.Add(new ExtenderAttributeVM(hero, att));
+                Attributes.Add(new ExtenderAttributeVM(_hero, att));
             }
         }
 
