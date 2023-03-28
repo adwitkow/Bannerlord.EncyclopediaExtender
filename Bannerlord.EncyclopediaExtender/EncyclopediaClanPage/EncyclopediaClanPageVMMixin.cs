@@ -13,7 +13,7 @@ using Bannerlord.UIExtenderEx.ViewModels;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 {
-    [ViewModelMixin("RefreshValues", true)]
+    [ViewModelMixin(nameof(EncyclopediaClanPageVM.RefreshValues), true)]
     public class EncyclopediaClanPageVMMixin : BaseViewModelMixin<EncyclopediaClanPageVM>
     {
         private readonly Clan? _clan;
@@ -31,42 +31,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 
         [DataSourceProperty]
         public MBBindingList<StringPairItemVM> DefectionInfo { get; set; }
-
-        int SimulateConsiderDefection(Clan clan, List<Clan> e)
-        {
-            if (MBRandom.RandomFloat >= 0.2f) return 0;
-            var randomClan = e.GetRandomElement();
-            var num = 0;
-
-            while (randomClan.Kingdom == null || clan.Kingdom == randomClan.Kingdom || randomClan.IsEliminated)
-            {
-                randomClan = e.GetRandomElement();
-                num++;
-                if (num >= 20)
-                {
-                    break;
-                }
-            }
-
-            if (randomClan.Kingdom != null && clan.Kingdom != randomClan.Kingdom && randomClan.MapFaction.IsKingdomFaction && !randomClan.IsEliminated && randomClan != Clan.PlayerClan && randomClan.MapFaction.Leader != Hero.MainHero)
-            {
-                var kingdom = randomClan.Kingdom;
-
-                var joinKingdomAsClanBarterable = new JoinKingdomAsClanBarterable(clan.Leader, kingdom);
-                var clanValue = joinKingdomAsClanBarterable.GetValueForFaction(clan);
-                var kingdomValue = joinKingdomAsClanBarterable.GetValueForFaction(kingdom);
-                var valueSum = clanValue + kingdomValue;
-                if (clanValue < 0)
-                {
-                    clanValue = -clanValue;
-                }
-                if (valueSum > 0 && clanValue <= kingdom.Leader.Gold * 0.5f)
-                {
-                    return 1;
-                }
-            }
-            return 0;
-        }
 
         public override void OnRefresh()
         {
@@ -100,35 +64,125 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             var totalWealthFormatted = totalWealth.ToString("N0");
             ViewModel.ClanInfo.AddPair(totalWealthHeader, totalWealthFormatted);
 
-            if (_clan != Clan.PlayerClan && _clan.Kingdom != null && _clan.Leader != _clan.Kingdom.Leader && !_clan.IsUnderMercenaryService)
+            if (CanClanDefect(_clan))
             {
                 var leader = _clan.Leader;
 
-                if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService
-                    && _clan.MapFaction != Hero.MainHero.MapFaction)
+                if (IsPlayerVassal() && IsClanInSameFactionAsPlayer(_clan))
                 {
-                    var barter_val = -new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(_clan);
+                    var barterable = new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction);
+                    var barterValue = -barterable.GetValueForFaction(_clan);
 
-                    DefectionInfo.Add(new StringPairItemVM(new TextObject("{=mfaNceRHqRk}Defection Price:").ToString(), barter_val.ToString("N0")));
-                    string cash_requirement = barter_val > 2000000f ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
-                        : Math.Max(0, barter_val * 3 - 750000).ToString("N0");
+                    var defectionPriceHeader = new TextObject("{=mfaNceRHqRk}Defection Price:");
+                    DefectionInfo.AddPair(defectionPriceHeader, barterValue.ToString("N0"));
 
-                    DefectionInfo.Add(new StringPairItemVM(new TextObject("{=vMSUkkSBqeO}Cash required to persuade:").ToString(), cash_requirement));
+                    var cashRequiredHeader = new TextObject("{=vMSUkkSBqeO}Cash required to persuade:");
+                    var cashRequired = barterValue > 2000000f
+                        ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
+                        : Math.Max(0, barterValue * 3 - 750000).ToString("N0");
+                    DefectionInfo.AddPair(cashRequiredHeader, cashRequired);
                 }
 
-                List<Clan> e = Clan.NonBanditFactions.ToList();
-                int defections = 0;
-                int iterations;
-                for (iterations = 0; iterations < 5000; iterations++)
-                {
-                    defections += SimulateConsiderDefection(_clan, e);
-                }
+                var defectionChance = BruteForceDefectionChance(_clan);
+                GameTexts.SetVariable("NUMBER", defectionChance.ToString("N1"));
 
-                GameTexts.SetVariable("NUMBER", (defections / (float)iterations * 100).ToString("N1"));
-
-                DefectionInfo.Add(new StringPairItemVM(new TextObject("{=0w5RZCxnZ3B}Daily defection chance:").ToString(),
-                    GameTexts.FindText("str_NUMBER_percent", null).ToString()));
+                var defectionChanceHeader = new TextObject("{=0w5RZCxnZ3B}Daily defection chance:");
+                var defectionChanceFormatted = GameTexts.FindText("str_NUMBER_percent", null);
+                DefectionInfo.AddPair(defectionChanceHeader, defectionChanceFormatted);
             }
+        }
+
+        private float BruteForceDefectionChance(Clan clan)
+        {
+            // I really don't like this.
+            List<Clan> nonBanditClans = Clan.NonBanditFactions.ToList();
+            var defections = 0;
+            int iterations;
+            for (iterations = 0; iterations < 5000; iterations++)
+            {
+                defections += SimulateConsiderDefection(clan, nonBanditClans);
+            }
+
+            return defections / (float)iterations * 100;
+        }
+
+        private bool IsPlayerVassal()
+        {
+            return Hero.MainHero.MapFaction.IsKingdomFaction
+                && !Clan.PlayerClan.IsUnderMercenaryService;
+        }
+
+        private bool IsClanInSameFactionAsPlayer(Clan clan)
+        {
+            return clan.MapFaction != Hero.MainHero.MapFaction;
+        }
+
+        private bool CanClanDefect(Clan clan)
+        {
+            return clan != Clan.PlayerClan
+                && clan.Kingdom != null
+                && clan.Leader != clan.Kingdom.Leader
+                && !clan.IsUnderMercenaryService;
+        }
+
+        int SimulateConsiderDefection(Clan clan, List<Clan> nonBanditClans)
+        {
+            if (MBRandom.RandomFloat >= 0.2f)
+            {
+                return 0;
+            }
+
+            var randomClan = GetRandomClan(clan, nonBanditClans);
+
+            if (IsPossibleToJoinOtherClan(clan, randomClan))
+            {
+                var kingdom = randomClan.Kingdom;
+
+                var joinKingdomAsClanBarterable = new JoinKingdomAsClanBarterable(clan.Leader, kingdom);
+                var clanValue = joinKingdomAsClanBarterable.GetValueForFaction(clan);
+                var kingdomValue = joinKingdomAsClanBarterable.GetValueForFaction(kingdom);
+                var valueSum = clanValue + kingdomValue;
+
+                if (clanValue < 0)
+                {
+                    clanValue = -clanValue;
+                }
+
+                if (valueSum > 0 && clanValue <= kingdom.Leader.Gold * 0.5f)
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
+        private static Clan GetRandomClan(Clan clan, List<Clan> nonBanditClans)
+        {
+            var randomClan = nonBanditClans.GetRandomElement();
+            var num = 0;
+
+            while (randomClan.Kingdom == null || clan.Kingdom == randomClan.Kingdom || randomClan.IsEliminated)
+            {
+                randomClan = nonBanditClans.GetRandomElement();
+                num++;
+                if (num >= 20)
+                {
+                    break;
+                }
+            }
+
+            return randomClan;
+        }
+
+        private static bool IsPossibleToJoinOtherClan(Clan clan, Clan otherClan)
+        {
+            return otherClan.Kingdom != null
+                && clan.Kingdom != otherClan.Kingdom
+                && otherClan.MapFaction.IsKingdomFaction
+                && !otherClan.IsEliminated
+                && otherClan != Clan.PlayerClan
+                && otherClan.MapFaction.Leader != Hero.MainHero;
         }
     }
 }
