@@ -21,7 +21,7 @@ using TaleWorlds.Localization;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 {
-    [ViewModelMixin("RefreshValues", true)]
+    [ViewModelMixin(nameof(EncyclopediaHeroPageVM.RefreshValues), true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
         private readonly Hero? _hero;

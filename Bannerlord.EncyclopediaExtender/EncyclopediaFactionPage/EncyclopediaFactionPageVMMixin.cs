@@ -12,7 +12,7 @@ using Bannerlord.UIExtenderEx.Attributes;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 {
-    [ViewModelMixin("RefreshValues", true)]
+    [ViewModelMixin(nameof(EncyclopediaFactionPageVM.RefreshValues), true)]
     public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
         public EncyclopediaFactionPageVMMixin(EncyclopediaFactionPageVM vm) : base(vm)
