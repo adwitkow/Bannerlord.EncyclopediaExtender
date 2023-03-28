@@ -65,42 +65,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             PerksText = "";
             AttributesText = "";
         }
-        public static List<EquipmentElement> HeroEquipment(Hero x)
-        {
-            var equipment = new List<EquipmentElement>();
-            for (int i = 0; i < 12; i++)
-            {
-                if (!x.BattleEquipment[i].IsEmpty)
-                {
-                    equipment.Add(x.BattleEquipment[i]);
-                }
-                if (!x.CivilianEquipment[i].IsEmpty)
-                {
-                    equipment.Add(x.CivilianEquipment[i]);
-                }
-            }
 
-            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
-            equipment = equipment.OrderBy((e) => -town.GetItemPrice(e, MobileParty.MainParty, true)).ToList();
-
-            return equipment;
-        }
-
-        public static int HeroEquipmentValue(Hero h)
-        {
-            var equipment = HeroEquipment(h);
-            int equipment_value = 0;
-            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
-            equipment.ForEach((e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
-            return equipment_value;
-        }
-
-        public bool MyCanMarry(Hero maidenOrSuitor)
-        {
-            return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord &&
-                !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate &&
-                maidenOrSuitor.CharacterObject.Age >= 18;
-        }
         public override void OnRefresh()
         {
             DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
@@ -242,6 +207,42 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 Attributes.Add(new ExtenderAttributeVM(hero, att));
             }
         }
-    }
 
+        private static List<EquipmentElement> HeroEquipment(Hero x)
+        {
+            var equipment = new List<EquipmentElement>();
+            for (int i = 0; i < 12; i++)
+            {
+                if (!x.BattleEquipment[i].IsEmpty)
+                {
+                    equipment.Add(x.BattleEquipment[i]);
+                }
+                if (!x.CivilianEquipment[i].IsEmpty)
+                {
+                    equipment.Add(x.CivilianEquipment[i]);
+                }
+            }
+
+            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            equipment = equipment.OrderBy((e) => -town.GetItemPrice(e, MobileParty.MainParty, true)).ToList();
+
+            return equipment;
+        }
+
+        private static int HeroEquipmentValue(Hero h)
+        {
+            var equipment = HeroEquipment(h);
+            int equipment_value = 0;
+            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            equipment.ForEach((e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
+            return equipment_value;
+        }
+
+        private bool MyCanMarry(Hero maidenOrSuitor)
+        {
+            return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord &&
+                !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate &&
+                maidenOrSuitor.CharacterObject.Age >= 18;
+        }
+    }
 }
