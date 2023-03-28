@@ -24,7 +24,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
-        private Hero? _hero;
+        private readonly Hero? _hero;
 
         [DataSourceProperty]
         public string AttributesText { get; set; }
@@ -87,163 +87,246 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 return;
             }
 
-            var stats = ViewModel.Stats;
+            AddViewModelStats();
+            AddDowryValues();
+            AddHeroitems();
+            AddPerks();
+            AddAttributes();
+        }
 
-            TextObject levelText = GameTexts.FindText("str_level", null);
-            stats.Add(new StringPairItemVM(levelText.ToString() + ':', _hero.Level.ToString()));
-            TextObject equipmentSaleValueText = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
-            stats.Add(new StringPairItemVM(equipmentSaleValueText.ToString(), HeroEquipmentValue(_hero).ToString("N0")));
+        private void AddViewModelStats()
+        {
+            TextObject levelHeader = GameTexts.FindText("str_level", null);
+            AddViewModelStatPair($"{levelHeader}:", _hero!.Level);
 
-            TextObject prisonerText = new TextObject("{=MUOPLUL4Fru}Prisoner:");
+            TextObject equipmentValueHeader = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
+            var equipmentValue = CalculateEquipmentValue(_hero);
+            AddViewModelStatPair(equipmentValueHeader, equipmentValue);
+
+            TextObject prisonerHeader = new TextObject("{=MUOPLUL4Fru}Prisoner:");
             TextObject freeText = new TextObject("{=EfO4DVzClVp}Free");
-            stats.Add(new StringPairItemVM(prisonerText.ToString(), _hero.IsPrisoner ? _hero.PartyBelongedToAsPrisoner.Name.ToString() : freeText.ToString()));
-            TextObject armyText = new TextObject("{=2LlrWkeotbJ}Army:");
-            TextObject noneText = new TextObject("{=nBA38eYcLkV}Not in Army");
-            stats.Add(new StringPairItemVM(armyText.ToString(), _hero.PartyBelongedTo != null && _hero.PartyBelongedTo.Army != null ? _hero.PartyBelongedTo.Army.Name.ToString() : noneText.ToString()));
+            var prisonerValue = _hero.IsPrisoner
+                ? _hero.PartyBelongedToAsPrisoner.Name.ToString()
+                : freeText.ToString();
+            AddViewModelStatPair(prisonerHeader, prisonerValue);
 
-            if (_hero.Clan != null && _hero.Clan.Leader != null)
+            TextObject armyHeader = new TextObject("{=2LlrWkeotbJ}Army:");
+            TextObject notInArmyHeader = new TextObject("{=nBA38eYcLkV}Not in Army");
+            var armyValue = _hero.PartyBelongedTo != null && _hero.PartyBelongedTo.Army != null
+                ? _hero.PartyBelongedTo.Army.Name.ToString()
+                : notInArmyHeader.ToString();
+            AddViewModelStatPair(armyHeader, armyValue);
+        }
+
+        private void AddDowryValues()
+        {
+            if (_hero is null || _hero.Clan is null || _hero.Clan.Leader is null || !CanMarry(_hero))
             {
-                var mh = Hero.MainHero;
-                if (MyCanMarry(_hero))
-                {
-                    if (MyCanMarry(mh) && mh.IsFemale != _hero.IsFemale)
-                    {
-                        // PERSUATION DOWRY
-                        MarriageBarterable mb1 = new MarriageBarterable(mh, PartyBase.MainParty, _hero, mh);
-                        TextObject persuasionDowryText = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
-                        MarriagePrices.Add(new StringPairItemVM(persuasionDowryText.ToString(), (-mb1.GetUnitValueForFaction(_hero.Clan)).ToString("N0")));
-
-                        // BARTER DOWRY
-                        MarriageBarterable mb2 = new MarriageBarterable(mh, PartyBase.MainParty, mh, _hero);
-                        int dowry = -mb2.GetUnitValueForFaction(_hero.Clan);
-                        /*
-                        // Normalize prices to 0 relation
-                        int personal_relation = _hero.GetRelation(mh);
-                        dowry -= personal_relation * 1000;
-                        */
-                        TextObject barterDowryText = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
-                        MarriagePrices.Add(new StringPairItemVM(barterDowryText.ToString(), dowry.ToString("N0")));
-                    }
-
-                    foreach (var clanHero in Hero.MainHero.Clan.Lords)
-                    {
-                        if (clanHero != mh && MyCanMarry(clanHero) && clanHero.IsFemale != _hero.IsFemale)
-                        {
-                            MarriageBarterable mb3 = new MarriageBarterable(mh, PartyBase.MainParty, clanHero, _hero);
-                            int dowry = -mb3.GetUnitValueForFaction(_hero.Clan);
-                            MarriagePrices.Add(new StringPairItemVM(
-                                string.Format("{0}({1}):", clanHero.Name, CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mh, false)),
-                                dowry.ToString("N0")));
-                        }
-                    }
-                }
+                return;
             }
 
-            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            var mainHero = Hero.MainHero;
 
-            var equipment = HeroEquipment(_hero);
+            if (CanMarry(mainHero) && mainHero.IsFemale != _hero.IsFemale)
+            {
+                MarriageBarterable mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, _hero, mainHero);
+                TextObject persuasionDowryHeader = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
+                var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(_hero.Clan);
+                var persuasionDowryFormatted = persuasionDowryValue.ToString("N0");
+                AddBindingPair(MarriagePrices, persuasionDowryHeader, persuasionDowryFormatted);
+
+                MarriageBarterable heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, _hero);
+                int dowry = -heroToMainHero.GetUnitValueForFaction(_hero.Clan);
+                /*
+                // Normalize prices to 0 relation
+                int personal_relation = _hero.GetRelation(mh);
+                dowry -= personal_relation * 1000;
+                */
+                TextObject barterDowryHeader = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
+                AddBindingPair(MarriagePrices, barterDowryHeader, dowry.ToString("N0"));
+            }
+
+            foreach (var clanHero in mainHero.Clan.Lords)
+            {
+                if (clanHero != mainHero && CanMarry(clanHero) && clanHero.IsFemale != _hero.IsFemale)
+                {
+                    MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, _hero);
+                    int dowry = -heroToClanHero.GetUnitValueForFaction(_hero.Clan);
+                    var relation = CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mainHero, false);
+                    AddBindingPair(MarriagePrices, $"{clanHero.Name} ({relation}):", dowry.ToString("N0"));
+                }
+            }
+        }
+
+        private void AddHeroitems()
+        {
+            if (_hero is null)
+            {
+                return;
+            }
+
+            Town town = Settlement.FindFirst(z => z.IsTown).Town;
+
+            var equipment = GetHeroEquipment(_hero);
 
             var itemRoster = new ItemRoster();
             var inventoryLogic = new InventoryLogic(null);
             inventoryLogic.Initialize(itemRoster, MobileParty.MainParty, false, true,
                                       CharacterObject.PlayerCharacter, InventoryManager.InventoryCategoryType.None,
                                       town.MarketData, false);
+            inventoryLogic.Initialize(itemRoster,
+                MobileParty.MainParty,
+                false,
+                true,
+                CharacterObject.PlayerCharacter,
+                InventoryManager.InventoryCategoryType.None,
+                town.MarketData,
+                false);
 
-            foreach (var e in equipment)
+            foreach (var element in equipment)
             {
-                itemRoster.AddToCounts(e, 1);
+                itemRoster.AddToCounts(element, 1);
             }
 
-            foreach (var e in itemRoster)
+            foreach (var element in itemRoster)
             {
-                var item_vm = new SPItemVM(inventoryLogic, _hero.IsFemale, true, InventoryMode.Default, e,
-                    InventoryLogic.InventorySide.OtherInventory, "", "",
-                    town.GetItemPrice(e.EquipmentElement, MobileParty.MainParty, true));
 
-                HeroItems.Add(item_vm);
+                var price = town.GetItemPrice(element.EquipmentElement, MobileParty.MainParty, true);
+                var itemVm = new SPItemVM(inventoryLogic,
+                    _hero.IsFemale,
+                    true,
+                    InventoryMode.Default,
+                    element,
+                    InventoryLogic.InventorySide.OtherInventory,
+                    string.Empty,
+                    string.Empty,
+                    price);
+
+                HeroItems.Add(itemVm);
             }
+        }
 
-            Dictionary<SkillObject, List<PerkObject>> perks_per_skill = new Dictionary<SkillObject, List<PerkObject>>();
-            Traverse.IterateFields(Campaign.Current.DefaultPerks, (tr) =>
+        private void AddPerks()
+        {
+            Dictionary<SkillObject, List<PerkObject>> perksPerSkill = new Dictionary<SkillObject, List<PerkObject>>();
+
+            Traverse.IterateFields(Campaign.Current.DefaultPerks, tr =>
             {
                 var uncasted = tr.GetValue();
 
                 if (uncasted is PerkObject perk && _hero.GetPerkValue(perk))
                 {
-                    List<PerkObject> skill_group;
-                    if (perks_per_skill.ContainsKey(perk.Skill))
+                    List<PerkObject> skillGroup;
+                    if (perksPerSkill.ContainsKey(perk.Skill))
                     {
-                        skill_group = perks_per_skill[perk.Skill];
+                        skillGroup = perksPerSkill[perk.Skill];
                     }
                     else
                     {
-                        skill_group = new List<PerkObject>();
+                        skillGroup = new List<PerkObject>();
                     }
 
-                    skill_group.Add(perk);
-                    perks_per_skill[perk.Skill] = skill_group;
+                    skillGroup.Add(perk);
+                    perksPerSkill[perk.Skill] = skillGroup;
                 }
             });
 
             var rowsLeftSide = 0;
             var rowsRightSide = 0;
-            foreach (var skill in perks_per_skill)
+            foreach (var skill in perksPerSkill)
             {
-                var skill_vm = new PerksForSkillVM(skill.Key, skill.Value);
-                int rows = skill_vm.Perks.Count + 1;
+                var skillVm = new PerksForSkillVM(skill.Key, skill.Value);
+                int rows = skillVm.Perks.Count + 1;
                 if (rowsLeftSide <= rowsRightSide)
                 {
-                    PerksPerSkillLeftSide.Add(skill_vm);
+                    PerksPerSkillLeftSide.Add(skillVm);
                     rowsLeftSide += rows;
                 }
                 else
                 {
-                    PerksPerSkillRightSide.Add(skill_vm);
+                    PerksPerSkillRightSide.Add(skillVm);
                     rowsRightSide += rows;
                 }
             }
+        }
 
+        private void AddAttributes()
+        {
             foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Extensions.Attributes.All)
             {
                 Attributes.Add(new ExtenderAttributeVM(_hero, att));
             }
         }
 
-        private static List<EquipmentElement> HeroEquipment(Hero x)
+        private static IEnumerable<EquipmentElement> GetHeroEquipment(Hero hero)
         {
             var equipment = new List<EquipmentElement>();
             for (int i = 0; i < 12; i++)
             {
-                if (!x.BattleEquipment[i].IsEmpty)
+                if (!hero.BattleEquipment[i].IsEmpty)
                 {
-                    equipment.Add(x.BattleEquipment[i]);
+                    equipment.Add(hero.BattleEquipment[i]);
                 }
-                if (!x.CivilianEquipment[i].IsEmpty)
+
+                if (!hero.CivilianEquipment[i].IsEmpty)
                 {
-                    equipment.Add(x.CivilianEquipment[i]);
+                    equipment.Add(hero.CivilianEquipment[i]);
                 }
             }
 
             Town town = Settlement.FindFirst((z) => z.IsTown).Town;
-            equipment = equipment.OrderBy((e) => -town.GetItemPrice(e, MobileParty.MainParty, true)).ToList();
-
-            return equipment;
+            return equipment.OrderByDescending(element => town.GetItemPrice(element, MobileParty.MainParty, true));
         }
 
-        private static int HeroEquipmentValue(Hero h)
+        private static int CalculateEquipmentValue(Hero hero)
         {
-            var equipment = HeroEquipment(h);
-            int equipment_value = 0;
-            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
-            equipment.ForEach((e) => equipment_value += town.GetItemPrice(e, MobileParty.MainParty, true));
-            return equipment_value;
+            var equipment = GetHeroEquipment(hero);
+            Town town = Settlement.FindFirst(settlement => settlement.IsTown).Town;
+
+            int result = 0;
+            foreach (var element in equipment)
+            {
+                result += town.GetItemPrice(element, MobileParty.MainParty, true);
+            }
+
+            return result;
         }
 
-        private bool MyCanMarry(Hero maidenOrSuitor)
+        private static bool CanMarry(Hero maidenOrSuitor)
         {
             return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord &&
                 !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate &&
                 maidenOrSuitor.CharacterObject.Age >= 18;
+        }
+
+        private void AddBindingPair<T>(MBBindingList<StringPairItemVM> bindingList, string header, T value)
+        {
+            if (value is null)
+            {
+                return;
+            }
+
+            bindingList.Add(new StringPairItemVM(header, value.ToString()));
+        }
+
+        private void AddBindingPair<T>(MBBindingList<StringPairItemVM> bindingList, TextObject header, T value)
+        {
+            AddBindingPair(bindingList, header, value);
+        }
+
+        private void AddViewModelStatPair<T>(string header, T value)
+        {
+            if (ViewModel is null)
+            {
+                return;
+            }
+
+            AddBindingPair(ViewModel.Stats, header, value);
+        }
+
+        private void AddViewModelStatPair<T>(TextObject header, T value)
+        {
+            AddViewModelStatPair(header.ToString(), value);
         }
     }
 }
