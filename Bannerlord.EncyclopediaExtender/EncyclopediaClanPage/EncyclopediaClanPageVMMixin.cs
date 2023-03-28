@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
-using HarmonyLib;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem;
@@ -17,8 +16,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
     [ViewModelMixin("RefreshValues", true)]
     public class EncyclopediaClanPageVMMixin : BaseViewModelMixin<EncyclopediaClanPageVM>
     {
+        private readonly Clan? _clan;
+
         public EncyclopediaClanPageVMMixin(EncyclopediaClanPageVM vm) : base(vm)
         {
+            _clan = vm.Obj as Clan;
+
             DefectionText = "";
             DefectionInfo = new MBBindingList<StringPairItemVM>();
         }
@@ -70,56 +73,61 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             DefectionText = new TextObject("{=uj3CXxKYK03}Defection").ToString();
             DefectionInfo.Clear();
 
-            var vm = ViewModel;
-            if (vm != null)
+            if (_clan is null || ViewModel is null)
             {
-                var clan = Traverse.Create(vm).Field("_clan").GetValue<Clan>();
-                if (vm.ClanInfo.Count <= 3)
+                return;
+            }
+
+            var cashHeader = new TextObject("{=beBL5H1u2fu}Cash:");
+            var cashValue = _clan.Leader.Gold.ToString("N0");
+            ViewModel.ClanInfo.AddPair(cashHeader, cashValue);
+
+            var debtHeader = new TextObject("{=C1SUFxYrMXk}Debt:");
+            var debtValue = _clan.DebtToKingdom;
+            ViewModel.ClanInfo.AddPair(debtHeader, debtValue);
+
+            var kingdom = _clan.Kingdom;
+            int kingdomWealthShare = 0;
+            if (kingdom != null && !_clan.IsMinorFaction)
+            {
+                kingdomWealthShare = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
+                var kingdomWealthShareHeader = new TextObject("{=a2uZeyyIdQX}Share of Kingdom Wealth:");
+                ViewModel.ClanInfo.AddPair(kingdomWealthShareHeader, kingdomWealthShare.ToString("N0"));
+            }
+
+            var totalWealthHeader = new TextObject("{=nAr2HzgGiVn}Nominal Total Wealth:");
+            var totalWealth = _clan.Leader.Gold + kingdomWealthShare - _clan.DebtToKingdom;
+            var totalWealthFormatted = totalWealth.ToString("N0");
+            ViewModel.ClanInfo.AddPair(totalWealthHeader, totalWealthFormatted);
+
+            if (_clan != Clan.PlayerClan && _clan.Kingdom != null && _clan.Leader != _clan.Kingdom.Leader && !_clan.IsUnderMercenaryService)
+            {
+                var leader = _clan.Leader;
+
+                if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService
+                    && _clan.MapFaction != Hero.MainHero.MapFaction)
                 {
-                    vm.ClanInfo.Add(new StringPairItemVM("", ""));
-                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=beBL5H1u2fu}Cash:").ToString(), clan.Leader.Gold.ToString("N0")));
-                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=C1SUFxYrMXk}Debt:").ToString(), clan.DebtToKingdom.ToString()));
-                    var kingdom = clan.Kingdom;
-                    int kingdom_wealth = 0;
-                    if (kingdom != null && !clan.IsMinorFaction)
-                    {
-                        kingdom_wealth = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
-                        vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=a2uZeyyIdQX}Share of Kingdom Wealth:").ToString(),
-                            kingdom_wealth.ToString("N0")));
-                    }
-                    vm.ClanInfo.Add(new StringPairItemVM(new TextObject("{=nAr2HzgGiVn}Nominal Total Wealth:").ToString(),
-                        (clan.Leader.Gold + kingdom_wealth - clan.DebtToKingdom).ToString("N0")));
+                    var barter_val = -new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(_clan);
+
+                    DefectionInfo.Add(new StringPairItemVM(new TextObject("{=mfaNceRHqRk}Defection Price:").ToString(), barter_val.ToString("N0")));
+                    string cash_requirement = barter_val > 2000000f ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
+                        : Math.Max(0, barter_val * 3 - 750000).ToString("N0");
+
+                    DefectionInfo.Add(new StringPairItemVM(new TextObject("{=vMSUkkSBqeO}Cash required to persuade:").ToString(), cash_requirement));
                 }
 
-                if (clan != Clan.PlayerClan && clan.Kingdom != null && clan.Leader != clan.Kingdom.Leader && !clan.IsUnderMercenaryService)
+                List<Clan> e = Clan.NonBanditFactions.ToList();
+                int defections = 0;
+                int iterations;
+                for (iterations = 0; iterations < 5000; iterations++)
                 {
-                    var leader = clan.Leader;
-
-                    if (Hero.MainHero.MapFaction.IsKingdomFaction && !Clan.PlayerClan.IsUnderMercenaryService
-                        && clan.MapFaction != Hero.MainHero.MapFaction)
-                    {
-                        var barter_val = -new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction).GetValueForFaction(clan);
-
-                        DefectionInfo.Add(new StringPairItemVM(new TextObject("{=mfaNceRHqRk}Defection Price:").ToString(), barter_val.ToString("N0")));
-                        string cash_requirement = barter_val > 2000000f ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
-                            : Math.Max(0, barter_val * 3 - 750000).ToString("N0");
-
-                        DefectionInfo.Add(new StringPairItemVM(new TextObject("{=vMSUkkSBqeO}Cash required to persuade:").ToString(), cash_requirement));
-                    }
-
-                    List<Clan> e = Clan.NonBanditFactions.ToList();
-                    int defections = 0;
-                    int iterations;
-                    for (iterations = 0; iterations < 5000; iterations++)
-                    {
-                        defections += SimulateConsiderDefection(clan, e);
-                    }
-
-                    GameTexts.SetVariable("NUMBER", (defections / (float)iterations * 100).ToString("N1"));
-
-                    DefectionInfo.Add(new StringPairItemVM(new TextObject("{=0w5RZCxnZ3B}Daily defection chance:").ToString(),
-                        GameTexts.FindText("str_NUMBER_percent", null).ToString()));
+                    defections += SimulateConsiderDefection(_clan, e);
                 }
+
+                GameTexts.SetVariable("NUMBER", (defections / (float)iterations * 100).ToString("N1"));
+
+                DefectionInfo.Add(new StringPairItemVM(new TextObject("{=0w5RZCxnZ3B}Daily defection chance:").ToString(),
+                    GameTexts.FindText("str_NUMBER_percent", null).ToString()));
             }
         }
     }
