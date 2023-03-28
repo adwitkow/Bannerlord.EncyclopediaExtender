@@ -133,7 +133,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 TextObject persuasionDowryHeader = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
                 var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(_hero.Clan);
                 var persuasionDowryFormatted = persuasionDowryValue.ToString("N0");
-                AddBindingPair(MarriagePrices, persuasionDowryHeader, persuasionDowryFormatted);
+                MarriagePrices.AddPair(persuasionDowryHeader, persuasionDowryFormatted);
 
                 MarriageBarterable heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, _hero);
                 int dowry = -heroToMainHero.GetUnitValueForFaction(_hero.Clan);
@@ -143,7 +143,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 dowry -= personal_relation * 1000;
                 */
                 TextObject barterDowryHeader = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
-                AddBindingPair(MarriagePrices, barterDowryHeader, dowry.ToString("N0"));
+                MarriagePrices.AddPair(barterDowryHeader, dowry.ToString("N0"));
             }
 
             foreach (var clanHero in mainHero.Clan.Lords)
@@ -153,7 +153,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                     MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, _hero);
                     int dowry = -heroToClanHero.GetUnitValueForFaction(_hero.Clan);
                     var relation = CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mainHero, false);
-                    AddBindingPair(MarriagePrices, $"{clanHero.Name} ({relation}):", dowry.ToString("N0"));
+                    MarriagePrices.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString("N0"));
                 }
             }
         }
@@ -299,21 +299,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 maidenOrSuitor.CharacterObject.Age >= 18;
         }
 
-        private void AddBindingPair<T>(MBBindingList<StringPairItemVM> bindingList, string header, T value)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            bindingList.Add(new StringPairItemVM(header, value.ToString()));
-        }
-
-        private void AddBindingPair<T>(MBBindingList<StringPairItemVM> bindingList, TextObject header, T value)
-        {
-            AddBindingPair(bindingList, header, value);
-        }
-
         private void AddViewModelStatPair<T>(string header, T value)
         {
             if (ViewModel is null)
@@ -321,7 +306,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 return;
             }
 
-            AddBindingPair(ViewModel.Stats, header, value);
+            ViewModel.Stats.AddPair(header, value);
         }
 
         private void AddViewModelStatPair<T>(TextObject header, T value)
