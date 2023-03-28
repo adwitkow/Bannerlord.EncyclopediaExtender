@@ -68,7 +68,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             {
                 var leader = _clan.Leader;
 
-                if (IsPlayerVassal() && IsClanInSameFactionAsPlayer(_clan))
+                if (IsPlayerVassal() && !IsClanInSameFactionAsPlayer(_clan))
                 {
                     var barterable = new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction);
                     var barterValue = -barterable.GetValueForFaction(_clan);
@@ -95,7 +95,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
         private float BruteForceDefectionChance(Clan clan)
         {
             // I really don't like this.
-            List<Clan> nonBanditClans = Clan.NonBanditFactions.ToList();
+            var nonBanditClans = Clan.NonBanditFactions.ToArray();
             var defections = 0;
             int iterations;
             for (iterations = 0; iterations < 5000; iterations++)
@@ -114,7 +114,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 
         private bool IsClanInSameFactionAsPlayer(Clan clan)
         {
-            return clan.MapFaction != Hero.MainHero.MapFaction;
+            return clan.MapFaction == Hero.MainHero.MapFaction;
         }
 
         private bool CanClanDefect(Clan clan)
@@ -125,7 +125,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                 && !clan.IsUnderMercenaryService;
         }
 
-        int SimulateConsiderDefection(Clan clan, List<Clan> nonBanditClans)
+        int SimulateConsiderDefection(Clan clan, Clan[] nonBanditClans)
         {
             if (MBRandom.RandomFloat >= 0.2f)
             {
@@ -157,7 +157,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             return 0;
         }
 
-        private static Clan GetRandomClan(Clan clan, List<Clan> nonBanditClans)
+        private static Clan GetRandomClan(Clan clan, Clan[] nonBanditClans)
         {
             var randomClan = nonBanditClans.GetRandomElement();
             var num = 0;
