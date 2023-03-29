@@ -9,7 +9,7 @@
     <!-- Versions of Major Dependencies (For Package References & SubModule.xml Substitution) -->
     <PropertyGroup>
         <!--BuildResources Version-->
-        <BuildResourcesVersion>1.0.1.89</BuildResourcesVersion>
+        <BuildResourcesVersion>1.0.1.92</BuildResourcesVersion>
         <!--Harmony Version-->
         <HarmonyVersion>2.2.2</HarmonyVersion>
         <!--ButterLib Version-->
@@ -17,7 +17,7 @@
         <!--MCM Version-->
         <MCMVersion>5.5.5</MCMVersion>
         <!--UIExtenderEx Version-->
-        <UIExtenderExVersion>2.6.0</UIExtenderExVersion>
+        <UIExtenderExVersion>2.7.0</UIExtenderExVersion>
         <!--BUTRShared Version-->
         <BUTRSharedVersion>3.0.0.130</BUTRSharedVersion>
         <!--BUTRModuleManager Version-->
