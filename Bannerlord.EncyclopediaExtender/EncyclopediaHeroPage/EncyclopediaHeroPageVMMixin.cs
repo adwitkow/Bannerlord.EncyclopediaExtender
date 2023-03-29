@@ -89,7 +89,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             AddViewModelStats();
             AddDowryValues();
-            AddHeroitems();
+            AddHeroItems();
             AddPerks();
             AddAttributes();
         }
@@ -158,7 +158,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             }
         }
 
-        private void AddHeroitems()
+        private void AddHeroItems()
         {
             if (_hero is null)
             {
@@ -171,9 +171,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             var itemRoster = new ItemRoster();
             var inventoryLogic = new InventoryLogic(null);
-            inventoryLogic.Initialize(itemRoster, MobileParty.MainParty, false, true,
-                                      CharacterObject.PlayerCharacter, InventoryManager.InventoryCategoryType.None,
-                                      town.MarketData, false);
             inventoryLogic.Initialize(itemRoster,
                 MobileParty.MainParty,
                 false,
