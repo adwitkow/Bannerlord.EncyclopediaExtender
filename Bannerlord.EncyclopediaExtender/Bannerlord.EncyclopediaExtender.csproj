@@ -49,5 +49,13 @@
       <Replacement>$(MCMVersion)</Replacement>
     </SubModuleOverrides>
   </ItemGroup>
+  <ItemGroup>
+    <None Update="_Module\GUI\Prefabs\ItemElement.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="_Module\GUI\Prefabs\SettlementPage.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
