@@ -23,7 +23,7 @@ jobs:
         id: get-version
         shell: pwsh
         run: |
-          $version = (Select-Xml -Path Build/Modules/Bannerlord.EncyclopediaExtender/SubModule.xml -XPath //Version | Select-Object -First 1).Node.InnerXml
+          $version = (Select-Xml -Path Build/Modules/Bannerlord.EncyclopediaExtender/SubModule.xml -XPath //Version | Select-Object -First 1).Node.Attributes.Value
           Write-Output "::set-output name=version::$version"
           Write-Output "::set-output name=release-name::Release $version"
           Write-Output $version
