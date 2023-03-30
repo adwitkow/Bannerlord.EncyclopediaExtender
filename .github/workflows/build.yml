@@ -42,7 +42,7 @@ jobs:
           $versionElement =  $xml.SelectSingleNode("//Version")
           $versionElement.InnerText = $version
           $xml.Save($path)
-          Write-Output 'Modified common.props to build with version $version'
+          Write-Output 'Modified common.props to build with version ${version}'
         } else {
           Write-Output 'No need to modify common.props version - this is not a release'
         }
