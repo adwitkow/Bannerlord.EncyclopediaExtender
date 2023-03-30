@@ -26,6 +26,7 @@ jobs:
           $version = (Select-Xml -Path Build/Modules/Bannerlord.EncyclopediaExtender/SubModule.xml -XPath //Version | Select-Object -First 1).Node.InnerXml
           Write-Output "::set-output name=version::$version"
           Write-Output "::set-output name=release-name::Release $version"
+          Write-Output $version
           
       - name: List all files before compressing
         run: ls -R
