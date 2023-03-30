@@ -33,7 +33,7 @@ jobs:
     - name: Update verison in common.props
       shell: pwsh
       run: |
-        $branch = $env:GITHUB_REF.replace('refs/heads/', ''))
+        $branch = $env:GITHUB_REF.replace('refs/heads/', '')
         if ($branch -match 'release\/(\d\.?){3,4}') {
           $version = $branch.Split('/')[-1]
           $path = 'build/common.props'
