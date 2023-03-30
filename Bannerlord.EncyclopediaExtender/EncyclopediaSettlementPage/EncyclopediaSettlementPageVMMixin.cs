@@ -31,9 +31,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
         public string TradeBoundText { get; set; }
 
         [DataSourceProperty]
-        public bool IsTradeBound { get; set; }
-
-        [DataSourceProperty]
         public MBBindingList<ItemElementVM> ProducedItems { get; set; }
 
         [DataSourceProperty]
@@ -50,8 +47,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
                 return;
             }
 
-            IsTradeBound = _settlement.IsVillage || _settlement.IsTown;
-            
             if (_settlement.IsVillage)
             {
                 TradeBoundText = new TextObject("{=2noOKM5N}Trade bound settlement").ToString();
@@ -64,6 +59,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
             else if (_settlement.IsTown)
             {
                 TradeBoundText = new TextObject("{=q7xpz1xb}Trade bound village(s)").ToString();
+
+                foreach (var village in _settlement.BoundVillages)
+                {
+                    var itemElementVm = CreateItemElementVM(village);
+                    ProducedItems.Add(itemElementVm);
+                }
 
                 foreach (var tradeBound in _settlement.Town.TradeBoundVillages)
                 {
