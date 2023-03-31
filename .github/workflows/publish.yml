@@ -19,11 +19,15 @@ jobs:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           workflow_conclusion: success
           
+      - name: Get repo name
+        id: get-repo-name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+
       - name: Get version
         id: get-version
         shell: pwsh
         run: |
-          $version = (Select-Xml -Path Build/Modules/Bannerlord.EncyclopediaExtender/SubModule.xml -XPath //Version | Select-Object -First 1).Node.Attributes.Value
+          $version = (Select-Xml -Path Build/Modules/$env:REPO_NAME/SubModule.xml -XPath //Version | Select-Object -First 1).Node.Attributes.Value
           Write-Output "::set-output name=version::$version"
           Write-Output "::set-output name=release-name::Release $version"
           Write-Output $version
