@@ -24,6 +24,20 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin(nameof(EncyclopediaHeroPageVM.RefreshValues), true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
+        private static readonly TextObject _equipmentTextObject = GameTexts.FindText("str_equipment", null);
+        private static readonly TextObject _attributesTextObject = GameTexts.FindText("str_attributes", null);
+        private static readonly TextObject _levelTextObject = GameTexts.FindText("str_level", null);
+
+        private static readonly TextObject _dowryPricesTextObject = new TextObject("{=vKsoAjVZRxL}Dowry Prices");
+        private static readonly TextObject _perksTextObject = new TextObject("{=fVmG6YTtQai}Perks");
+        private static readonly TextObject _equipmentValueTextObject = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
+        private static readonly TextObject _prisonerTextObject = new TextObject("{=MUOPLUL4Fru}Prisoner:");
+        private static readonly TextObject _freeTextObject = new TextObject("{=EfO4DVzClVp}Free");
+        private static readonly TextObject _armyTextObject = new TextObject("{=2LlrWkeotbJ}Army:");
+        private static readonly TextObject _notInArmyTextObject = new TextObject("{=nBA38eYcLkV}Not in Army");
+        private static readonly TextObject _persuasionDowryTextObject = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
+        private static readonly TextObject _barterDowryTextObject = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
+
         private readonly Hero? _hero;
 
         [DataSourceProperty]
@@ -71,10 +85,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         public override void OnRefresh()
         {
-            DowryPricesText = new TextObject("{=vKsoAjVZRxL}Dowry Prices").ToString();
-            EquipmentText = GameTexts.FindText("str_equipment", null).ToString();
-            PerksText = new TextObject("{=fVmG6YTtQai}Perks").ToString();
-            AttributesText = GameTexts.FindText("str_attributes", null).ToString();
+            DowryPricesText = _dowryPricesTextObject.ToString();
+            EquipmentText = _equipmentTextObject.ToString();
+            PerksText = _perksTextObject.ToString();
+            AttributesText = _attributesTextObject.ToString();
 
             MarriagePrices.Clear();
             HeroItems.Clear();
@@ -87,87 +101,69 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 return;
             }
 
-            AddViewModelStats();
-            AddDowryValues();
-            AddHeroItems();
-            AddPerks();
-            AddAttributes();
+            AddViewModelStats(_hero);
+            AddDowryValues(_hero);
+            AddHeroItems(_hero);
+            AddPerks(_hero);
+            AddAttributes(_hero);
         }
 
-        private void AddViewModelStats()
+        private void AddViewModelStats(Hero hero)
         {
-            TextObject levelHeader = GameTexts.FindText("str_level", null);
-            AddViewModelStatPair($"{levelHeader}:", _hero!.Level);
+            AddViewModelStatPair($"{_levelTextObject}:", hero.Level);
 
-            TextObject equipmentValueHeader = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
-            var equipmentValue = CalculateEquipmentValue(_hero);
-            AddViewModelStatPair(equipmentValueHeader, equipmentValue);
+            var equipmentValue = CalculateEquipmentValue(hero);
+            AddViewModelStatPair(_equipmentValueTextObject, equipmentValue);
 
-            TextObject prisonerHeader = new TextObject("{=MUOPLUL4Fru}Prisoner:");
-            TextObject freeText = new TextObject("{=EfO4DVzClVp}Free");
-            var prisonerValue = _hero.IsPrisoner
-                ? _hero.PartyBelongedToAsPrisoner.Name.ToString()
-                : freeText.ToString();
-            AddViewModelStatPair(prisonerHeader, prisonerValue);
+            var prisonerValue = hero.IsPrisoner
+                ? hero.PartyBelongedToAsPrisoner.Name.ToString()
+                : _freeTextObject.ToString();
+            AddViewModelStatPair(_prisonerTextObject, prisonerValue);
 
-            TextObject armyHeader = new TextObject("{=2LlrWkeotbJ}Army:");
-            TextObject notInArmyHeader = new TextObject("{=nBA38eYcLkV}Not in Army");
-            var armyValue = _hero.PartyBelongedTo != null && _hero.PartyBelongedTo.Army != null
-                ? _hero.PartyBelongedTo.Army.Name.ToString()
-                : notInArmyHeader.ToString();
-            AddViewModelStatPair(armyHeader, armyValue);
+            var armyValue = hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null
+                ? hero.PartyBelongedTo.Army.Name.ToString()
+                : _notInArmyTextObject.ToString();
+            AddViewModelStatPair(_armyTextObject, armyValue);
         }
 
-        private void AddDowryValues()
+        private void AddDowryValues(Hero hero)
         {
-            if (_hero is null || _hero.Clan is null || _hero.Clan.Leader is null || !CanMarry(_hero))
+            if (hero.Clan is null || hero.Clan.Leader is null || !CanMarry(hero))
             {
                 return;
             }
 
             var mainHero = Hero.MainHero;
 
-            if (CanMarry(mainHero) && mainHero.IsFemale != _hero.IsFemale)
+            if (CanMarry(mainHero) && mainHero.IsFemale != hero.IsFemale)
             {
-                MarriageBarterable mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, _hero, mainHero);
-                TextObject persuasionDowryHeader = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
-                var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(_hero.Clan);
+                var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
+                var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
                 var persuasionDowryFormatted = persuasionDowryValue.ToString("N0");
-                MarriagePrices.AddPair(persuasionDowryHeader, persuasionDowryFormatted);
+                MarriagePrices.AddPair(_persuasionDowryTextObject, persuasionDowryFormatted);
 
-                MarriageBarterable heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, _hero);
-                int dowry = -heroToMainHero.GetUnitValueForFaction(_hero.Clan);
-                /*
-                // Normalize prices to 0 relation
-                int personal_relation = _hero.GetRelation(mh);
-                dowry -= personal_relation * 1000;
-                */
-                TextObject barterDowryHeader = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
-                MarriagePrices.AddPair(barterDowryHeader, dowry.ToString("N0"));
+                var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
+                int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
+                MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString("N0"));
             }
 
             foreach (var clanHero in mainHero.Clan.Lords)
             {
-                if (clanHero != mainHero && CanMarry(clanHero) && clanHero.IsFemale != _hero.IsFemale)
+                if (clanHero != mainHero && CanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
                 {
-                    MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, _hero);
-                    int dowry = -heroToClanHero.GetUnitValueForFaction(_hero.Clan);
+                    MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, hero);
+                    int dowry = -heroToClanHero.GetUnitValueForFaction(hero.Clan);
                     var relation = CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mainHero, false);
                     MarriagePrices.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString("N0"));
                 }
             }
         }
 
-        private void AddHeroItems()
+        private void AddHeroItems(Hero hero)
         {
-            if (_hero is null)
-            {
-                return;
-            }
-
             Town town = Settlement.FindFirst(z => z.IsTown).Town;
 
-            var equipment = GetHeroEquipment(_hero);
+            var equipment = GetHeroEquipment(hero);
 
             var itemRoster = new ItemRoster();
             var inventoryLogic = new InventoryLogic(null);
@@ -190,7 +186,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
                 var price = town.GetItemPrice(element.EquipmentElement, MobileParty.MainParty, true);
                 var itemVm = new SPItemVM(inventoryLogic,
-                    _hero.IsFemale,
+                    hero.IsFemale,
                     true,
                     InventoryMode.Default,
                     element,
@@ -203,15 +199,15 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             }
         }
 
-        private void AddPerks()
+        private void AddPerks(Hero hero)
         {
-            Dictionary<SkillObject, List<PerkObject>> perksPerSkill = new Dictionary<SkillObject, List<PerkObject>>();
+            var perksPerSkill = new Dictionary<SkillObject, List<PerkObject>>();
 
             Traverse.IterateFields(Campaign.Current.DefaultPerks, tr =>
             {
                 var uncasted = tr.GetValue();
 
-                if (uncasted is PerkObject perk && _hero.GetPerkValue(perk))
+                if (uncasted is PerkObject perk && hero.GetPerkValue(perk))
                 {
                     List<PerkObject> skillGroup;
                     if (perksPerSkill.ContainsKey(perk.Skill))
@@ -247,11 +243,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             }
         }
 
-        private void AddAttributes()
+        private void AddAttributes(Hero hero)
         {
             foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Extensions.Attributes.All)
             {
-                Attributes.Add(new ExtenderAttributeVM(_hero, att));
+                Attributes.Add(new ExtenderAttributeVM(hero, att));
             }
         }
 
@@ -271,7 +267,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 }
             }
 
-            Town town = Settlement.FindFirst((z) => z.IsTown).Town;
+            Town town = Settlement.FindFirst(z => z.IsTown).Town;
             return equipment.OrderByDescending(element => town.GetItemPrice(element, MobileParty.MainParty, true));
         }
 
@@ -291,9 +287,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private static bool CanMarry(Hero maidenOrSuitor)
         {
-            return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord &&
-                !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable && !maidenOrSuitor.IsTemplate &&
-                maidenOrSuitor.CharacterObject.Age >= 18;
+            return maidenOrSuitor.IsAlive && !maidenOrSuitor.IsPrisoner
+                && maidenOrSuitor.Spouse == null && maidenOrSuitor.IsLord
+                && !maidenOrSuitor.IsMinorFactionHero && !maidenOrSuitor.IsNotable
+                && !maidenOrSuitor.IsTemplate && maidenOrSuitor.CharacterObject.Age >= 18;
         }
 
         private void AddViewModelStatPair<T>(string header, T value)
