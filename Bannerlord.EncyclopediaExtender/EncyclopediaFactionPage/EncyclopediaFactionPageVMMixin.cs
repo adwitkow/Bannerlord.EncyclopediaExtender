@@ -1,5 +1,4 @@
 ﻿using Bannerlord.UIExtenderEx.ViewModels;
-using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem;
@@ -97,14 +96,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
         {
             MBBindingList<HeroVM> list = new MBBindingList<HeroVM>();
 
-            var prisoners = Hero.AllAliveHeroes.Where(hero => hero.IsPrisoner);
+            var prisoners = Hero.AllAliveHeroes
+                .Where(hero => IsPrisonerOfFaction(hero, capturerFaction));
+
             foreach (Hero hero in prisoners)
             {
-                PartyBase partyBelongedToAsPrisoner = hero.PartyBelongedToAsPrisoner;
-                if (partyBelongedToAsPrisoner.MapFaction == capturerFaction)
-                {
-                    list.Add(new HeroVM(hero));
-                }
+                list.Add(new HeroVM(hero));
             }
 
             return list;
@@ -120,6 +117,22 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             }
 
             return list;
+        }
+
+        private static bool IsPrisonerOfFaction(Hero hero, IFaction capturerFaction)
+        {
+            if (!hero.IsPrisoner)
+            {
+                return false;
+            }
+
+            var capturerParty = hero.PartyBelongedToAsPrisoner;
+            if (capturerParty is null)
+            {
+                return false;
+            }
+
+            return capturerParty.MapFaction == capturerFaction;
         }
     }
 }

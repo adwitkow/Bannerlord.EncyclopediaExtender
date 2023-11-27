@@ -24,6 +24,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin(nameof(EncyclopediaHeroPageVM.RefreshValues), true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
+        private const string _unknown = "Unknown";
+
         private static readonly TextObject _equipmentTextObject = GameTexts.FindText("str_equipment", null);
         private static readonly TextObject _attributesTextObject = GameTexts.FindText("str_attributes", null);
         private static readonly TextObject _levelTextObject = GameTexts.FindText("str_level", null);
@@ -115,15 +117,38 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             var equipmentValue = CalculateEquipmentValue(hero);
             AddViewModelStatPair(_equipmentValueTextObject, equipmentValue);
 
-            var prisonerValue = hero.IsPrisoner
-                ? hero.PartyBelongedToAsPrisoner.Name.ToString()
-                : _freeTextObject.ToString();
+            string prisonerValue = GetImprisonmentValue(hero);
             AddViewModelStatPair(_prisonerTextObject, prisonerValue);
 
             var armyValue = hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null
                 ? hero.PartyBelongedTo.Army.Name.ToString()
                 : _notInArmyTextObject.ToString();
             AddViewModelStatPair(_armyTextObject, armyValue);
+        }
+
+        private static string GetImprisonmentValue(Hero hero)
+        {
+            string result;
+
+            if (hero.IsPrisoner)
+            {
+                var capturerParty = hero.PartyBelongedToAsPrisoner;
+
+                if (capturerParty is not null)
+                {
+                    result = capturerParty.Name.ToString();
+                }
+                else
+                {
+                    result = _unknown;
+                }
+            }
+            else
+            {
+                result = _freeTextObject.ToString();
+            }
+
+            return result;
         }
 
         private void AddDowryValues(Hero hero)
