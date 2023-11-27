@@ -164,12 +164,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             {
                 var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
                 var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
-                var persuasionDowryFormatted = persuasionDowryValue.ToString("N0");
+                var persuasionDowryFormatted = persuasionDowryValue.ToString(Constants.WholeNumberFormat);
                 MarriagePrices.AddPair(_persuasionDowryTextObject, persuasionDowryFormatted);
 
                 var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
                 int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
-                MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString("N0"));
+                MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString(Constants.WholeNumberFormat));
             }
 
             foreach (var clanHero in mainHero.Clan.Lords)
@@ -179,7 +179,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                     MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, hero);
                     int dowry = -heroToClanHero.GetUnitValueForFaction(hero.Clan);
                     var relation = CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mainHero, false);
-                    MarriagePrices.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString("N0"));
+                    MarriagePrices.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString(Constants.WholeNumberFormat));
                 }
             }
         }

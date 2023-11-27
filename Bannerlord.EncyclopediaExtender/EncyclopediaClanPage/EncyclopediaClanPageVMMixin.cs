@@ -43,7 +43,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             }
 
             var cashHeader = new TextObject("{=beBL5H1u2fu}Cash:");
-            var cashValue = _clan.Leader.Gold.ToString("N0");
+            var cashValue = _clan.Leader.Gold.ToString(Constants.WholeNumberFormat);
             ViewModel.ClanInfo.AddPair(cashHeader, cashValue);
 
             var debtHeader = new TextObject("{=C1SUFxYrMXk}Debt:");
@@ -56,12 +56,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             {
                 kingdomWealthShare = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
                 var kingdomWealthShareHeader = new TextObject("{=a2uZeyyIdQX}Share of Kingdom Wealth:");
-                ViewModel.ClanInfo.AddPair(kingdomWealthShareHeader, kingdomWealthShare.ToString("N0"));
+                ViewModel.ClanInfo.AddPair(kingdomWealthShareHeader, kingdomWealthShare.ToString(Constants.WholeNumberFormat));
             }
 
             var totalWealthHeader = new TextObject("{=nAr2HzgGiVn}Nominal Total Wealth:");
             var totalWealth = _clan.Leader.Gold + kingdomWealthShare - _clan.DebtToKingdom;
-            var totalWealthFormatted = totalWealth.ToString("N0");
+            var totalWealthFormatted = totalWealth.ToString(Constants.WholeNumberFormat);
             ViewModel.ClanInfo.AddPair(totalWealthHeader, totalWealthFormatted);
 
             if (CanClanDefect(_clan))
@@ -74,12 +74,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                     var barterValue = -barterable.GetValueForFaction(_clan);
 
                     var defectionPriceHeader = new TextObject("{=mfaNceRHqRk}Defection Price:");
-                    DefectionInfo.AddPair(defectionPriceHeader, barterValue.ToString("N0"));
+                    DefectionInfo.AddPair(defectionPriceHeader, barterValue.ToString(Constants.WholeNumberFormat));
 
                     var cashRequiredHeader = new TextObject("{=vMSUkkSBqeO}Cash required to persuade:");
                     var cashRequired = barterValue > 2000000f
                         ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
-                        : Math.Max(0, barterValue * 3 - 750000).ToString("N0");
+                        : Math.Max(0, barterValue * 3 - 750000).ToString(Constants.WholeNumberFormat);
                     DefectionInfo.AddPair(cashRequiredHeader, cashRequired);
                 }
 

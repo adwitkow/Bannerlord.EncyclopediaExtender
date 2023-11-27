@@ -13,8 +13,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
     [ViewModelMixin(nameof(EncyclopediaFactionPageVM.RefreshValues), true)]
     public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
-        private const string _moneyFormat = "N0";
-
         private static readonly TextObject _kingdomWealthTextObject = new TextObject("{=VidmvRvXecq}Kingdom Wealth");
         private static readonly TextObject _capturedHeroesTextObject = new TextObject("{=FwJELs27ac7}Captured Heroes");
         private static readonly TextObject _imprisonedHeroesTextObject = new TextObject("{=1CYZYNXTfN9}Imprisoned Heroes");
@@ -84,12 +82,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             return kingdom.Clans
                 .Where(clan => !clan.IsUnderMercenaryService && !clan.IsMinorFaction)
                 .Sum(clan => clan.Leader.Gold - clan.DebtToKingdom)
-                .ToString(_moneyFormat);
+                .ToString(Constants.WholeNumberFormat);
         }
 
         private static string GetFormattedKingdomBank(Kingdom kingdom)
         {
-            return kingdom.KingdomBudgetWallet.ToString(_moneyFormat);
+            return kingdom.KingdomBudgetWallet.ToString(Constants.WholeNumberFormat);
         }
 
         private static MBBindingList<HeroVM> GetCapturedHeroes(IFaction capturerFaction)
