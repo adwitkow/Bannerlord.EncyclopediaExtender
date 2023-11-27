@@ -14,6 +14,14 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
     [ViewModelMixin(nameof(EncyclopediaFactionPageVM.RefreshValues), true)]
     public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
+        private const string _moneyFormat = "N0";
+
+        private static readonly TextObject _kingdomWealthTextObject = new TextObject("{=VidmvRvXecq}Kingdom Wealth");
+        private static readonly TextObject _capturedHeroesTextObject = new TextObject("{=FwJELs27ac7}Captured Heroes");
+        private static readonly TextObject _imprisonedHeroesTextObject = new TextObject("{=1CYZYNXTfN9}Imprisoned Heroes");
+        private static readonly TextObject _kingdomBankTextObject = new TextObject("{=z4z97KSX12m}Kingdom Bank:");
+        private static readonly TextObject _sumOfClanWealthTextObject = new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:");
+
         private readonly Kingdom? _kingdom;
 
         public EncyclopediaFactionPageVMMixin(EncyclopediaFactionPageVM vm) : base(vm)
@@ -23,6 +31,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             WealthInfo = new MBBindingList<StringPairItemVM>();
             CapturedHeroes = new MBBindingList<HeroVM>();
             ImprisonedHeroes = new MBBindingList<HeroVM>();
+
             KingdomWealthText = "";
             CapturedHeroesText = "";
             ImprisonedHeroesText = "";
@@ -48,9 +57,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 
         public override void OnRefresh()
         {
-            KingdomWealthText = new TextObject("{=VidmvRvXecq}Kingdom Wealth").ToString();
-            CapturedHeroesText = new TextObject("{=FwJELs27ac7}Captured Heroes").ToString();
-            ImprisonedHeroesText = new TextObject("{=1CYZYNXTfN9}Imprisoned Heroes").ToString();
+            KingdomWealthText = _kingdomWealthTextObject.ToString();
+            CapturedHeroesText = _capturedHeroesTextObject.ToString();
+            ImprisonedHeroesText = _imprisonedHeroesTextObject.ToString();
+
             WealthInfo.Clear();
             CapturedHeroes.Clear();
             ImprisonedHeroes.Clear();
@@ -60,21 +70,30 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
                 return;
             }
 
-            var kingdomBankHeader = new TextObject("{=z4z97KSX12m}Kingdom Bank:");
-            var kingdomBankFormatted = _kingdom.KingdomBudgetWallet.ToString("N0");
-            WealthInfo.AddPair(kingdomBankHeader, kingdomBankFormatted);
+            var kingdomBank = GetFormattedKingdomBank(_kingdom);
+            WealthInfo.AddPair(_kingdomBankTextObject, kingdomBank);
 
-            var clansWealthHeader = new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:");
-            var clansWealthFormatted = _kingdom.Clans
+            var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
+            WealthInfo.AddPair(_sumOfClanWealthTextObject, sumOfClanWealth);
+
+            CapturedHeroes = GetCapturedHeroes(_kingdom);
+            ImprisonedHeroes = GetImprisonedHeroes(_kingdom);
+        }
+
+        private static string CalculateSumOfClanWealth(Kingdom kingdom)
+        {
+            return kingdom.Clans
                 .Where(clan => !clan.IsUnderMercenaryService && !clan.IsMinorFaction)
                 .Sum(clan => clan.Leader.Gold - clan.DebtToKingdom)
-                .ToString("N0");
-            WealthInfo.AddPair(clansWealthHeader, clansWealthFormatted);
-
-            CapturedHeroes = GetHeroesCapturedBy(_kingdom);
-            ImprisonedHeroes = GetHeroesImprisoned(_kingdom);
+                .ToString(_moneyFormat);
         }
-        public static MBBindingList<HeroVM> GetHeroesCapturedBy(IFaction capturerFaction)
+
+        private static string GetFormattedKingdomBank(Kingdom kingdom)
+        {
+            return kingdom.KingdomBudgetWallet.ToString(_moneyFormat);
+        }
+
+        private static MBBindingList<HeroVM> GetCapturedHeroes(IFaction capturerFaction)
         {
             MBBindingList<HeroVM> list = new MBBindingList<HeroVM>();
 
@@ -90,7 +109,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 
             return list;
         }
-        public static MBBindingList<HeroVM> GetHeroesImprisoned(IFaction capturedFaction)
+        private static MBBindingList<HeroVM> GetImprisonedHeroes(IFaction capturedFaction)
         {
             MBBindingList<HeroVM> list = new MBBindingList<HeroVM>();
 
