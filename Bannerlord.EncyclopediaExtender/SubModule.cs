@@ -20,11 +20,5 @@ namespace Bannerlord.EncyclopediaExtender
             _extender.Register(typeof(SubModule).Assembly);
             _extender.Enable();
         }
-
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
-            base.OnBeforeInitialModuleScreenSetAsRoot();
-            DCCCompatibility.DCCPatcher(_harmony);
-        }
     }
 }
