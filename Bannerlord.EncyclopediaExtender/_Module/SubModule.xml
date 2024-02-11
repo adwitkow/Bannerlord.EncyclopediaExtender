@@ -10,22 +10,12 @@
   <DependedModules>
     <DependedModule Id="Bannerlord.Harmony" />
     <DependedModule Id="Bannerlord.UIExtenderEx" />
-    <DependedModule Id="Native" />
-    <DependedModule Id="SandBoxCore" />
-    <DependedModule Id="Sandbox" />
-    <DependedModule Id="StoryMode" />
-    <DependedModule Id="CustomBattle" />
   </DependedModules>
   <!-- Community Dependency Metadata -->
   <!-- https://github.com/BUTR/Bannerlord.BUTRLoader#for-modders -->
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" />
-    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
-    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
-    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
-    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
   </DependedModuleMetadatas>
   <!-- Community Dependency Metadata -->
   <SubModules>
