@@ -28,7 +28,7 @@
     </PackageReference>
     <PackageReference Include="Bannerlord.ModuleLoader.Injector" Version="$(BUTRModuleLoaderVersion)" />
     <PackageReference Include="Bannerlord.ModuleManager.Source" Version="$(BUTRModuleManagerVersion)" />
-    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" IncludeAssets="compile" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.1.1" IncludeAssets="compile" />
     <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.11.0" IncludeAssets="compile" />
 
     <!-- ReferenceAssemblies -->
