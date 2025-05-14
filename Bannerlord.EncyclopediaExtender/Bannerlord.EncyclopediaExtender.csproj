@@ -26,7 +26,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Bannerlord.ModuleLoader.Injector" Version="$(BUTRModuleLoaderVersion)" />
+    <PackageReference Include="Bannerlord.ModuleLoader.Injector" Version="1.0.1.50">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Bannerlord.ModuleManager.Source" Version="5.0.226">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
