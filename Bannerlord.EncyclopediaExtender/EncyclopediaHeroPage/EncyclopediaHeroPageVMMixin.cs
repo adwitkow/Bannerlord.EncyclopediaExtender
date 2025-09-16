@@ -2,6 +2,7 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
+using Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -172,7 +173,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString(Constants.WholeNumberFormat));
             }
 
-            foreach (var clanHero in mainHero.Clan.Lords)
+            foreach (var clanHero in mainHero.Clan.Heroes)
             {
                 if (clanHero != mainHero && CanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
                 {
@@ -197,9 +198,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 false,
                 true,
                 CharacterObject.PlayerCharacter,
-                InventoryManager.InventoryCategoryType.None,
+                InventoryScreenHelper.InventoryCategoryType.None,
                 town.MarketData,
-                false);
+                false,
+                InventoryScreenHelper.InventoryMode.Default);
 
             foreach (var element in equipment)
             {
@@ -208,16 +210,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             foreach (var element in itemRoster)
             {
-
                 var price = town.GetItemPrice(element.EquipmentElement, MobileParty.MainParty, true);
                 var itemVm = new SPItemVM(inventoryLogic,
                     hero.IsFemale,
                     true,
-                    InventoryMode.Default,
+                    InventoryScreenHelper.InventoryMode.Default,
                     element,
                     InventoryLogic.InventorySide.OtherInventory,
-                    string.Empty,
-                    string.Empty,
                     price);
 
                 HeroItems.Add(itemVm);
