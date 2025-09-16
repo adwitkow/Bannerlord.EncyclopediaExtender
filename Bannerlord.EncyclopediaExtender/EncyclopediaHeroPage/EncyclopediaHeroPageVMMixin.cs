@@ -3,6 +3,7 @@ using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
 using Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -173,7 +174,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString(Constants.WholeNumberFormat));
             }
 
-            foreach (var clanHero in mainHero.Clan.Heroes)
+            foreach (var clanHero in GetClanHeroes(mainHero))
             {
                 if (clanHero != mainHero && CanMarry(clanHero) && clanHero.IsFemale != hero.IsFemale)
                 {
@@ -192,16 +193,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             var equipment = GetHeroEquipment(hero);
 
             var itemRoster = new ItemRoster();
-            var inventoryLogic = new InventoryLogic(null);
-            inventoryLogic.Initialize(itemRoster,
-                MobileParty.MainParty,
-                false,
-                true,
-                CharacterObject.PlayerCharacter,
-                InventoryScreenHelper.InventoryCategoryType.None,
-                town.MarketData,
-                false,
-                InventoryScreenHelper.InventoryMode.Default);
+            var inventoryLogic = CreateNewInventoryLogic(town, itemRoster);
 
             foreach (var element in equipment)
             {
@@ -211,16 +203,33 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             foreach (var element in itemRoster)
             {
                 var price = town.GetItemPrice(element.EquipmentElement, MobileParty.MainParty, true);
-                var itemVm = new SPItemVM(inventoryLogic,
-                    hero.IsFemale,
-                    true,
-                    InventoryScreenHelper.InventoryMode.Default,
-                    element,
-                    InventoryLogic.InventorySide.OtherInventory,
-                    price);
+                var itemVm = CreateNewSPItemVM(hero, inventoryLogic, element, price);
 
                 HeroItems.Add(itemVm);
             }
+        }
+
+        private static SPItemVM CreateNewSPItemVM(Hero hero, InventoryLogic inventoryLogic, ItemRosterElement element, int price)
+        {
+#if v130
+            return new SPItemVM(inventoryLogic,
+                hero.IsFemale,
+                true,
+                InventoryScreenHelper.InventoryMode.Default,
+                element,
+                InventoryLogic.InventorySide.OtherInventory,
+                price);
+#else
+            return new SPItemVM(inventoryLogic,
+                hero.IsFemale,
+                true,
+                InventoryMode.Default,
+                element,
+                InventoryLogic.InventorySide.OtherInventory,
+                string.Empty,
+                string.Empty,
+                price);
+#endif
         }
 
         private void AddPerks(Hero hero)
@@ -330,6 +339,43 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         private void AddViewModelStatPair<T>(TextObject header, T value)
         {
             AddViewModelStatPair(header.ToString(), value);
+        }
+
+        private static IEnumerable<Hero> GetClanHeroes(Hero hero)
+        {
+#if v130
+            return hero.Clan.Heroes;
+#else
+            return hero.Clan.Lords;
+#endif
+        }
+
+        private static InventoryLogic CreateNewInventoryLogic(Town town, ItemRoster itemRoster)
+        {
+            var inventoryLogic = new InventoryLogic(null);
+
+#if v130
+            inventoryLogic.Initialize(itemRoster,
+                MobileParty.MainParty,
+                false,
+                true,
+                CharacterObject.PlayerCharacter,
+                InventoryScreenHelper.InventoryCategoryType.None,
+                town.MarketData,
+                false,
+                InventoryScreenHelper.InventoryMode.Default);
+#else
+            inventoryLogic.Initialize(itemRoster,
+                MobileParty.MainParty,
+                false,
+                true,
+                CharacterObject.PlayerCharacter,
+                InventoryManager.InventoryCategoryType.None,
+                town.MarketData,
+                false);
+#endif
+
+            return inventoryLogic;
         }
     }
 }
