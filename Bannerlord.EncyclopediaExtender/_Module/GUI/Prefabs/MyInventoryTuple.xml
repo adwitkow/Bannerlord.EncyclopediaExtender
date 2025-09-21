@@ -111,7 +111,7 @@
 
         <Widget Id="DragWidget" IsVisible="false" WidthSizePolicy = "Fixed" HeightSizePolicy = "Fixed" SuggestedWidth = "128" SuggestedHeight = "60" HorizontalAlignment = "Left" VerticalAlignment="Top" Sprite="Inventory\portrait" DoNotPassEventsToChildren="true" IsDisabled="true">
           <Children>
-            <ImageIdentifierWidget DataSource="{ImageIdentifier}" ImageId="@Id" AdditionalArgs="@AdditionalArgs" ImageTypeCode="@ImageTypeCode" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" MarginLeft="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" MarginRight="!Image.Padding" />
+            <ImageIdentifierWidget DataSource="{ImageIdentifier}" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" MarginLeft="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" MarginRight="!Image.Padding" />
           </Children>
         </Widget>
 
@@ -201,7 +201,7 @@
                         <InventoryItemValueTextWidget Id="CostText" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IntText="@ItemCost" DoNotAcceptEvents="true"  Brush="InventoryItemCostFont" Brush.TextHorizontalAlignment="Center" ProfitType="@ProfitType" IsVisible="@IsTransferable"/>
                       </Children>
                     </Widget>
-                    <ImageIdentifierWidget DoNotAcceptEvents="true" DataSource="{ImageIdentifier}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="111" SuggestedHeight="51" MarginLeft="!Inventory.Tuple.ThumbnailMargin" MarginTop="2" ImageId="@Id" ImageTypeCode="@ImageTypeCode" AdditionalArgs="@AdditionalArgs" LoadingIconWidget="LoadingIconWidget">
+                    <ImageIdentifierWidget DoNotAcceptEvents="true" DataSource="{ImageIdentifier}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="111" SuggestedHeight="51" MarginLeft="!Inventory.Tuple.ThumbnailMargin" MarginTop="2" ImageId="@Id" TextureProviderName="@TextureProviderName" AdditionalArgs="@AdditionalArgs" LoadingIconWidget="LoadingIconWidget">
                       <Children>
                         <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="Inventory\tuple_shadow" AlphaFactor="0.7"/>
                         <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>

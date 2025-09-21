@@ -11,7 +11,7 @@
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
           <Children>
             <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.SubPage.Element"  />
-            <InventoryImageIdentifierWidget Id="ImageIdentifier" DoNotAcceptEvents="true" DataSource="{ImageIdentifier}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="111" SuggestedHeight="51" MarginTop="2" MarginBottom="2" ImageId="@Id" ImageTypeCode="@ImageTypeCode" AdditionalArgs="@AdditionalArgs" LoadingIconWidget="LoadingIconWidget"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <InventoryImageIdentifierWidget Id="ImageIdentifier" DoNotAcceptEvents="true" DataSource="{ImageIdentifier}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="111" SuggestedHeight="51" MarginTop="2" MarginBottom="2" ImageId="@Id" TextureProviderName="@TextureProviderName" AdditionalArgs="@AdditionalArgs" LoadingIconWidget="LoadingIconWidget"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
               <Children>
                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="Inventory\tuple_shadow" AlphaFactor="0.7"/>
                 <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
