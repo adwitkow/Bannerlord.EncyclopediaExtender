@@ -12,7 +12,7 @@
     <DefineConstants Condition="$(GameMinor) &lt; 2">$(DefineConstants);LOWER_THAN_1_2</DefineConstants>
     <DefineConstants Condition="$(GameMinor) &lt; 3">$(DefineConstants);LOWER_THAN_1_3</DefineConstants>
   </PropertyGroup>
-  
+
   <!-- NuGet Packages -->
   <ItemGroup>
     <PackageReference Include="Nullable" Version="1.3.1">
@@ -55,14 +55,6 @@
       <Regex>\$mcmversion\$</Regex>
       <Replacement>$(MCMVersion)</Replacement>
     </SubModuleOverrides>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="_Module\GUI\Prefabs\ItemElement.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="_Module\GUI\Prefabs\SettlementPage.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

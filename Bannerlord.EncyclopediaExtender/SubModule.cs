@@ -1,6 +1,6 @@
 ﻿using Bannerlord.UIExtenderEx;
-using TaleWorlds.MountAndBlade;
 using HarmonyLib;
+using TaleWorlds.MountAndBlade;
 
 namespace Bannerlord.EncyclopediaExtender
 {
@@ -14,6 +14,9 @@ namespace Bannerlord.EncyclopediaExtender
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+
+            PrefabInjector.RegisterHeroItemTuple();
+            PrefabInjector.RegisterSettlementProducedItem();
 
             _harmony.PatchAll();
 
