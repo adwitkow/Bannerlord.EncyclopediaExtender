@@ -3,7 +3,6 @@ using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
 using Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -20,7 +19,6 @@ using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using static Helpers.InventoryScreenHelper;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 {
