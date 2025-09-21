@@ -20,6 +20,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using static Helpers.InventoryScreenHelper;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 {
@@ -211,15 +212,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private static SPItemVM CreateNewSPItemVM(Hero hero, InventoryLogic inventoryLogic, ItemRosterElement element, int price)
         {
-#if v130
-            return new SPItemVM(inventoryLogic,
-                hero.IsFemale,
-                true,
-                InventoryScreenHelper.InventoryMode.Default,
-                element,
-                InventoryLogic.InventorySide.OtherInventory,
-                price);
-#else
+#if LOWER_THAN_1_3
             return new SPItemVM(inventoryLogic,
                 hero.IsFemale,
                 true,
@@ -228,6 +221,14 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 InventoryLogic.InventorySide.OtherInventory,
                 string.Empty,
                 string.Empty,
+                price);
+#else
+            return new SPItemVM(inventoryLogic,
+                hero.IsFemale,
+                true,
+                InventoryScreenHelper.InventoryMode.Default,
+                element,
+                InventoryLogic.InventorySide.OtherInventory,
                 price);
 #endif
         }
@@ -343,10 +344,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private static IEnumerable<Hero> GetClanHeroes(Hero hero)
         {
-#if v130
-            return hero.Clan.Heroes;
-#else
+#if LOWER_THAN_1_3
             return hero.Clan.Lords;
+#else
+            return hero.Clan.Heroes;
 #endif
         }
 
@@ -354,7 +355,16 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         {
             var inventoryLogic = new InventoryLogic(null);
 
-#if v130
+#if LOWER_THAN_1_3
+            inventoryLogic.Initialize(itemRoster,
+                MobileParty.MainParty,
+                false,
+                true,
+                CharacterObject.PlayerCharacter,
+                InventoryManager.InventoryCategoryType.None,
+                town.MarketData,
+                false);
+#else
             inventoryLogic.Initialize(itemRoster,
                 MobileParty.MainParty,
                 false,
@@ -364,15 +374,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 town.MarketData,
                 false,
                 InventoryScreenHelper.InventoryMode.Default);
-#else
-            inventoryLogic.Initialize(itemRoster,
-                MobileParty.MainParty,
-                false,
-                true,
-                CharacterObject.PlayerCharacter,
-                InventoryManager.InventoryCategoryType.None,
-                town.MarketData,
-                false);
 #endif
 
             return inventoryLogic;

@@ -5,11 +5,12 @@
     <Configurations>Stable_Debug;Stable_Release;Beta_Debug;Beta_Release</Configurations>
   </PropertyGroup>
 
-  <!-- STABLE, BETA, and e.g., e157 / e158 Constants Defined in Code -->
   <PropertyGroup>
-    <GameVersionFlat>$([System.String]::Copy('$(GameVersion)').Replace('.',''))</GameVersionFlat>
-    <GameVersionConstant>v$(GameVersionFlat)</GameVersionConstant>
-    <DefineConstants>$(DefineConstants);$(GameVersionConstant)</DefineConstants>
+    <GameMinor>$([System.Convert]::ToInt32($([System.String]::Copy('$(GameVersion)').Split('.')[1])))</GameMinor>
+
+    <DefineConstants Condition="$(GameMinor) &lt; 1">$(DefineConstants);LOWER_THAN_1_1</DefineConstants>
+    <DefineConstants Condition="$(GameMinor) &lt; 2">$(DefineConstants);LOWER_THAN_1_2</DefineConstants>
+    <DefineConstants Condition="$(GameMinor) &lt; 3">$(DefineConstants);LOWER_THAN_1_3</DefineConstants>
   </PropertyGroup>
   
   <!-- NuGet Packages -->
