@@ -9,7 +9,7 @@ public static class PrefabInjector
 {
     public static void RegisterHeroItemTuple()
     {
-        var doc = LoadVanillaPrefabXml("InventoryItemTuple");
+        var doc = LoadVanillaGuiPrefabXml("SandBox", "Inventory", "InventoryItemTuple");
 
         var inventoryItemTupleWidget = doc
             .SelectSingleNode("/Prefab/Window/InventoryItemTupleWidget");
@@ -82,11 +82,20 @@ public static class PrefabInjector
             doc);
     }
 
-    private static XmlDocument LoadVanillaPrefabXml(string prefabName)
+    private static XmlDocument LoadVanillaGuiPrefabXml(string module, string directory, string prefabName)
     {
-        var originalPrefabPath = UIResourceManager.WidgetFactory.GetCustomTypePath(prefabName);
+        var basePath = TaleWorlds.Engine.Utilities.GetBasePath();
+        var originalPrefabPath = Path.Combine(
+            basePath,
+            "Modules",
+            module,
+            "GUI",
+            "Prefabs",
+            directory,
+            $"{prefabName}.xml");
+        
         var doc = new XmlDocument();
-        doc.Load(Path.Combine(originalPrefabPath, $"{prefabName}.xml"));
+        doc.Load(originalPrefabPath);
 
         return doc;
     }
