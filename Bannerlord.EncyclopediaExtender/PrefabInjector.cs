@@ -1,7 +1,6 @@
 ﻿using Bannerlord.UIExtenderEx.ResourceManager;
 using System.IO;
 using System.Xml;
-using TaleWorlds.Engine.GauntletUI;
 
 namespace Bannerlord.EncyclopediaExtender;
 
@@ -19,9 +18,14 @@ public static class PrefabInjector
         RenameNode(doc, inventoryTupleExtensionControlsWidget, "Widget");
         RenameNode(doc, inventoryItemTupleWidget, "ListPanel");
 
-        var transferButtonElement = doc
-            .SelectSingleNode("//InventoryTransferButtonWidget[@Id='TransferButton']");
-        transferButtonElement.Attributes["IsVisible"].Value = "false";
+#if LOWER_THAN_1_3
+        //var transferButtonElement = doc
+        //    .SelectSingleNode("//InventoryTransferButtonWidget[@Id='TransferButton']");
+        //transferButtonElement.Attributes["IsVisible"].Value = "false";
+#else
+        var buyButtonElement = doc.SelectSingleNode("//Widget[@Id='BuyButtonParent']");
+        buyButtonElement.Attributes["IsHidden"].Value = "true";
+#endif
 
         var commentNodes = doc.SelectNodes("//comment()");
         foreach (XmlNode item in commentNodes)
