@@ -42,7 +42,7 @@
     <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.3.5.102453" PrivateAssets="All" />
     <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="1.3.5.102453" PrivateAssets="All" />
     <PackageReference Include="Bannerlord.ReferenceAssemblies.StoryMode" Version="$(GameVersion).*-*" PrivateAssets="All" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="1.3.5.102453" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Extra Substitution Variables to Use in SubModule.xml -->
