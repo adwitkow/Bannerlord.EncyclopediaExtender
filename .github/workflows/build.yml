@@ -85,7 +85,7 @@ jobs:
         Remove-Item -Recurse $impl;
         
     - name: Upload build
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: Build
         path: ./bannerlord/
