@@ -1,32 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk;Bannerlord.BuildResourcesLite.Sdk/1.2.0.35">
 
   <PropertyGroup>
-    <AssemblyName>$(ModuleName).$(GameVersion)</AssemblyName>
-    <Configurations>Stable_Debug;Stable_Release;Beta_Debug;Beta_Release</Configurations>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <GameMinor>$([System.Convert]::ToInt32($([System.String]::Copy('$(GameVersion)').Split('.')[1])))</GameMinor>
-
-    <DefineConstants Condition="$(GameMinor) &lt; 1">$(DefineConstants);LOWER_THAN_1_1</DefineConstants>
-    <DefineConstants Condition="$(GameMinor) &lt; 2">$(DefineConstants);LOWER_THAN_1_2</DefineConstants>
-    <DefineConstants Condition="$(GameMinor) &lt; 3">$(DefineConstants);LOWER_THAN_1_3</DefineConstants>
-  </PropertyGroup>
-
-  <!-- NuGet Packages -->
   <ItemGroup>
-    <PackageReference Include="Nullable" Version="1.3.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="IsExternalInit" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.129">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Bannerlord.ModuleLoader.Injector" Version="1.0.1.50">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -36,25 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="2.4.2" IncludeAssets="compile" />
-    <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" />
-
-    <!-- ReferenceAssemblies -->
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.StoryMode" Version="$(GameVersion).*-*" PrivateAssets="All" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />
-  </ItemGroup>
-
-  <!-- Extra Substitution Variables to Use in SubModule.xml -->
-  <ItemGroup>
-    <SubModuleOverrides Include="DisplayName">
-      <Regex>\$displayname\$</Regex>
-      <Replacement>$(DisplayName)</Replacement>
-    </SubModuleOverrides>
-    <SubModuleOverrides Include="MCMVersion">
-      <Regex>\$mcmversion\$</Regex>
-      <Replacement>$(MCMVersion)</Replacement>
-    </SubModuleOverrides>
+    <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.0" IncludeAssets="compile" />
   </ItemGroup>
 
 </Project>

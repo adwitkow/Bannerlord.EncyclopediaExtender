@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Module xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd" >
-  <Id value="$modulename$" />
-  <Name value="$displayname$" />
+  <Id value="$moduleid$" />
+  <Name value="$modulename$" />
   <Version value="v$version$" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
@@ -22,10 +22,10 @@
     <!-- Bannerlord Module Loader. Do not change the name! -->
     <SubModule>
       <Name value="Bannerlord Module Loader" />
-      <DLLName value="Bannerlord.ModuleLoader.$modulename$.dll" />
-      <SubModuleClassType value="Bannerlord.ModuleLoader.Bannerlord_EncyclopediaExtender" />
+      <DLLName value="Bannerlord.ModuleLoader.$dllname$.dll" />
+      <SubModuleClassType value="Bannerlord.ModuleLoader.$submoduleclasstype$" />
       <Tags>
-        <Tag key="LoaderFilter" value ="$modulename$.*.dll" />
+        <Tag key="LoaderFilter" value ="$dllname$.*.dll" />
       </Tags>
     </SubModule>
   </SubModules>
