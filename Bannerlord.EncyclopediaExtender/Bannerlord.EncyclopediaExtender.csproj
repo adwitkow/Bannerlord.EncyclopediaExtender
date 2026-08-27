@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk;Bannerlord.BuildResourcesLite.Sdk/1.2.1.39">
+<Project Sdk="Microsoft.NET.Sdk;Bannerlord.BuildResourcesLite.Sdk/1.2.2.40">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
