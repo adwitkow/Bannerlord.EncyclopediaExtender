@@ -14,3 +14,8 @@ jobs:
     permissions:
       actions: read
       contents: write
+    with:
+      nexus_file_id: "8082051"
+      nexus_mod_id: "13632226211296"
+    secrets:
+      NEXUSMODS_API_KEY: ${{ secrets.NEXUSMODS_API_KEY }}
