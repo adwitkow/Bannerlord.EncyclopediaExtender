@@ -50,32 +50,89 @@ public static class PrefabInjector
         // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
         var xml = $@"
 <Prefab>
-  <Constants>
-    <Constant Name=""Encyclopedia.SubPage.Element.Width"" BrushLayer=""Default"" BrushName=""Encyclopedia.SubPage.Element"" BrushValueType=""Width"" />
-    <Constant Name=""Encyclopedia.SubPage.Element.Height"" BrushLayer=""Default"" BrushName=""Encyclopedia.SubPage.Element"" BrushValueType=""Height"" />
-  </Constants>
-  <Window>
-    <ButtonWidget DoNotPassEventsToChildren=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed"" SuggestedWidth=""!Encyclopedia.SubPage.Element.Width"" SuggestedHeight=""!Encyclopedia.SubPage.Element.Height"" HorizontalAlignment=""Center"" Command.Click=""ExecuteLink"">
-      <Children>
+    <Constants>
+        <Constant
+            Name=""Encyclopedia.SubPage.Element.Width""
+            BrushLayer=""Default""
+            BrushName=""Encyclopedia.SubPage.Element""
+            BrushValueType=""Width"" />
+        <Constant
+            Name=""Encyclopedia.SubPage.Element.Height""
+            BrushLayer=""Default""
+            BrushName=""Encyclopedia.SubPage.Element""
+            BrushValueType=""Height"" />
+    </Constants>
+    <Window>
+        <ButtonWidget
+            DoNotPassEventsToChildren=""true""
+            WidthSizePolicy=""Fixed""
+            HeightSizePolicy=""Fixed""
+            SuggestedWidth=""!Encyclopedia.SubPage.Element.Width""
+            SuggestedHeight=""!Encyclopedia.SubPage.Element.Height""
+            HorizontalAlignment=""Center""
+            Command.Click=""ExecuteLink"">
 
-        <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"">
-          <Children>
-            <BrushWidget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Brush=""Encyclopedia.SubPage.Element""  />
-            <InventoryImageIdentifierWidget Id=""ImageIdentifier"" {textureAttribute} DoNotAcceptEvents=""true"" DataSource=""{{ImageIdentifier}}"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed"" SuggestedWidth=""111"" SuggestedHeight=""51"" MarginTop=""2"" MarginBottom=""2"" ImageId=""@Id"" AdditionalArgs=""@AdditionalArgs"" LoadingIconWidget=""LoadingIconWidget""  HorizontalAlignment=""Center"" VerticalAlignment=""Bottom"">
-              <Children>
-                <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Sprite=""Inventory\tuple_shadow"" AlphaFactor=""0.7""/>
-                <Standard.CircleLoadingWidget HorizontalAlignment=""Center"" VerticalAlignment=""Center"" Id=""LoadingIconWidget""/>
-              </Children>
-            </InventoryImageIdentifierWidget>
-          </Children>
-        </Widget>
+            <Children>
+                <Widget
+                    WidthSizePolicy=""StretchToParent""
+                    HeightSizePolicy=""StretchToParent"">
 
-        <TextWidget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed"" SuggestedHeight=""30"" VerticalAlignment=""Bottom"" PositionYOffset=""34"" Brush=""Encyclopedia.SubPage.Element.Name.Text"" Brush.TextVerticalAlignment=""Top"" Text=""@ItemDescription"" />
+                    <Children>
+                        <BrushWidget
+                            WidthSizePolicy=""StretchToParent""
+                            HeightSizePolicy=""StretchToParent""
+                            Brush=""Encyclopedia.SubPage.Element"" />
+                        <InventoryImageIdentifierWidget
+                            Id=""ImageIdentifier""
+                            {textureAttribute}
+                            DoNotAcceptEvents=""true""
+                            DataSource=""{{ImageIdentifier}}""
+                            WidthSizePolicy=""Fixed""
+                            HeightSizePolicy=""Fixed""
+                            SuggestedWidth=""111""
+                            SuggestedHeight=""51""
+                            MarginTop=""2""
+                            MarginBottom=""2""
+                            ImageId=""@Id""
+                            AdditionalArgs=""@AdditionalArgs""
+                            LoadingIconWidget=""LoadingIconWidget""
+                            HorizontalAlignment=""Center""
+                            VerticalAlignment=""Bottom"">
+                            
+                            <Children>
+                                <Widget
+                                    DoNotAcceptEvents=""true""
+                                    WidthSizePolicy=""StretchToParent""
+                                    HeightSizePolicy=""StretchToParent""
+                                    Sprite=""Inventory\tuple_shadow""
+                                    AlphaFactor=""0.7"" />
+                                <Standard.CircleLoadingWidget
+                                    HorizontalAlignment=""Center""
+                                    VerticalAlignment=""Center""
+                                    Id=""LoadingIconWidget"" />
+                            </Children>
+                        </InventoryImageIdentifierWidget>
+                    </Children>
+                </Widget>
 
-        <HintWidget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.HoverBegin=""ExecuteBeginHint"" Command.HoverEnd=""ExecuteEndHint"" />
-      </Children>
-    </ButtonWidget>
-  </Window>
+                <TextWidget
+                    WidthSizePolicy=""StretchToParent""
+                    HeightSizePolicy=""Fixed""
+                    SuggestedHeight=""30""
+                    VerticalAlignment=""Bottom""
+                    PositionYOffset=""34""
+                    Brush=""Encyclopedia.SubPage.Element.Name.Text""
+                    Brush.TextVerticalAlignment=""Top""
+                    Text=""@ItemDescription"" />
+
+                <HintWidget
+                    WidthSizePolicy=""StretchToParent""
+                    HeightSizePolicy=""StretchToParent""
+                    Command.HoverBegin=""ExecuteBeginHint""
+                    Command.HoverEnd=""ExecuteEndHint"" />
+            </Children>
+        </ButtonWidget>
+    </Window>
 </Prefab>";
 
         var doc = new XmlDocument();
