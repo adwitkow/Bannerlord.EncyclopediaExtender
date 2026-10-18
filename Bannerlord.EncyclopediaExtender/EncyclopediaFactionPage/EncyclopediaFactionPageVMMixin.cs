@@ -6,6 +6,7 @@ using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using Bannerlord.UIExtenderEx.Attributes;
 using System.Linq;
+using Bannerlord.EncyclopediaExtender.Configuration;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 {
@@ -60,14 +61,27 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
                 return;
             }
 
-            var kingdomBank = GetFormattedKingdomBank(_kingdom);
-            WealthInfo.AddPair(Texts.KingdomBank, kingdomBank);
+            if (Settings.KingdomBank)
+            {
+                var kingdomBank = GetFormattedKingdomBank(_kingdom);
+                WealthInfo.AddPair(Texts.KingdomBank, kingdomBank);
+            }
 
-            var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
-            WealthInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
+            if (Settings.KingdomClansWealthSum)
+            {
+                var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
+                WealthInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
+            }
 
-            CapturedHeroes = GetCapturedHeroes(_kingdom);
-            ImprisonedHeroes = GetImprisonedHeroes(_kingdom);
+            if (Settings.CapturedHeroes)
+            {
+                CapturedHeroes = GetCapturedHeroes(_kingdom);
+            }
+
+            if (Settings.ImprisonedHeroes)
+            {
+                ImprisonedHeroes = GetImprisonedHeroes(_kingdom);
+            }
         }
 
         private static string CalculateSumOfClanWealth(Kingdom kingdom)

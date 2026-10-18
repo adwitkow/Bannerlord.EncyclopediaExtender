@@ -1,6 +1,8 @@
-﻿using Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage.ViewModels;
+﻿using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage.ViewModels;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
@@ -64,38 +66,60 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
         {
             TradeBoundText = Texts.TradeBoundSettlement.ToString();
 
-            var itemElementVm = CreateItemElementVM(village);
-            ProducedItems.Add(itemElementVm);
-            var settlementVm = new EncyclopediaSettlementVM(village.TradeBound);
-            TradeBoundSettlements.Add(settlementVm);
+            AddProducedItems(village);
+            AddTradeBoundSettlement(village.TradeBound);
         }
 
         private void PopulateBindingsForTown(Town town)
         {
             TradeBoundText = Texts.TradeBoundVillages.ToString();
 
-            foreach (var village in town.Villages)
-            {
-                var itemElementVm = CreateItemElementVM(village);
-                ProducedItems.Add(itemElementVm);
-            }
-
-            foreach (var tradeBound in town.TradeBoundVillages)
-            {
-                var itemElementVm = CreateItemElementVM(tradeBound);
-                ProducedItems.Add(itemElementVm);
-
-                var settlementVm = new EncyclopediaSettlementVM(tradeBound.Settlement);
-                TradeBoundSettlements.Add(settlementVm);
-            }
+            AddProducedItems(town.Villages);
+            AddProducedItems(town.TradeBoundVillages);
+            AddTradeBoundVillages(town.TradeBoundVillages);
         }
 
         private void PopulateGenericBindings(Settlement settlement)
         {
-            foreach (var bound in settlement.BoundVillages)
+            AddProducedItems(settlement.BoundVillages);
+        }
+
+        private void AddProducedItems(params IEnumerable<Village> villages)
+        {
+            if (!Settings.SettlementProducedItems)
             {
-                var itemElementVm = CreateItemElementVM(bound);
+                return;
+            }
+
+            foreach (var village in villages)
+            {
+                var itemElementVm = CreateItemElementVM(village);
                 ProducedItems.Add(itemElementVm);
+            }
+        }
+
+        private void AddTradeBoundSettlement(Settlement settlement)
+        {
+            if (!Settings.TradeBoundSettlement)
+            {
+                return;
+            }
+
+            var settlementVm = new EncyclopediaSettlementVM(settlement);
+            TradeBoundSettlements.Add(settlementVm);
+        }
+
+        private void AddTradeBoundVillages(params IEnumerable<Village> villages)
+        {
+            if (!Settings.TradeBoundVillages)
+            {
+                return;
+            }
+
+            foreach (var village in villages)
+            {
+                var settlementVm = new EncyclopediaSettlementVM(village.Settlement);
+                TradeBoundSettlements.Add(settlementVm);
             }
         }
 

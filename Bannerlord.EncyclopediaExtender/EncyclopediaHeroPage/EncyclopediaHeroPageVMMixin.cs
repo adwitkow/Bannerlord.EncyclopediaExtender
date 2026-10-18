@@ -1,4 +1,5 @@
-﻿using Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
+﻿using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
@@ -97,43 +98,30 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddViewModelStats(Hero hero)
         {
-            AddViewModelStatPair(Texts.Level, hero.Level);
-
-            var equipmentValue = CalculateEquipmentValue(hero);
-            AddViewModelStatPair(Texts.EquipmentSaleValue, equipmentValue);
-
-            string prisonerValue = GetImprisonmentValue(hero);
-            AddViewModelStatPair(Texts.Prisoner, prisonerValue);
-
-            var armyValue = hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null
-                ? hero.PartyBelongedTo.Army.Name.ToString()
-                : Texts.NotInArmy.ToString();
-            AddViewModelStatPair(Texts.Army, armyValue);
-        }
-
-        private static string GetImprisonmentValue(Hero hero)
-        {
-            string result;
-
-            if (hero.IsPrisoner)
+            if (Settings.HeroLevel)
             {
-                var capturerParty = hero.PartyBelongedToAsPrisoner;
-
-                if (capturerParty is not null)
-                {
-                    result = capturerParty.Name.ToString();
-                }
-                else
-                {
-                    result = Texts.Unknown.ToString();
-                }
-            }
-            else
-            {
-                result = Texts.Free.ToString();
+                AddViewModelStatPair(Texts.Level, hero.Level);
             }
 
-            return result;
+            if (Settings.HeroEquipmentSaleValue)
+            {
+                var equipmentValue = CalculateEquipmentValue(hero);
+                AddViewModelStatPair(Texts.EquipmentSaleValue, equipmentValue);
+            }
+
+            if (Settings.HeroImprisonment)
+            {
+                string prisonerValue = GetImprisonmentValue(hero);
+                AddViewModelStatPair(Texts.Prisoner, prisonerValue);
+            }
+
+            if (Settings.HeroArmy)
+            {
+                var armyValue = hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null
+                    ? hero.PartyBelongedTo.Army.Name.ToString()
+                    : Texts.NotInArmy.ToString();
+                AddViewModelStatPair(Texts.Army, armyValue);
+            }
         }
 
         private void AddDowryValues(Hero hero)
@@ -147,14 +135,25 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             if (CanMarry(mainHero) && mainHero.IsFemale != hero.IsFemale)
             {
-                var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
-                var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
-                var persuasionDowryFormatted = persuasionDowryValue.ToString(Constants.WholeNumberFormat);
-                MarriagePrices.AddPair(Texts.PersuasionDowry, persuasionDowryFormatted);
+                if (Settings.HeroPersuasionDowry)
+                {
+                    var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
+                    var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
+                    var persuasionDowryFormatted = persuasionDowryValue.ToString(Constants.WholeNumberFormat);
+                    MarriagePrices.AddPair(Texts.PersuasionDowry, persuasionDowryFormatted);
+                }
 
-                var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
-                int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
-                MarriagePrices.AddPair(Texts.BarterDowry, dowry.ToString(Constants.WholeNumberFormat));
+                if (Settings.HeroBarterDowry)
+                {
+                    var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
+                    int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
+                    MarriagePrices.AddPair(Texts.BarterDowry, dowry.ToString(Constants.WholeNumberFormat));
+                }
+            }
+
+            if (!Settings.HeroClanMemberDowry)
+            {
+                return;
             }
 
             foreach (var clanHero in GetClanHeroes(mainHero))
@@ -171,6 +170,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddHeroItems(Hero hero)
         {
+            if (!Settings.HeroEquipmentList)
+            {
+                return;
+            }
+
             Town town = Settlement.FindFirst(z => z.IsTown).Town;
 
             var equipment = GetHeroEquipment(hero);
@@ -192,31 +196,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
             }
         }
 
-        private static SPItemVM CreateNewSPItemVM(Hero hero, InventoryLogic inventoryLogic, ItemRosterElement element, int price)
-        {
-#if LOWER_THAN_1_3
-            return new SPItemVM(inventoryLogic,
-                hero.IsFemale,
-                true,
-                InventoryMode.Default,
-                element,
-                InventoryLogic.InventorySide.OtherInventory,
-                string.Empty,
-                string.Empty,
-                price);
-#else
-            return new SPItemVM(inventoryLogic,
-                hero.IsFemale,
-                true,
-                InventoryScreenHelper.InventoryMode.Default,
-                element,
-                InventoryLogic.InventorySide.OtherInventory,
-                price);
-#endif
-        }
-
         private void AddPerks(Hero hero)
         {
+            if (!Settings.HeroPerks)
+            {
+                return;
+            }
+
             var perksPerSkill = new Dictionary<SkillObject, List<PerkObject>>();
 
             Traverse.IterateFields(Campaign.Current.DefaultPerks, tr =>
@@ -261,10 +247,63 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddAttributes(Hero hero)
         {
+            if (!Settings.HeroAttributes)
+            {
+                return;
+            }
+
             foreach (CharacterAttribute att in TaleWorlds.CampaignSystem.Extensions.Attributes.All)
             {
                 Attributes.Add(new ExtenderAttributeVM(hero, att));
             }
+        }
+
+        private static string GetImprisonmentValue(Hero hero)
+        {
+            string result;
+
+            if (hero.IsPrisoner)
+            {
+                var capturerParty = hero.PartyBelongedToAsPrisoner;
+
+                if (capturerParty is not null)
+                {
+                    result = capturerParty.Name.ToString();
+                }
+                else
+                {
+                    result = Texts.Unknown.ToString();
+                }
+            }
+            else
+            {
+                result = Texts.Free.ToString();
+            }
+
+            return result;
+        }
+
+        private static SPItemVM CreateNewSPItemVM(Hero hero, InventoryLogic inventoryLogic, ItemRosterElement element, int price)
+        {
+#if LOWER_THAN_1_3
+            return new SPItemVM(inventoryLogic,
+                hero.IsFemale,
+                true,
+                InventoryMode.Default,
+                element,
+                InventoryLogic.InventorySide.OtherInventory,
+                string.Empty,
+                string.Empty,
+                price);
+#else
+            return new SPItemVM(inventoryLogic,
+                hero.IsFemale,
+                true,
+                InventoryScreenHelper.InventoryMode.Default,
+                element,
+                InventoryLogic.InventorySide.OtherInventory,
+                price);
+#endif
         }
 
         private static IEnumerable<EquipmentElement> GetHeroEquipment(Hero hero)

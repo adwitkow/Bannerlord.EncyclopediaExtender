@@ -8,6 +8,7 @@ using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using Bannerlord.UIExtenderEx.ViewModels;
+using Bannerlord.EncyclopediaExtender.Configuration;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 {
@@ -41,25 +42,38 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                 return;
             }
 
-            var cashValue = _clan.Leader.Gold.ToString(Constants.WholeNumberFormat);
-            ViewModel.ClanInfo.AddPair(Texts.Cash, cashValue);
+            if (Settings.ClanCash)
+            {
+                var cashValue = _clan.Leader.Gold.ToString(Constants.WholeNumberFormat);
+                ViewModel.ClanInfo.AddPair(Texts.Cash, cashValue);
+            }
 
-            var debtValue = _clan.DebtToKingdom;
-            ViewModel.ClanInfo.AddPair(Texts.Debt, debtValue);
+            if (Settings.ClanDebt)
+            {
+                var debtValue = _clan.DebtToKingdom;
+                ViewModel.ClanInfo.AddPair(Texts.Debt, debtValue);
+            }
 
             var kingdom = _clan.Kingdom;
             int kingdomWealthShare = 0;
             if (kingdom != null && !_clan.IsMinorFaction)
             {
                 kingdomWealthShare = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
-                ViewModel.ClanInfo.AddPair(
-                    Texts.ShareOfKingdomWealth,
-                    kingdomWealthShare.ToString(Constants.WholeNumberFormat));
+
+                if (Settings.ClanShareOfKingdomWealth)
+                {
+                    ViewModel.ClanInfo.AddPair(
+                        Texts.ShareOfKingdomWealth,
+                        kingdomWealthShare.ToString(Constants.WholeNumberFormat));
+                }
             }
 
-            var totalWealth = _clan.Leader.Gold + kingdomWealthShare - _clan.DebtToKingdom;
-            var totalWealthFormatted = totalWealth.ToString(Constants.WholeNumberFormat);
-            ViewModel.ClanInfo.AddPair(Texts.NominalTotalWealth, totalWealthFormatted);
+            if (Settings.ClanTotalWealth)
+            {
+                var totalWealth = _clan.Leader.Gold + kingdomWealthShare - _clan.DebtToKingdom;
+                var totalWealthFormatted = totalWealth.ToString(Constants.WholeNumberFormat);
+                ViewModel.ClanInfo.AddPair(Texts.NominalTotalWealth, totalWealthFormatted);
+            }
 
             if (CanClanDefect(_clan))
             {
@@ -70,19 +84,28 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                     var barterable = new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction);
                     var barterValue = -barterable.GetValueForFaction(_clan);
 
-                    DefectionInfo.AddPair(Texts.DefectionPrice, barterValue.ToString(Constants.WholeNumberFormat));
+                    if (Settings.ClanDefectionPrice)
+                    {
+                        DefectionInfo.AddPair(Texts.DefectionPrice, barterValue.ToString(Constants.WholeNumberFormat));
+                    }
 
-                    var cashRequired = barterValue > 2000000f
-                        ? Texts.HappyWithCurrentLiege.ToString()
-                        : Math.Max(0, barterValue * 3 - 750000).ToString(Constants.WholeNumberFormat);
-                    DefectionInfo.AddPair(Texts.CashRequiredToPersuade, cashRequired);
+                    if (Settings.ClanCashToPersuade)
+                    {
+                        var cashRequired = barterValue > 2000000f
+                            ? Texts.HappyWithCurrentLiege.ToString()
+                            : Math.Max(0, barterValue * 3 - 750000).ToString(Constants.WholeNumberFormat);
+                        DefectionInfo.AddPair(Texts.CashRequiredToPersuade, cashRequired);
+                    }
                 }
 
-                var defectionChance = BruteForceDefectionChance(_clan);
-                GameTexts.SetVariable("NUMBER", defectionChance.ToString("N1"));
+                if (Settings.ClanDefectionChance)
+                {
+                    var defectionChance = BruteForceDefectionChance(_clan);
+                    GameTexts.SetVariable("NUMBER", defectionChance.ToString(Constants.DecimalNumberFormat));
 
-                var defectionChanceFormatted = GameTexts.FindText("str_NUMBER_percent", null);
-                DefectionInfo.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
+                    var defectionChanceFormatted = GameTexts.FindText("str_NUMBER_percent", null);
+                    DefectionInfo.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
+                }
             }
         }
 
