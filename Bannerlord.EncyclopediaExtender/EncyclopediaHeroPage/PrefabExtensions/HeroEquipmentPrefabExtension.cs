@@ -13,12 +13,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 
         // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
         [PrefabExtensionText(true)]
-        public string GetContent() => @"
+        public string GetContent() => $@"
 <DummyRoot>
     <EncyclopediaDivider MarginTop=""20"" Parameter.Title=""@EquipmentText"" Parameter.ItemList=""..\EquipmentContainer""/>
     <Widget Id=""EquipmentContainer"" MarginTop=""15"" HeightSizePolicy=""CoverChildren"" WidthSizePolicy=""StretchToParent"">
         <Children>
-            <ListPanel Id=""EquipmentList"" DataSource=""{HeroItems}"" WidthSizePolicy=""CoverChildren"" HeightSizePolicy=""CoverChildren"" StackLayout.LayoutMethod=""VerticalBottomToTop"">
+            <ListPanel Id=""EquipmentList"" DataSource=""{{HeroItems}}"" WidthSizePolicy=""CoverChildren"" HeightSizePolicy=""CoverChildren"" StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
                 <ItemTemplate>
                     <!--AutoHideRichTextWidget HeightSizePolicy =""CoverChildren"" WidthSizePolicy=""CoverChildren"" VerticalAlignment=""Center"" Brush=""Encyclopedia.Stat.DefinitionText"" Text=""@ItemDescription"" MarginRight=""5""/-->
                     <HeroItemTuple />

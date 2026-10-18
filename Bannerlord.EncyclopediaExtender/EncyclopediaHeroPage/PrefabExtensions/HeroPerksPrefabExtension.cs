@@ -1,5 +1,4 @@
-﻿using System;
-using Bannerlord.UIExtenderEx.Attributes;
+﻿using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
@@ -11,7 +10,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 
         // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
         [PrefabExtensionText(true)]
-        public string GetContent() => @"
+        public string GetContent() => $@"
 <DummyRoot>
   <EncyclopediaDivider
       MarginTop=""20""
@@ -28,16 +27,16 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
     <Children>
       <ListPanel
           Id=""PerksPerSkill""
-          DataSource=""{PerksPerSkillLeftSide}""
+          DataSource=""{{PerksPerSkillLeftSide}}""
           WidthSizePolicy=""StretchToParent""
           HeightSizePolicy=""CoverChildren""
-          StackLayout.LayoutMethod=""VerticalBottomToTop"">
+          StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
         <ItemTemplate>
           <ListPanel
               WidthSizePolicy=""StretchToParent""
               HeightSizePolicy=""CoverChildren""
-              StackLayout.LayoutMethod=""VerticalBottomToTop"">
+              StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
             <Children>
               <AutoHideRichTextWidget
@@ -48,10 +47,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
                   Text=""@SkillName""
                   MarginRight=""5"" />
               <ListPanel
-                  DataSource=""{Perks}""
+                  DataSource=""{{Perks}}""
                   WidthSizePolicy=""StretchToParent""
                   HeightSizePolicy=""CoverChildren""
-                  StackLayout.LayoutMethod=""VerticalBottomToTop"">
+                  StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
                 <ItemTemplate>
                   <ListPanel
@@ -77,7 +76,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
                           Text=""@Value""
                           PositionYOffset=""2"" />
                       <HintWidget
-                          DataSource=""{Hint}""
+                          DataSource=""{{Hint}}""
                           WidthSizePolicy=""CoverChildren""
                           HeightSizePolicy=""CoverChildren""
                           Command.HoverBegin=""ExecuteBeginHint""
@@ -101,17 +100,17 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 
       <ListPanel
           Id=""PerksPerSkill""
-          DataSource=""{PerksPerSkillRightSide}""
+          DataSource=""{{PerksPerSkillRightSide}}""
           WidthSizePolicy=""StretchToParent""
           HeightSizePolicy=""CoverChildren""
-          StackLayout.LayoutMethod=""VerticalBottomToTop""
+          StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}""
           MarginLeft=""25"">
 
         <ItemTemplate>
           <ListPanel
               WidthSizePolicy=""StretchToParent""
               HeightSizePolicy=""CoverChildren""
-              StackLayout.LayoutMethod=""VerticalBottomToTop"">
+              StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
             <Children>
               <AutoHideRichTextWidget
@@ -122,10 +121,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
                   Text=""@SkillName""
                   MarginRight=""5"" />
               <ListPanel
-                  DataSource=""{Perks}""
+                  DataSource=""{{Perks}}""
                   WidthSizePolicy=""StretchToParent""
                   HeightSizePolicy=""CoverChildren""
-                  StackLayout.LayoutMethod=""VerticalBottomToTop"">
+                  StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
                 <ItemTemplate>
                   <ListPanel
@@ -151,7 +150,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
                           Text=""@Value""
                           PositionYOffset=""2"" />
                       <HintWidget
-                          DataSource=""{Hint}""
+                          DataSource=""{{Hint}}""
                           WidthSizePolicy=""CoverChildren""
                           HeightSizePolicy=""CoverChildren""
                           Command.HoverBegin=""ExecuteBeginHint""

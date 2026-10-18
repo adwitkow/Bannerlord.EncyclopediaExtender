@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Bannerlord.UIExtenderEx.Attributes;
+﻿using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
@@ -12,7 +10,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 
         // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
         [PrefabExtensionText(true)]
-        public string GetContent() => @"
+        public string GetContent() => $@"
 <DummyRoot>
   <TextWidget
       HeightSizePolicy=""CoverChildren""
@@ -22,7 +20,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       ClipContents=""false"" />
 
   <GridWidget
-      DataSource=""{Attributes}""
+      DataSource=""{{Attributes}}""
       WidthSizePolicy=""CoverChildren""
       HeightSizePolicy=""CoverChildren""
       DefaultCellWidth=""55""
@@ -32,13 +30,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       MarginRight=""20""
       DefaultCellHeight=""50""
       ColumnCount=""6""
-      LayoutImp.VerticalLayoutMethod=""TopToBottom"">
+      LayoutImp.VerticalLayoutMethod=""{Constants.VerticalTopToBottom}"">
 
     <ItemTemplate>
       <ListPanel
           WidthSizePolicy=""StretchToParent""
           HeightSizePolicy=""StretchToParent""
-          StackLayout.LayoutMethod=""VerticalBottomToTop"">
+          StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
 
         <Children>
           <TextWidget
