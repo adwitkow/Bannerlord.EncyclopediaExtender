@@ -25,8 +25,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin(nameof(EncyclopediaHeroPageVM.RefreshValues), true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
-        private const string _unknown = "Unknown";
-
         private static readonly TextObject _equipmentTextObject = GameTexts.FindText("str_equipment", null);
         private static readonly TextObject _attributesTextObject = GameTexts.FindText("str_attributes", null);
         private static readonly TextObject _levelTextObject = GameTexts.FindText("str_level", null);
@@ -40,6 +38,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         private static readonly TextObject _notInArmyTextObject = new TextObject("{=nBA38eYcLkV}Not in Army");
         private static readonly TextObject _persuasionDowryTextObject = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
         private static readonly TextObject _barterDowryTextObject = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
+        private static readonly TextObject _unknownTextObject = new TextObject("{=MT4b8H9h}Unknown");
 
         private readonly Hero? _hero;
 
@@ -141,7 +140,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 }
                 else
                 {
-                    result = _unknown;
+                    result = _unknownTextObject.ToString();
                 }
             }
             else
