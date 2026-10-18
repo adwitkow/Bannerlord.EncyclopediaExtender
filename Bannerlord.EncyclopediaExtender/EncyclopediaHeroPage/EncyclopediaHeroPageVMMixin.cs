@@ -153,7 +153,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddDowryValues(Hero hero)
         {
-            if (hero.Clan is null || hero.Clan.Leader is null || !CanMarry(hero))
+            if (hero.Clan is null || hero.Clan.Leader is null)
             {
                 return;
             }
