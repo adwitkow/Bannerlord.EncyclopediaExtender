@@ -1,5 +1,4 @@
-﻿using System;
-using Bannerlord.UIExtenderEx.Attributes;
+﻿using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensions
@@ -9,7 +8,61 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
     {
         public override InsertType Type => InsertType.Append;
 
-        [PrefabExtensionFileName(true)]
-        public string File => "FactionPagePrisonerPatch";
+        // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
+        [PrefabExtensionText(true)]
+        public string GetContent() => @"
+<DummyRoot>
+  <EncyclopediaDivider
+      MarginTop=""30""
+      Parameter.Title=""@CapturedHeroesText""
+      Parameter.ItemList=""..\CapturedHeroesGrid"" />
+
+  <GridWidget
+      Id=""CapturedHeroesGrid""
+      DataSource=""{CapturedHeroes}""
+      WidthSizePolicy=""CoverChildren""
+      HeightSizePolicy=""CoverChildren""
+      SuggestedWidth=""350""
+      SuggestedHeight=""150""
+      DefaultCellWidth=""100""
+      DefaultCellHeight=""100""
+      HorizontalAlignment=""Left""
+      MarginLeft=""25""
+      ColumnCount=""7""
+      MarginTop=""5""
+      MarginBottom=""0"">
+
+    <ItemTemplate>
+      <EncyclopediaSubPageElement />
+    </ItemTemplate>
+  </GridWidget>
+
+  <EncyclopediaDivider
+      MarginTop=""5""
+      MarginBottom=""20""
+      Parameter.Title=""@ImprisonedHeroesText""
+      Parameter.ItemList=""..\ImprisonedHeroesGrid"" />
+
+  <GridWidget
+      Id=""ImprisonedHeroesGrid""
+      DataSource=""{ImprisonedHeroes}""
+      WidthSizePolicy=""CoverChildren""
+      HeightSizePolicy=""CoverChildren""
+      SuggestedWidth=""350""
+      SuggestedHeight=""150""
+      DefaultCellWidth=""100""
+      DefaultCellHeight=""100""
+      HorizontalAlignment=""Left""
+      MarginLeft=""25""
+      ColumnCount=""7""
+      MarginTop=""5""
+      MarginBottom=""0"">
+    
+    <ItemTemplate>
+      <EncyclopediaSubPageElement />
+    </ItemTemplate>
+  </GridWidget>
+
+</DummyRoot>";
     }
 }
