@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
@@ -8,7 +7,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using Bannerlord.UIExtenderEx.ViewModels;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
@@ -34,7 +32,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 
         public override void OnRefresh()
         {
-            DefectionText = new TextObject("{=uj3CXxKYK03}Defection").ToString();
+            DefectionText = Texts.Defection.ToString();
+
             DefectionInfo.Clear();
 
             if (_clan is null || ViewModel is null)
@@ -42,27 +41,25 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                 return;
             }
 
-            var cashHeader = new TextObject("{=beBL5H1u2fu}Cash:");
             var cashValue = _clan.Leader.Gold.ToString(Constants.WholeNumberFormat);
-            ViewModel.ClanInfo.AddPair(cashHeader, cashValue);
+            ViewModel.ClanInfo.AddPair(Texts.Cash, cashValue);
 
-            var debtHeader = new TextObject("{=C1SUFxYrMXk}Debt:");
             var debtValue = _clan.DebtToKingdom;
-            ViewModel.ClanInfo.AddPair(debtHeader, debtValue);
+            ViewModel.ClanInfo.AddPair(Texts.Debt, debtValue);
 
             var kingdom = _clan.Kingdom;
             int kingdomWealthShare = 0;
             if (kingdom != null && !_clan.IsMinorFaction)
             {
                 kingdomWealthShare = kingdom.KingdomBudgetWallet / (kingdom.Clans.Count + 1) / 2;
-                var kingdomWealthShareHeader = new TextObject("{=a2uZeyyIdQX}Share of Kingdom Wealth:");
-                ViewModel.ClanInfo.AddPair(kingdomWealthShareHeader, kingdomWealthShare.ToString(Constants.WholeNumberFormat));
+                ViewModel.ClanInfo.AddPair(
+                    Texts.ShareOfKingdomWealth,
+                    kingdomWealthShare.ToString(Constants.WholeNumberFormat));
             }
 
-            var totalWealthHeader = new TextObject("{=nAr2HzgGiVn}Nominal Total Wealth:");
             var totalWealth = _clan.Leader.Gold + kingdomWealthShare - _clan.DebtToKingdom;
             var totalWealthFormatted = totalWealth.ToString(Constants.WholeNumberFormat);
-            ViewModel.ClanInfo.AddPair(totalWealthHeader, totalWealthFormatted);
+            ViewModel.ClanInfo.AddPair(Texts.NominalTotalWealth, totalWealthFormatted);
 
             if (CanClanDefect(_clan))
             {
@@ -73,22 +70,19 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                     var barterable = new JoinKingdomAsClanBarterable(leader, (Kingdom)Hero.MainHero.MapFaction);
                     var barterValue = -barterable.GetValueForFaction(_clan);
 
-                    var defectionPriceHeader = new TextObject("{=mfaNceRHqRk}Defection Price:");
-                    DefectionInfo.AddPair(defectionPriceHeader, barterValue.ToString(Constants.WholeNumberFormat));
+                    DefectionInfo.AddPair(Texts.DefectionPrice, barterValue.ToString(Constants.WholeNumberFormat));
 
-                    var cashRequiredHeader = new TextObject("{=vMSUkkSBqeO}Cash required to persuade:");
                     var cashRequired = barterValue > 2000000f
-                        ? new TextObject("{=9QU7uyLxhXJ}Happy with current liege").ToString()
+                        ? Texts.HappyWithCurrentLiege.ToString()
                         : Math.Max(0, barterValue * 3 - 750000).ToString(Constants.WholeNumberFormat);
-                    DefectionInfo.AddPair(cashRequiredHeader, cashRequired);
+                    DefectionInfo.AddPair(Texts.CashRequiredToPersuade, cashRequired);
                 }
 
                 var defectionChance = BruteForceDefectionChance(_clan);
                 GameTexts.SetVariable("NUMBER", defectionChance.ToString("N1"));
 
-                var defectionChanceHeader = new TextObject("{=0w5RZCxnZ3B}Daily defection chance:");
                 var defectionChanceFormatted = GameTexts.FindText("str_NUMBER_percent", null);
-                DefectionInfo.AddPair(defectionChanceHeader, defectionChanceFormatted);
+                DefectionInfo.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
             }
         }
 

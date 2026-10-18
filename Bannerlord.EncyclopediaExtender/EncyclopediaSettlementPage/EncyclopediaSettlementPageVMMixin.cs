@@ -5,17 +5,12 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
 {
     [ViewModelMixin(nameof(EncyclopediaSettlementPageVM.RefreshValues), true)]
     public class EncyclopediaSettlementPageVMMixin : BaseViewModelMixin<EncyclopediaSettlementPageVM>
     {
-        private static readonly TextObject _productionTextObject = new TextObject("{=bGyrPe8c}Production");
-        private static readonly TextObject _tradeBoundSettlementTextObject = new TextObject("{=2noOKM5N}Trade bound settlement");
-        private static readonly TextObject _tradeBoundVillagesTextObject = new TextObject("{=q7xpz1xb}Trade bound village(s)");
-
         private readonly Settlement? _settlement;
 
         public EncyclopediaSettlementPageVMMixin(EncyclopediaSettlementPageVM vm) : base(vm)
@@ -42,7 +37,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
 
         public override void OnRefresh()
         {
-            ProducedText = _productionTextObject.ToString();
+            ProducedText = Texts.Production.ToString();
             ProducedItems.Clear();
             TradeBoundSettlements.Clear();
 
@@ -67,7 +62,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
 
         private void PopulateBindingsForVillage(Village village)
         {
-            TradeBoundText = _tradeBoundSettlementTextObject.ToString();
+            TradeBoundText = Texts.TradeBoundSettlement.ToString();
 
             var itemElementVm = CreateItemElementVM(village);
             ProducedItems.Add(itemElementVm);
@@ -77,7 +72,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
 
         private void PopulateBindingsForTown(Town town)
         {
-            TradeBoundText = _tradeBoundVillagesTextObject.ToString();
+            TradeBoundText = Texts.TradeBoundVillages.ToString();
 
             foreach (var village in town.Villages)
             {

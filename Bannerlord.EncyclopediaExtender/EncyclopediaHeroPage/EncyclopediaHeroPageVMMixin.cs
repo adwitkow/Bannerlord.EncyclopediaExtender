@@ -25,21 +25,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
     [ViewModelMixin(nameof(EncyclopediaHeroPageVM.RefreshValues), true)]
     public class EncyclopediaHeroPageVMMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
-        private static readonly TextObject _equipmentTextObject = GameTexts.FindText("str_equipment", null);
-        private static readonly TextObject _attributesTextObject = GameTexts.FindText("str_attributes", null);
-        private static readonly TextObject _levelTextObject = GameTexts.FindText("str_level", null);
-
-        private static readonly TextObject _dowryPricesTextObject = new TextObject("{=vKsoAjVZRxL}Dowry Prices");
-        private static readonly TextObject _perksTextObject = new TextObject("{=fVmG6YTtQai}Perks");
-        private static readonly TextObject _equipmentValueTextObject = new TextObject("{=oSsmAi5ejuy}Equipment Sale Value:");
-        private static readonly TextObject _prisonerTextObject = new TextObject("{=MUOPLUL4Fru}Prisoner:");
-        private static readonly TextObject _freeTextObject = new TextObject("{=EfO4DVzClVp}Free");
-        private static readonly TextObject _armyTextObject = new TextObject("{=2LlrWkeotbJ}Army:");
-        private static readonly TextObject _notInArmyTextObject = new TextObject("{=nBA38eYcLkV}Not in Army");
-        private static readonly TextObject _persuasionDowryTextObject = new TextObject("{=d6gwqE9RW1q}Persuasion Dowry:");
-        private static readonly TextObject _barterDowryTextObject = new TextObject("{=EJ8BsdSHZTv}Barter Dowry:");
-        private static readonly TextObject _unknownTextObject = new TextObject("{=MT4b8H9h}Unknown");
-
         private readonly Hero? _hero;
 
         [DataSourceProperty]
@@ -87,10 +72,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         public override void OnRefresh()
         {
-            DowryPricesText = _dowryPricesTextObject.ToString();
-            EquipmentText = _equipmentTextObject.ToString();
-            PerksText = _perksTextObject.ToString();
-            AttributesText = _attributesTextObject.ToString();
+            DowryPricesText = Texts.DowryPrices.ToString();
+            EquipmentText = Texts.Equipment.ToString();
+            PerksText = Texts.Perks.ToString();
+            AttributesText = Texts.Attributes.ToString();
 
             MarriagePrices.Clear();
             HeroItems.Clear();
@@ -112,18 +97,18 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddViewModelStats(Hero hero)
         {
-            AddViewModelStatPair($"{_levelTextObject}:", hero.Level);
+            AddViewModelStatPair(Texts.Level, hero.Level);
 
             var equipmentValue = CalculateEquipmentValue(hero);
-            AddViewModelStatPair(_equipmentValueTextObject, equipmentValue);
+            AddViewModelStatPair(Texts.EquipmentSaleValue, equipmentValue);
 
             string prisonerValue = GetImprisonmentValue(hero);
-            AddViewModelStatPair(_prisonerTextObject, prisonerValue);
+            AddViewModelStatPair(Texts.Prisoner, prisonerValue);
 
             var armyValue = hero.PartyBelongedTo != null && hero.PartyBelongedTo.Army != null
                 ? hero.PartyBelongedTo.Army.Name.ToString()
-                : _notInArmyTextObject.ToString();
-            AddViewModelStatPair(_armyTextObject, armyValue);
+                : Texts.NotInArmy.ToString();
+            AddViewModelStatPair(Texts.Army, armyValue);
         }
 
         private static string GetImprisonmentValue(Hero hero)
@@ -140,12 +125,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 }
                 else
                 {
-                    result = _unknownTextObject.ToString();
+                    result = Texts.Unknown.ToString();
                 }
             }
             else
             {
-                result = _freeTextObject.ToString();
+                result = Texts.Free.ToString();
             }
 
             return result;
@@ -165,11 +150,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
                 var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
                 var persuasionDowryFormatted = persuasionDowryValue.ToString(Constants.WholeNumberFormat);
-                MarriagePrices.AddPair(_persuasionDowryTextObject, persuasionDowryFormatted);
+                MarriagePrices.AddPair(Texts.PersuasionDowry, persuasionDowryFormatted);
 
                 var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
                 int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
-                MarriagePrices.AddPair(_barterDowryTextObject, dowry.ToString(Constants.WholeNumberFormat));
+                MarriagePrices.AddPair(Texts.BarterDowry, dowry.ToString(Constants.WholeNumberFormat));
             }
 
             foreach (var clanHero in GetClanHeroes(mainHero))
@@ -324,19 +309,14 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 && !maidenOrSuitor.IsTemplate && maidenOrSuitor.CharacterObject.Age >= 18;
         }
 
-        private void AddViewModelStatPair<T>(string header, T value)
+        private void AddViewModelStatPair<T>(TextObject header, T value)
         {
             if (ViewModel is null)
             {
                 return;
             }
 
-            ViewModel.Stats.AddPair(header, value);
-        }
-
-        private void AddViewModelStatPair<T>(TextObject header, T value)
-        {
-            AddViewModelStatPair(header.ToString(), value);
+            ViewModel.Stats.AddPair(header.ToHeader(), value);
         }
 
         private static IEnumerable<Hero> GetClanHeroes(Hero hero)

@@ -4,7 +4,6 @@ using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using Bannerlord.UIExtenderEx.Attributes;
 using System.Linq;
 
@@ -13,12 +12,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
     [ViewModelMixin(nameof(EncyclopediaFactionPageVM.RefreshValues), true)]
     public class EncyclopediaFactionPageVMMixin : BaseViewModelMixin<EncyclopediaFactionPageVM>
     {
-        private static readonly TextObject _kingdomWealthTextObject = new TextObject("{=VidmvRvXecq}Kingdom Wealth");
-        private static readonly TextObject _capturedHeroesTextObject = new TextObject("{=FwJELs27ac7}Captured Heroes");
-        private static readonly TextObject _imprisonedHeroesTextObject = new TextObject("{=1CYZYNXTfN9}Imprisoned Heroes");
-        private static readonly TextObject _kingdomBankTextObject = new TextObject("{=z4z97KSX12m}Kingdom Bank:");
-        private static readonly TextObject _sumOfClanWealthTextObject = new TextObject("{=Ks1B7PO9DjP}Sum of Clan Wealth:");
-
         private readonly Kingdom? _kingdom;
 
         public EncyclopediaFactionPageVMMixin(EncyclopediaFactionPageVM vm) : base(vm)
@@ -54,9 +47,9 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 
         public override void OnRefresh()
         {
-            KingdomWealthText = _kingdomWealthTextObject.ToString();
-            CapturedHeroesText = _capturedHeroesTextObject.ToString();
-            ImprisonedHeroesText = _imprisonedHeroesTextObject.ToString();
+            KingdomWealthText = Texts.KingdomWealth.ToString();
+            CapturedHeroesText = Texts.CapturedHeroes.ToString();
+            ImprisonedHeroesText = Texts.ImprisonedHeroes.ToString();
 
             WealthInfo.Clear();
             CapturedHeroes.Clear();
@@ -68,10 +61,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             }
 
             var kingdomBank = GetFormattedKingdomBank(_kingdom);
-            WealthInfo.AddPair(_kingdomBankTextObject, kingdomBank);
+            WealthInfo.AddPair(Texts.KingdomBank, kingdomBank);
 
             var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
-            WealthInfo.AddPair(_sumOfClanWealthTextObject, sumOfClanWealth);
+            WealthInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
 
             CapturedHeroes = GetCapturedHeroes(_kingdom);
             ImprisonedHeroes = GetImprisonedHeroes(_kingdom);

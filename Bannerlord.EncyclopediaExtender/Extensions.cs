@@ -18,7 +18,7 @@ namespace Bannerlord.EncyclopediaExtender
 
         public static void AddPair<T>(this MBBindingList<StringPairItemVM> bindingList, TextObject header, T value)
         {
-            AddPair(bindingList, header.ToString(), value);
+            AddPair(bindingList, header.ToHeader().ToString(), value);
         }
     }
 }
