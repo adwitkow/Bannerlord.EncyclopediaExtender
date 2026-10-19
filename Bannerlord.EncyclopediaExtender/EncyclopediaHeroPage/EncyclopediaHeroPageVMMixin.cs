@@ -4,6 +4,7 @@ using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using HarmonyLib;
 using Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -47,10 +48,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         public MBBindingList<SPItemVM> HeroItems { get; set; }
 
         [DataSourceProperty]
-        public MBBindingList<PerksForSkillVM> PerksPerSkillLeftSide { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<PerksForSkillVM> PerksPerSkillRightSide { get; set; }
+        public MBBindingList<PerkColumnVM> PerkColumns { get; set; }
 
         [DataSourceProperty]
         public MBBindingList<ExtenderAttributeVM> Attributes { get; set; }
@@ -61,8 +59,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             MarriagePrices = new MBBindingList<StringPairItemVM>();
             HeroItems = new MBBindingList<SPItemVM>();
-            PerksPerSkillLeftSide = new MBBindingList<PerksForSkillVM>();
-            PerksPerSkillRightSide = new MBBindingList<PerksForSkillVM>();
+            PerkColumns = new MBBindingList<PerkColumnVM>();
             Attributes = new MBBindingList<ExtenderAttributeVM>();
 
             DowryPricesText = "";
@@ -80,8 +77,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             MarriagePrices.Clear();
             HeroItems.Clear();
-            PerksPerSkillLeftSide.Clear();
-            PerksPerSkillRightSide.Clear();
+            PerkColumns.Clear();
             Attributes.Clear();
 
             if (_hero is null || ViewModel is null)
@@ -205,6 +201,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
             var perksPerSkill = new Dictionary<SkillObject, List<PerkObject>>();
 
+            // TODO: Maybe this can finally be refactored
             Traverse.IterateFields(Campaign.Current.DefaultPerks, tr =>
             {
                 var uncasted = tr.GetValue();
@@ -226,22 +223,17 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 }
             });
 
-            var rowsLeftSide = 0;
-            var rowsRightSide = 0;
-            foreach (var skill in perksPerSkill)
+            var perkSkillGroups = new List<PerkSkillGroupVM>();
+            foreach (var pair in perksPerSkill)
             {
-                var skillVm = new PerksForSkillVM(skill.Key, skill.Value);
-                int rows = skillVm.Perks.Count + 1;
-                if (rowsLeftSide <= rowsRightSide)
-                {
-                    PerksPerSkillLeftSide.Add(skillVm);
-                    rowsLeftSide += rows;
-                }
-                else
-                {
-                    PerksPerSkillRightSide.Add(skillVm);
-                    rowsRightSide += rows;
-                }
+                var skill = pair.Key;
+                var perks = pair.Value;
+                perkSkillGroups.Add(new PerkSkillGroupVM(skill, perks));
+            }
+
+            foreach (var column in BuildColumns(perkSkillGroups))
+            {
+                PerkColumns.Add(column);
             }
         }
 
@@ -355,7 +347,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                 return;
             }
 
-            ViewModel.Stats.AddPair(header.ToHeader(), value);
+            ViewModel.Stats.AddPair(header, value);
         }
 
         private static IEnumerable<Hero> GetClanHeroes(Hero hero)
@@ -393,6 +385,32 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 #endif
 
             return inventoryLogic;
+        }
+
+        private static MBBindingList<PerkColumnVM> BuildColumns(
+            IReadOnlyList<PerkSkillGroupVM> items,
+            int columnCount = 2)
+        {
+            var columns = new MBBindingList<PerkColumnVM>();
+            if (items.Count == 0)
+            {
+                return columns;
+            }
+
+            int perColumn = (int)Math.Ceiling(items.Count / (double)columnCount);
+            for (int i = 0; i < items.Count; i += perColumn)
+            {
+                var chunk = new MBBindingList<PerkSkillGroupVM>();
+
+                foreach (var item in items.Skip(i).Take(perColumn))
+                {
+                    chunk.Add(item);
+                }
+
+                columns.Add(new PerkColumnVM(chunk));
+            }
+
+            return columns;
         }
     }
 }
