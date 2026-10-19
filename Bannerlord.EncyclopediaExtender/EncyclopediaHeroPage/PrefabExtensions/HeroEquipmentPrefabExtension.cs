@@ -17,11 +17,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
 <DummyRoot>
     <EncyclopediaDivider
         MarginTop=""20""
+        MarginBottom=""30""
         Parameter.Title=""@EquipmentText""
         Parameter.ItemList=""..\EquipmentContainer\EquipmentList"" />
     <Widget
         Id=""EquipmentContainer""
-        MarginTop=""15""
+        MarginLeft=""30""
         HeightSizePolicy=""CoverChildren""
         WidthSizePolicy=""StretchToParent"">
         <Children>

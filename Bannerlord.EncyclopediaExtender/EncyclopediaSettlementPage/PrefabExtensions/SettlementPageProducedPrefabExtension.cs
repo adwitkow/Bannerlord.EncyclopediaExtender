@@ -15,7 +15,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage.PrefabExten
   <EncyclopediaDivider MarginTop=""20"" Parameter.Title=""@ProducedText"" Parameter.ItemList=""..\ProducedItemsGrid""/>
 
   <NavigationScopeTargeter ScopeID=""EncyclopediaSettlementProducedItemsScope"" ScopeParent=""..\ProducedItemsGrid"" ScopeMovements=""Horizontal"" AlternateScopeMovements=""Vertical"" AlternateMovementStepSize=""7"" />
-  <NavigatableGridWidget Id=""ProducedItemsGrid"" DataSource=""{{ProducedItems}}"" WidthSizePolicy = ""StretchToParent"" HeightSizePolicy = ""CoverChildren"" SuggestedWidth=""350"" SuggestedHeight=""350"" DefaultCellWidth=""100"" DefaultCellHeight=""100"" HorizontalAlignment=""Left"" ColumnCount=""7"" MarginTop=""10"" MarginLeft=""15"" AutoScrollYOffset=""35"" >
+  <NavigatableGridWidget Id=""ProducedItemsGrid"" DataSource=""{{ProducedItems}}"" WidthSizePolicy = ""StretchToParent"" HeightSizePolicy = ""CoverChildren"" SuggestedWidth=""350"" SuggestedHeight=""350"" DefaultCellWidth=""100"" DefaultCellHeight=""100"" HorizontalAlignment=""Left"" ColumnCount=""7"" MarginTop=""20"" MarginLeft=""15"" AutoScrollYOffset=""35"" >
     <ItemTemplate>
 
         <SettlementProducedItem />
@@ -26,7 +26,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage.PrefabExten
   <EncyclopediaDivider MarginTop=""20"" Parameter.Title=""@TradeBoundText"" Parameter.ItemList=""..\TradeBoundSettlements"" />
 
   <NavigationScopeTargeter ScopeID=""EncyclopediaSettlementTradeBoundScope"" ScopeParent=""..\TradeBoundSettlements"" ScopeMovements=""Horizontal"" AlternateScopeMovements=""Vertical"" AlternateMovementStepSize=""7"" />
-  <NavigatableGridWidget Id=""TradeBoundSettlements"" DataSource=""{{TradeBoundSettlements}}"" WidthSizePolicy = ""StretchToParent"" HeightSizePolicy = ""CoverChildren"" SuggestedWidth=""350"" SuggestedHeight=""350"" DefaultCellWidth=""100"" DefaultCellHeight=""100"" HorizontalAlignment=""Left"" ColumnCount=""7"" MarginTop=""10"" MarginLeft=""15"" AutoScrollYOffset=""35"" >
+  <NavigatableGridWidget Id=""TradeBoundSettlements"" DataSource=""{{TradeBoundSettlements}}"" WidthSizePolicy = ""StretchToParent"" HeightSizePolicy = ""CoverChildren"" SuggestedWidth=""350"" SuggestedHeight=""350"" DefaultCellWidth=""100"" DefaultCellHeight=""100"" HorizontalAlignment=""Left"" ColumnCount=""7"" MarginTop=""20"" MarginLeft=""15"" AutoScrollYOffset=""35"" >
     <ItemTemplate>
 
       <ButtonWidget DoNotPassEventsToChildren=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed"" SuggestedWidth=""90"" SuggestedHeight=""90"" Brush=""Encyclopedia.SubPage.Element"" Command.Click=""ExecuteLink"">

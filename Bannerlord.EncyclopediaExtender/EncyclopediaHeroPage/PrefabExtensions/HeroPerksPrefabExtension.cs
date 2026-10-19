@@ -13,7 +13,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
         public string GetContent() => $@"
 <DummyRoot>
   <EncyclopediaDivider
-    MarginTop=""20""
+    MarginTop=""-50""
     Parameter.Title=""@PerksText""
     Parameter.ItemList=""..\PerksColumns"" />
 
