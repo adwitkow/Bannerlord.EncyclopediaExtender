@@ -30,7 +30,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       MarginRight=""20""
       DefaultCellHeight=""50""
       ColumnCount=""6""
-      LayoutImp.VerticalLayoutMethod=""{Constants.VerticalTopToBottom}"">
+      LayoutImp.VerticalLayoutMethod=""TopToBottom"">
 
     <ItemTemplate>
       <ListPanel
