@@ -3,17 +3,22 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensions
 {
-    [PrefabExtension("EncyclopediaFactionPage", "descendant::NavigatableGridWidget[@Id='EnemiesGrid']")]
+    [PrefabExtension(
+        "EncyclopediaFactionPage",
+        "descendant::ListPanel[@Id='RightSideList']/Children/Widget/Children/ListPanel/Children")]
     internal class FactionPrisonerPrefabExtension : PrefabExtensionInsertPatch
     {
-        public override InsertType Type => InsertType.Append;
+        public override InsertType Type => InsertType.Child;
+
+        public override int Index => int.MaxValue;
 
         // TODO: Externalize this xml to a file outside of Module/GUI/Prefabs directory
         [PrefabExtensionText(true)]
         public string GetContent() => @"
 <DummyRoot>
   <EncyclopediaDivider
-      MarginTop=""30""
+      MarginTop=""35""      
+      MarginBottom=""15""
       Parameter.Title=""@CapturedHeroesText""
       Parameter.ItemList=""..\CapturedHeroesGrid"" />
 
@@ -28,9 +33,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
       DefaultCellHeight=""100""
       HorizontalAlignment=""Left""
       MarginLeft=""25""
-      ColumnCount=""7""
-      MarginTop=""5""
-      MarginBottom=""0"">
+      ColumnCount=""7"">
 
     <ItemTemplate>
       <EncyclopediaSubPageElement />
@@ -38,8 +41,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
   </GridWidget>
 
   <EncyclopediaDivider
-      MarginTop=""5""
-      MarginBottom=""20""
+      MarginTop=""35""
+      MarginBottom=""15""
       Parameter.Title=""@ImprisonedHeroesText""
       Parameter.ItemList=""..\ImprisonedHeroesGrid"" />
 
@@ -54,15 +57,19 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
       DefaultCellHeight=""100""
       HorizontalAlignment=""Left""
       MarginLeft=""25""
-      ColumnCount=""7""
-      MarginTop=""5""
-      MarginBottom=""0"">
+      ColumnCount=""7"">
     
     <ItemTemplate>
       <EncyclopediaSubPageElement />
     </ItemTemplate>
   </GridWidget>
-
+  
+  <!--Bottom Padding Widget-->
+  <Widget
+    DoNotAcceptEvents=""true""
+    WidthSizePolicy=""StretchToParent""
+    HeightSizePolicy=""Fixed""
+    SuggestedHeight=""100""/>
 </DummyRoot>";
     }
 }
