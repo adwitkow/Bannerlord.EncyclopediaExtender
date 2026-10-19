@@ -15,12 +15,27 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
         [PrefabExtensionText(true)]
         public string GetContent() => $@"
 <DummyRoot>
-    <EncyclopediaDivider MarginTop=""20"" Parameter.Title=""@EquipmentText"" Parameter.ItemList=""..\EquipmentContainer""/>
-    <Widget Id=""EquipmentContainer"" MarginTop=""15"" HeightSizePolicy=""CoverChildren"" WidthSizePolicy=""StretchToParent"">
+    <EncyclopediaDivider
+        MarginTop=""20""
+        Parameter.Title=""@EquipmentText""
+        Parameter.ItemList=""..\EquipmentContainer\EquipmentList"" />
+    <Widget
+        Id=""EquipmentContainer""
+        MarginTop=""15""
+        HeightSizePolicy=""CoverChildren""
+        WidthSizePolicy=""StretchToParent"">
         <Children>
-            <ListPanel Id=""EquipmentList"" DataSource=""{{HeroItems}}"" WidthSizePolicy=""CoverChildren"" HeightSizePolicy=""CoverChildren"" StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
+            <ListPanel
+                Id=""EquipmentList""
+                DataSource=""{{HeroItems}}""
+                WidthSizePolicy=""CoverChildren""
+                HeightSizePolicy=""CoverChildren""
+                StackLayout.LayoutMethod=""{Constants.VerticalTopToBottom}"">
                 <ItemTemplate>
-                    <!--AutoHideRichTextWidget HeightSizePolicy =""CoverChildren"" WidthSizePolicy=""CoverChildren"" VerticalAlignment=""Center"" Brush=""Encyclopedia.Stat.DefinitionText"" Text=""@ItemDescription"" MarginRight=""5""/-->
+                    <!--AutoHideRichTextWidget
+                    HeightSizePolicy =""CoverChildren"" WidthSizePolicy=""CoverChildren""
+                    VerticalAlignment=""Center"" Brush=""Encyclopedia.Stat.DefinitionText""
+                    Text=""@ItemDescription"" MarginRight=""5""/-->
                     <HeroItemTuple />
                 </ItemTemplate>
             </ListPanel>
