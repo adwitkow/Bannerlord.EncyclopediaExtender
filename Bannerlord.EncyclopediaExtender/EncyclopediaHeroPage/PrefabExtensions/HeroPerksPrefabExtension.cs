@@ -24,7 +24,6 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       HeightSizePolicy=""CoverChildren""
       HorizontalAlignment=""Left""
       MarginTop=""10""
-      MarginBottom=""80""
       MarginLeft=""15""
       StackLayout.LayoutMethod=""HorizontalLeftToRight"">
 
@@ -102,6 +101,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       </Widget>
     </ItemTemplate>
   </ListPanel>
+  
+  <!--Bottom Padding Widget-->
+  <Widget
+    DoNotAcceptEvents=""true""
+    WidthSizePolicy=""StretchToParent""
+    HeightSizePolicy=""Fixed""
+    SuggestedHeight=""100""/>
 </DummyRoot>";
     }
 }
