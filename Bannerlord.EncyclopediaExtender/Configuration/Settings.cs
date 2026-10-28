@@ -10,6 +10,7 @@ internal static class Settings
     internal static bool ClanDefectionPrice { get; set; } = true;
     internal static bool ClanCashToPersuade { get; set; } = true;
     internal static bool ClanDefectionChance { get; set; } = true;
+    internal static bool ClanRenown { get; set; } = true;
     #endregion
     #region Faction page
     internal static bool KingdomBank { get; set; } = true;

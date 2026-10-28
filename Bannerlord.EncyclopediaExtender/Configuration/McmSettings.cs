@@ -17,6 +17,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
         ClanDefectionPrice = Settings.ClanDefectionPrice;
         ClanCashToPersuade = Settings.ClanCashToPersuade;
         ClanDefectionChance = Settings.ClanDefectionChance;
+        ClanRenown = Settings.ClanRenown;
         KingdomBank = Settings.KingdomBank;
         KingdomClansWealthSum = Settings.KingdomClansWealthSum;
         CapturedHeroes = Settings.CapturedHeroes;
@@ -148,6 +149,22 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
             {
                 field = value;
                 Settings.ClanDefectionChance = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    [SettingPropertyBool(Texts.Ids.Renown, Order = 8, RequireRestart = false)]
+    [SettingPropertyGroup(Texts.Ids.Clan)]
+    public bool ClanRenown
+    {
+        get;
+        set
+        {
+            if (field != value)
+            {
+                field = value;
+                Settings.ClanRenown = value;
                 OnPropertyChanged();
             }
         }
@@ -445,6 +462,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
                 ClanDefectionPrice = false,
                 ClanCashToPersuade = false,
                 ClanDefectionChance = false,
+                ClanRenown = false,
                 KingdomBank = false,
                 KingdomClansWealthSum = false,
                 CapturedHeroes = false,
@@ -477,6 +495,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
                 ClanDefectionPrice = true,
                 ClanCashToPersuade = true,
                 ClanDefectionChance = true,
+                ClanRenown = true,
                 KingdomBank = true,
                 KingdomClansWealthSum = true,
                 CapturedHeroes = true,

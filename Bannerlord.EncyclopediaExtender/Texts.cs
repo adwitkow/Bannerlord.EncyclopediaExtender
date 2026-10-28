@@ -15,7 +15,8 @@ internal static class Texts
     public static readonly TextObject CashRequiredToPersuade = new(Ids.CashRequiredToPersuade);
     public static readonly TextObject HappyWithCurrentLiege = new(Ids.HappyWithCurrentLiege);
     public static readonly TextObject DailyDefectionChance = new(Ids.DailyDefectionChance);
-#endregion
+    public static readonly TextObject Renown = new(Ids.Renown);
+    #endregion
     #region Faction page
     public static readonly TextObject KingdomWealth = new(Ids.KingdomWealth);
     public static readonly TextObject CapturedHeroes = new(Ids.CapturedHeroes);
@@ -62,6 +63,7 @@ internal static class Texts
         public const string CashRequiredToPersuade = "{=vMSUkkSBqeO}Cash required to persuade";
         public const string HappyWithCurrentLiege = "{=9QU7uyLxhXJ}Happy with current liege";
         public const string DailyDefectionChance = "{=0w5RZCxnZ3B}Daily defection chance";
+        public const string Renown = "{=aZxHIra4}Renown";
         #endregion
         #region Faction page
         public const string KingdomWealth = "{=VidmvRvXecq}Kingdom Wealth";

@@ -107,6 +107,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                     DefectionInfo.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
                 }
             }
+
+            if (Settings.ClanRenown)
+            {
+                ViewModel.ClanInfo.AddPair(Texts.Renown, _clan.Renown.ToString(Constants.WholeNumberFormat));
+            }
         }
 
         private float BruteForceDefectionChance(Clan clan)
