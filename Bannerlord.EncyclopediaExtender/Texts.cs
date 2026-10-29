@@ -1,10 +1,10 @@
-﻿using TaleWorlds.Core;
-using TaleWorlds.Localization;
+﻿using TaleWorlds.Localization;
 
 namespace Bannerlord.EncyclopediaExtender;
 
 internal static class Texts
-{        
+{
+    public static readonly TextObject Info = new(Ids.Info);
     #region Clan page
     public static readonly TextObject Defection = new(Ids.Defection);
     public static readonly TextObject Cash = new(Ids.Cash);
@@ -18,7 +18,6 @@ internal static class Texts
     public static readonly TextObject Renown = new(Ids.Renown);
     #endregion
     #region Faction page
-    public static readonly TextObject KingdomWealth = new(Ids.KingdomWealth);
     public static readonly TextObject CapturedHeroes = new(Ids.CapturedHeroes);
     public static readonly TextObject ImprisonedHeroes = new(Ids.ImprisonedHeroes);
     public static readonly TextObject KingdomBank = new(Ids.KingdomBank);
@@ -53,6 +52,7 @@ internal static class Texts
 
     internal static class Ids
     {
+        public const string Info = "{=cJmI2poS}Info";
         #region Clan page
         public const string Defection = "{=uj3CXxKYK03}Defection";
         public const string Cash = "{=beBL5H1u2fu}Cash";
@@ -66,7 +66,6 @@ internal static class Texts
         public const string Renown = "{=aZxHIra4}Renown";
         #endregion
         #region Faction page
-        public const string KingdomWealth = "{=VidmvRvXecq}Kingdom Wealth";
         public const string CapturedHeroes = "{=FwJELs27ac7}Captured Heroes";
         public const string ImprisonedHeroes = "{=1CYZYNXTfN9}Imprisoned Heroes";
         public const string KingdomBank = "{=z4z97KSX12m}Kingdom Bank";

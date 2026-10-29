@@ -4,7 +4,7 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensions
 {
     [PrefabExtension("EncyclopediaFactionPage", "descendant::EncyclopediaSubPageElement[@Id='Leader']")]
-    public class FactionWealthPrefabExtension : PrefabExtensionInsertPatch
+    public class FactionInfoPrefabExtension : PrefabExtensionInsertPatch
     {
         public override InsertType Type => InsertType.Append;
 
@@ -14,12 +14,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
 <DummyRoot>
   <EncyclopediaDivider
       MarginTop=""30""
-      Parameter.Title=""@KingdomWealthText""
-      Parameter.ItemList=""..\WealthInfoGrid"" />
+      Parameter.Title=""@KingdomInfoText""
+      Parameter.ItemList=""..\KingdomInfoGrid"" />
 
   <GridWidget
-      Id=""WealthInfoGrid""
-      DataSource=""{WealthInfo}""
+      Id=""KingdomInfoGrid""
+      DataSource=""{KingdomInfo}""
       WidthSizePolicy=""CoverChildren""
       HeightSizePolicy=""CoverChildren""
       DefaultCellWidth=""300""

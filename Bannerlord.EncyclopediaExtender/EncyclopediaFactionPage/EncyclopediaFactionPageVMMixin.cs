@@ -19,20 +19,20 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
         {
             _kingdom = vm.Obj as Kingdom;
 
-            WealthInfo = new MBBindingList<StringPairItemVM>();
+            KingdomInfo = new MBBindingList<StringPairItemVM>();
             CapturedHeroes = new MBBindingList<HeroVM>();
             ImprisonedHeroes = new MBBindingList<HeroVM>();
 
-            KingdomWealthText = "";
+            KingdomInfoText = "";
             CapturedHeroesText = "";
             ImprisonedHeroesText = "";
         }
 
         [DataSourceProperty]
-        public string KingdomWealthText { get; set; }
+        public string KingdomInfoText { get; set; }
 
         [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> WealthInfo { get; set; }
+        public MBBindingList<StringPairItemVM> KingdomInfo { get; set; }
 
         [DataSourceProperty]
         public string CapturedHeroesText { get; set; }
@@ -48,11 +48,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 
         public override void OnRefresh()
         {
-            KingdomWealthText = Texts.KingdomWealth.ToString();
+            KingdomInfoText = Texts.Info.ToString();
             CapturedHeroesText = Texts.CapturedHeroes.ToString();
             ImprisonedHeroesText = Texts.ImprisonedHeroes.ToString();
 
-            WealthInfo.Clear();
+            KingdomInfo.Clear();
             CapturedHeroes.Clear();
             ImprisonedHeroes.Clear();
 
@@ -64,13 +64,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             if (Settings.KingdomBank)
             {
                 var kingdomBank = GetFormattedKingdomBank(_kingdom);
-                WealthInfo.AddPair(Texts.KingdomBank, kingdomBank);
+                KingdomInfo.AddPair(Texts.KingdomBank, kingdomBank);
             }
 
             if (Settings.KingdomClansWealthSum)
             {
                 var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
-                WealthInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
+                KingdomInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
             }
 
             if (Settings.CapturedHeroes)
