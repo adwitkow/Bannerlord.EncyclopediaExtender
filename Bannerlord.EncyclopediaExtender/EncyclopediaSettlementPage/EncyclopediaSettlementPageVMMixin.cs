@@ -1,4 +1,5 @@
 ﻿using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.DictionarySection;
 using Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage.ViewModels;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
@@ -21,6 +22,9 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
 
             ProducedText = string.Empty;
             TradeBoundText = string.Empty;
+
+            InfoSection = new();
+
             ProducedItems = new MBBindingList<ItemElementVM>();
             TradeBoundSettlements = new MBBindingList<EncyclopediaSettlementVM>();
         }
@@ -32,6 +36,9 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
         public string TradeBoundText { get; set; }
 
         [DataSourceProperty]
+        public DictionarySectionVM InfoSection { get; set; }
+
+        [DataSourceProperty]
         public MBBindingList<ItemElementVM> ProducedItems { get; set; }
 
         [DataSourceProperty]
@@ -40,12 +47,21 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaSettlementPage
         public override void OnRefresh()
         {
             ProducedText = Texts.Production.ToString();
+
+            InfoSection.Title = Texts.Info.ToString();
+            InfoSection.Items.Clear();
+
             ProducedItems.Clear();
             TradeBoundSettlements.Clear();
 
             if (_settlement is null)
             {
                 return;
+            }
+
+            if (Settings.SettlementId)
+            {
+                InfoSection.Items.AddPair(Texts.Id, _settlement.StringId);
             }
 
             if (_settlement.IsVillage)

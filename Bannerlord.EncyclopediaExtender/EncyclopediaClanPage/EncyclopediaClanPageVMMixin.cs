@@ -36,6 +36,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
             {
                 return;
             }
+            
+            if (Settings.ClanId)
+            {
+                ViewModel.ClanInfo.AddPair(Texts.Id, _clan.StringId);
+            }
 
             if (Settings.ClanCash)
             {

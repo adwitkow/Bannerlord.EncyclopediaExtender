@@ -92,6 +92,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddViewModelStats(Hero hero)
         {
+            if (Settings.HeroId)
+            {
+                AddViewModelStatPair(Texts.Id, hero.StringId);
+            }
+
             if (Settings.HeroLevel)
             {
                 AddViewModelStatPair(Texts.Level, hero.Level);

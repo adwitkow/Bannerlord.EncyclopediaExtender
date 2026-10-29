@@ -4,6 +4,7 @@ namespace Bannerlord.EncyclopediaExtender;
 
 internal static class Texts
 {
+    public static readonly TextObject Id = new(Ids.Id);
     public static readonly TextObject Info = new(Ids.Info);
     #region Clan page
     public static readonly TextObject Defection = new(Ids.Defection);
@@ -52,6 +53,7 @@ internal static class Texts
 
     internal static class Ids
     {
+        public const string Id = "{=EE_id}ID";
         public const string Info = "{=cJmI2poS}Info";
         #region Clan page
         public const string Defection = "{=uj3CXxKYK03}Defection";

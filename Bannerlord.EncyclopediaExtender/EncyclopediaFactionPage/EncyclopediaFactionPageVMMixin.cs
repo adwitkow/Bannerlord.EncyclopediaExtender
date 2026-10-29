@@ -58,6 +58,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
                 return;
             }
 
+            if (Settings.KingdomId)
+            {
+                InfoSection.Items.AddPair(Texts.Id, _kingdom.StringId);
+            }
+
             if (Settings.KingdomBank)
             {
                 var kingdomBank = GetFormattedKingdomBank(_kingdom);

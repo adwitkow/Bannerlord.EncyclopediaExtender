@@ -3,6 +3,7 @@
 internal static class Settings
 {
     #region Clan page
+    internal static bool ClanId { get; set; } = true;
     internal static bool ClanCash { get; set; } = true;
     internal static bool ClanDebt { get; set; } = true;
     internal static bool ClanShareOfKingdomWealth { get; set; } = true;
@@ -13,12 +14,14 @@ internal static class Settings
     internal static bool ClanRenown { get; set; } = true;
     #endregion
     #region Faction page
+    internal static bool KingdomId { get; set; } = true;
     internal static bool KingdomBank { get; set; } = true;
     internal static bool KingdomClansWealthSum { get; set; } = true;
     internal static bool CapturedHeroes { get; set; } = true;
     internal static bool ImprisonedHeroes { get; set; } = true;
     #endregion
     #region Hero page
+    internal static bool HeroId { get; set; } = true;
     internal static bool HeroLevel { get; set; } = true;
     internal static bool HeroEquipmentSaleValue { get; set; } = true;
     internal static bool HeroImprisonment { get; set; } = true;
@@ -31,6 +34,7 @@ internal static class Settings
     internal static bool HeroAttributes { get; set; } = true;
     #endregion
     #region Settlement page
+    internal static bool SettlementId { get; set; } = true;
     internal static bool SettlementProducedItems { get; set; } = true;
     internal static bool TradeBoundSettlement { get; set; } = true;
     internal static bool TradeBoundVillages { get; set; } = true;

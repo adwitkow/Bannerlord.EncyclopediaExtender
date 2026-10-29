@@ -1,4 +1,5 @@
-﻿using MCM.Abstractions;
+﻿
+using MCM.Abstractions;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
@@ -8,50 +9,71 @@ namespace Bannerlord.EncyclopediaExtender.Configuration;
 
 internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
 {
-    public McmSettings()
-    {
-        ClanCash = Settings.ClanCash;
-        ClanDebt = Settings.ClanDebt;
-        ClanShareOfKingdomWealth = Settings.ClanShareOfKingdomWealth;
-        ClanTotalWealth = Settings.ClanTotalWealth;
-        ClanDefectionPrice = Settings.ClanDefectionPrice;
-        ClanCashToPersuade = Settings.ClanCashToPersuade;
-        ClanDefectionChance = Settings.ClanDefectionChance;
-        ClanRenown = Settings.ClanRenown;
-        KingdomBank = Settings.KingdomBank;
-        KingdomClansWealthSum = Settings.KingdomClansWealthSum;
-        CapturedHeroes = Settings.CapturedHeroes;
-        ImprisonedHeroes = Settings.ImprisonedHeroes;
-        HeroLevel = Settings.HeroLevel;
-        HeroEquipmentSaleValue = Settings.HeroEquipmentSaleValue;
-        HeroImprisonment = Settings.HeroImprisonment;
-        HeroArmy = Settings.HeroArmy;
-        HeroPersuasionDowry = Settings.HeroPersuasionDowry;
-        HeroBarterDowry = Settings.HeroBarterDowry;
-        HeroClanMemberDowry = Settings.HeroClanMemberDowry;
-        HeroEquipmentList = Settings.HeroEquipmentList;
-        HeroPerks = Settings.HeroPerks;
-        HeroAttributes = Settings.HeroAttributes;
-        SettlementProducedItems = Settings.SettlementProducedItems;
-        TradeBoundSettlement = Settings.TradeBoundSettlement;
-        TradeBoundVillages = Settings.TradeBoundVillages;
-    }
+    private bool _clanId = false;
+    private bool _clanCash = true;
+    private bool _clanDebt = true;
+    private bool _clanShareOfKingdomWealth = true;
+    private bool _clanTotalWealth = true;
+    private bool _clanDefectionPrice = true;
+    private bool _clanCashToPersuade = true;
+    private bool _clanDefectionChance = true;
+    private bool _clanRenown = true;
+
+    private bool _kingdomId = false;
+    private bool _kingdomBank = true;
+    private bool _kingdomClansWealthSum = true;
+    private bool _capturedHeroes = true;
+    private bool _imprisonedHeroes = true;
+
+    private bool _heroId = false;
+    private bool _heroLevel = true;
+    private bool _heroEquipmentSaleValue = true;
+    private bool _heroImprisonment = true;
+    private bool _heroArmy = true;
+    private bool _heroPersuasionDowry = true;
+    private bool _heroBarterDowry = true;
+    private bool _heroClanMemberDowry = true;
+    private bool _heroEquipmentList = true;
+    private bool _heroPerks = true;
+    private bool _heroAttributes = true;
+
+    private bool _settlementId = false;
+    private bool _settlementProducedItems = true;
+    private bool _tradeBoundSettlement = true;
+    private bool _tradeBoundVillages = true;
 
     public override string Id => "Bannerlord.EncyclopediaExtender";
     public override string DisplayName => "Encyclopedia Extender";
     public override string FolderName => "Bannerlord.EncyclopediaExtender";
     public override string FormatType => "json2";
 
+    #region Clan
+    [SettingPropertyBool(Texts.Ids.Id, Order = 0, RequireRestart = false)]
+    [SettingPropertyGroup(Texts.Ids.Clan)]
+    public bool ClanId
+    {
+        get => _clanId;
+        set
+        {
+            if (_clanId != value)
+            {
+                _clanId = value;
+                Settings.ClanId = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     [SettingPropertyBool(Texts.Ids.Cash, Order = 1, RequireRestart = false)]
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanCash
     {
-        get;
+        get => _clanCash;
         set
         {
-            if (field != value)
+            if (_clanCash != value)
             {
-                field = value;
+                _clanCash = value;
                 Settings.ClanCash = value;
                 OnPropertyChanged();
             }
@@ -62,12 +84,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanDebt
     {
-        get;
+        get => _clanDebt;
         set
         {
-            if (field != value)
+            if (_clanDebt != value)
             {
-                field = value;
+                _clanDebt = value;
                 Settings.ClanDebt = value;
                 OnPropertyChanged();
             }
@@ -78,12 +100,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanShareOfKingdomWealth
     {
-        get;
+        get => _clanShareOfKingdomWealth;
         set
         {
-            if (field != value)
+            if (_clanShareOfKingdomWealth != value)
             {
-                field = value;
+                _clanShareOfKingdomWealth = value;
                 Settings.ClanShareOfKingdomWealth = value;
                 OnPropertyChanged();
             }
@@ -94,12 +116,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanTotalWealth
     {
-        get;
+        get => _clanTotalWealth;
         set
         {
-            if (field != value)
+            if (_clanTotalWealth != value)
             {
-                field = value;
+                _clanTotalWealth = value;
                 Settings.ClanTotalWealth = value;
                 OnPropertyChanged();
             }
@@ -110,12 +132,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanDefectionPrice
     {
-        get;
+        get => _clanDefectionPrice;
         set
         {
-            if (field != value)
+            if (_clanDefectionPrice != value)
             {
-                field = value;
+                _clanDefectionPrice = value;
                 Settings.ClanDefectionPrice = value;
                 OnPropertyChanged();
             }
@@ -126,12 +148,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanCashToPersuade
     {
-        get;
+        get => _clanCashToPersuade;
         set
         {
-            if (field != value)
+            if (_clanCashToPersuade != value)
             {
-                field = value;
+                _clanCashToPersuade = value;
                 Settings.ClanCashToPersuade = value;
                 OnPropertyChanged();
             }
@@ -142,12 +164,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanDefectionChance
     {
-        get;
+        get => _clanDefectionChance;
         set
         {
-            if (field != value)
+            if (_clanDefectionChance != value)
             {
-                field = value;
+                _clanDefectionChance = value;
                 Settings.ClanDefectionChance = value;
                 OnPropertyChanged();
             }
@@ -158,13 +180,32 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Clan)]
     public bool ClanRenown
     {
-        get;
+        get => _clanRenown;
         set
         {
-            if (field != value)
+            if (_clanRenown != value)
             {
-                field = value;
+                _clanRenown = value;
                 Settings.ClanRenown = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Kingdom
+    [SettingPropertyBool(Texts.Ids.Id, Order = 0, RequireRestart = false)]
+    [SettingPropertyGroup(Texts.Ids.Kingdom)]
+    public bool KingdomId
+    {
+        get => _kingdomId;
+        set
+        {
+            if (_kingdomId != value)
+            {
+                _kingdomId = value;
+                Settings.KingdomId = value;
                 OnPropertyChanged();
             }
         }
@@ -174,12 +215,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Kingdom)]
     public bool KingdomBank
     {
-        get;
+        get => _kingdomBank;
         set
         {
-            if (field != value)
+            if (_kingdomBank != value)
             {
-                field = value;
+                _kingdomBank = value;
                 Settings.KingdomBank = value;
                 OnPropertyChanged();
             }
@@ -190,12 +231,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Kingdom)]
     public bool KingdomClansWealthSum
     {
-        get;
+        get => _kingdomClansWealthSum;
         set
         {
-            if (field != value)
+            if (_kingdomClansWealthSum != value)
             {
-                field = value;
+                _kingdomClansWealthSum = value;
                 Settings.KingdomClansWealthSum = value;
                 OnPropertyChanged();
             }
@@ -206,12 +247,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Kingdom)]
     public bool CapturedHeroes
     {
-        get;
+        get => _capturedHeroes;
         set
         {
-            if (field != value)
+            if (_capturedHeroes != value)
             {
-                field = value;
+                _capturedHeroes = value;
                 Settings.CapturedHeroes = value;
                 OnPropertyChanged();
             }
@@ -222,13 +263,31 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Kingdom)]
     public bool ImprisonedHeroes
     {
-        get;
+        get => _imprisonedHeroes;
         set
         {
-            if (field != value)
+            if (_imprisonedHeroes != value)
             {
-                field = value;
+                _imprisonedHeroes = value;
                 Settings.ImprisonedHeroes = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    #endregion
+
+    #region Hero
+    [SettingPropertyBool(Texts.Ids.Id, Order = 0, RequireRestart = false)]
+    [SettingPropertyGroup(Texts.Ids.Hero)]
+    public bool HeroId
+    {
+        get => _heroId;
+        set
+        {
+            if (_heroId != value)
+            {
+                _heroId = value;
+                Settings.HeroId = value;
                 OnPropertyChanged();
             }
         }
@@ -238,12 +297,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroLevel
     {
-        get;
+        get => _heroLevel;
         set
         {
-            if (field != value)
+            if (_heroLevel != value)
             {
-                field = value;
+                _heroLevel = value;
                 Settings.HeroLevel = value;
                 OnPropertyChanged();
             }
@@ -254,12 +313,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroEquipmentSaleValue
     {
-        get;
+        get => _heroEquipmentSaleValue;
         set
         {
-            if (field != value)
+            if (_heroEquipmentSaleValue != value)
             {
-                field = value;
+                _heroEquipmentSaleValue = value;
                 Settings.HeroEquipmentSaleValue = value;
                 OnPropertyChanged();
             }
@@ -270,12 +329,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroImprisonment
     {
-        get;
+        get => _heroImprisonment;
         set
         {
-            if (field != value)
+            if (_heroImprisonment != value)
             {
-                field = value;
+                _heroImprisonment = value;
                 Settings.HeroImprisonment = value;
                 OnPropertyChanged();
             }
@@ -286,12 +345,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroArmy
     {
-        get;
+        get => _heroArmy;
         set
         {
-            if (field != value)
+            if (_heroArmy != value)
             {
-                field = value;
+                _heroArmy = value;
                 Settings.HeroArmy = value;
                 OnPropertyChanged();
             }
@@ -302,12 +361,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroPersuasionDowry
     {
-        get;
+        get => _heroPersuasionDowry;
         set
         {
-            if (field != value)
+            if (_heroPersuasionDowry != value)
             {
-                field = value;
+                _heroPersuasionDowry = value;
                 Settings.HeroPersuasionDowry = value;
                 OnPropertyChanged();
             }
@@ -318,12 +377,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroBarterDowry
     {
-        get;
+        get => _heroBarterDowry;
         set
         {
-            if (field != value)
+            if (_heroBarterDowry != value)
             {
-                field = value;
+                _heroBarterDowry = value;
                 Settings.HeroBarterDowry = value;
                 OnPropertyChanged();
             }
@@ -334,12 +393,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroClanMemberDowry
     {
-        get;
+        get => _heroClanMemberDowry;
         set
         {
-            if (field != value)
+            if (_heroClanMemberDowry != value)
             {
-                field = value;
+                _heroClanMemberDowry = value;
                 Settings.HeroClanMemberDowry = value;
                 OnPropertyChanged();
             }
@@ -350,12 +409,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroEquipmentList
     {
-        get;
+        get => _heroEquipmentList;
         set
         {
-            if (field != value)
+            if (_heroEquipmentList != value)
             {
-                field = value;
+                _heroEquipmentList = value;
                 Settings.HeroEquipmentList = value;
                 OnPropertyChanged();
             }
@@ -366,12 +425,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroPerks
     {
-        get;
+        get => _heroPerks;
         set
         {
-            if (field != value)
+            if (_heroPerks != value)
             {
-                field = value;
+                _heroPerks = value;
                 Settings.HeroPerks = value;
                 OnPropertyChanged();
             }
@@ -382,13 +441,31 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Hero)]
     public bool HeroAttributes
     {
-        get;
+        get => _heroAttributes;
         set
         {
-            if (field != value)
+            if (_heroAttributes != value)
             {
-                field = value;
+                _heroAttributes = value;
                 Settings.HeroAttributes = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    #endregion
+
+    #region Settlement
+    [SettingPropertyBool(Texts.Ids.Id, Order = 0, RequireRestart = false)]
+    [SettingPropertyGroup(Texts.Ids.Settlement)]
+    public bool SettlementId
+    {
+        get => _settlementId;
+        set
+        {
+            if (_settlementId != value)
+            {
+                _settlementId = value;
+                Settings.SettlementId = value;
                 OnPropertyChanged();
             }
         }
@@ -398,12 +475,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Settlement)]
     public bool SettlementProducedItems
     {
-        get;
+        get => _settlementProducedItems;
         set
         {
-            if (field != value)
+            if (_settlementProducedItems != value)
             {
-                field = value;
+                _settlementProducedItems = value;
                 Settings.SettlementProducedItems = value;
                 OnPropertyChanged();
             }
@@ -414,12 +491,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Settlement)]
     public bool TradeBoundSettlement
     {
-        get;
+        get => _tradeBoundSettlement;
         set
         {
-            if (field != value)
+            if (_tradeBoundSettlement != value)
             {
-                field = value;
+                _tradeBoundSettlement = value;
                 Settings.TradeBoundSettlement = value;
                 OnPropertyChanged();
             }
@@ -430,17 +507,18 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     [SettingPropertyGroup(Texts.Ids.Settlement)]
     public bool TradeBoundVillages
     {
-        get;
+        get => _tradeBoundVillages;
         set
         {
-            if (field != value)
+            if (_tradeBoundVillages != value)
             {
-                field = value;
+                _tradeBoundVillages = value;
                 Settings.TradeBoundVillages = value;
                 OnPropertyChanged();
             }
         }
     }
+    #endregion
 
     public override IEnumerable<ISettingsPreset> GetBuiltInPresets()
     {
@@ -453,66 +531,51 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
             Id,
             "false",
             "Everything off",
-            () => new McmSettings()
-            {
-                ClanCash = false,
-                ClanDebt = false,
-                ClanShareOfKingdomWealth = false,
-                ClanTotalWealth = false,
-                ClanDefectionPrice = false,
-                ClanCashToPersuade = false,
-                ClanDefectionChance = false,
-                ClanRenown = false,
-                KingdomBank = false,
-                KingdomClansWealthSum = false,
-                CapturedHeroes = false,
-                ImprisonedHeroes = false,
-                HeroLevel = false,
-                HeroEquipmentSaleValue = false,
-                HeroImprisonment = false,
-                HeroArmy = false,
-                HeroPersuasionDowry = false,
-                HeroBarterDowry = false,
-                HeroClanMemberDowry = false,
-                HeroEquipmentList = false,
-                HeroPerks = false,
-                HeroAttributes = false,
-                SettlementProducedItems = false,
-                TradeBoundSettlement = false,
-                TradeBoundVillages = false,
-            });
+            () => CreateNew(false));
 
         yield return new MemorySettingsPreset(
             Id,
             "true",
             "Everything on",
-            () => new McmSettings()
-            {
-                ClanCash = true,
-                ClanDebt = true,
-                ClanShareOfKingdomWealth = true,
-                ClanTotalWealth = true,
-                ClanDefectionPrice = true,
-                ClanCashToPersuade = true,
-                ClanDefectionChance = true,
-                ClanRenown = true,
-                KingdomBank = true,
-                KingdomClansWealthSum = true,
-                CapturedHeroes = true,
-                ImprisonedHeroes = true,
-                HeroLevel = true,
-                HeroEquipmentSaleValue = true,
-                HeroImprisonment = true,
-                HeroArmy = true,
-                HeroPersuasionDowry = true,
-                HeroBarterDowry = true,
-                HeroClanMemberDowry = true,
-                HeroEquipmentList = true,
-                HeroPerks = true,
-                HeroAttributes = true,
-                SettlementProducedItems = true,
-                TradeBoundSettlement = true,
-                TradeBoundVillages = true,
-            });
+            () => CreateNew(true));
+    }
+
+    private McmSettings CreateNew(bool value)
+    {
+        return new McmSettings
+        {
+            _clanId = value,
+            _clanCash = value,
+            _clanDebt = value,
+            _clanShareOfKingdomWealth = value,
+            _clanTotalWealth = value,
+            _clanDefectionPrice = value,
+            _clanCashToPersuade = value,
+            _clanDefectionChance = value,
+            _clanRenown = value,
+
+            _kingdomId = value,
+            _kingdomBank = value,
+            _kingdomClansWealthSum = value,
+            _capturedHeroes = value,
+            _imprisonedHeroes = value,
+
+            _heroId = value,
+            _heroLevel = value,
+            _heroEquipmentSaleValue = value,
+            _heroImprisonment = value,
+            _heroArmy = value,
+            _heroPersuasionDowry = value,
+            _heroBarterDowry = value,
+            _heroClanMemberDowry = value,
+            _heroEquipmentList = value,
+            _heroPerks = value,
+            _heroAttributes = value,
+
+            _settlementId = value,
+            _settlementProducedItems = value,
+            _tradeBoundSettlement = value,
+            _tradeBoundVillages = value,
+        };
     }
 }
