@@ -12,50 +12,10 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage.PrefabExtensio
         [PrefabExtensionText(true)]
         public string GetContent() => @"
 <DummyRoot>
-  <EncyclopediaDivider
-      MarginTop=""30""
-      Parameter.Title=""@KingdomInfoText""
-      Parameter.ItemList=""..\KingdomInfoGrid"" />
-
-  <GridWidget
-      Id=""KingdomInfoGrid""
-      DataSource=""{KingdomInfo}""
-      WidthSizePolicy=""CoverChildren""
-      HeightSizePolicy=""CoverChildren""
-      DefaultCellWidth=""300""
-      DefaultCellHeight=""30""
-      HorizontalAlignment=""Left""
-      ColumnCount=""2""
-      MarginTop=""10""
-      MarginLeft=""15"">
-
-    <ItemTemplate>
-      <ListPanel
-          HeightSizePolicy=""CoverChildren""
-          WidthSizePolicy=""StretchToParent""
-          MarginLeft=""15""
-          MarginTop=""3"">
-
-        <Children>
-          <AutoHideRichTextWidget
-              HeightSizePolicy=""CoverChildren""
-              WidthSizePolicy=""CoverChildren""
-              VerticalAlignment=""Center""
-              Brush=""Encyclopedia.Stat.DefinitionText""
-              Text=""@Definition""
-              MarginRight=""5"" />
-
-          <AutoHideRichTextWidget
-              HeightSizePolicy=""CoverChildren""
-              WidthSizePolicy=""CoverChildren""
-              VerticalAlignment=""Center""
-              Brush=""Encyclopedia.Stat.ValueText""
-              Text=""@Value""
-              PositionYOffset=""2"" />
-        </Children>
-      </ListPanel>
-    </ItemTemplate>
-  </GridWidget>
+  <EncyclopediaDictionarySection
+    DataSource=""{InfoSection}""
+    Parameter.ScopeId=""KingomInfoSectionScope""
+    Parameter.MarginTop=""50"" />
 </DummyRoot>";
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.DictionarySection;
 using Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.ViewModels;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
@@ -18,7 +19,6 @@ using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
-using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -33,19 +33,16 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         public string AttributesText { get; set; }
 
         [DataSourceProperty]
-        public string DowryPricesText { get; set; }
-
-        [DataSourceProperty]
         public string EquipmentText { get; set; }
 
         [DataSourceProperty]
         public string PerksText { get; set; }
 
         [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> MarriagePrices { get; set; }
+        public MBBindingList<SPItemVM> HeroItems { get; set; }
 
         [DataSourceProperty]
-        public MBBindingList<SPItemVM> HeroItems { get; set; }
+        public DictionarySectionVM DowrySection { get; set; }
 
         [DataSourceProperty]
         public MBBindingList<PerkColumnVM> PerkColumns { get; set; }
@@ -57,12 +54,12 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         {
             _hero = vm.Obj as Hero;
 
-            MarriagePrices = new MBBindingList<StringPairItemVM>();
+            DowrySection = new();
+
             HeroItems = new MBBindingList<SPItemVM>();
             PerkColumns = new MBBindingList<PerkColumnVM>();
             Attributes = new MBBindingList<ExtenderAttributeVM>();
 
-            DowryPricesText = "";
             EquipmentText = "";
             PerksText = "";
             AttributesText = "";
@@ -70,12 +67,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         public override void OnRefresh()
         {
-            DowryPricesText = Texts.DowryPrices.ToString();
+            DowrySection.Title = Texts.DowryPrices.ToString();
+            DowrySection.Items.Clear();
+
             EquipmentText = Texts.Equipment.ToString();
             PerksText = Texts.Perks.ToString();
             AttributesText = Texts.Attributes.ToString();
 
-            MarriagePrices.Clear();
             HeroItems.Clear();
             PerkColumns.Clear();
             Attributes.Clear();
@@ -136,14 +134,14 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                     var mainHeroToHero = new MarriageBarterable(mainHero, PartyBase.MainParty, hero, mainHero);
                     var persuasionDowryValue = -mainHeroToHero.GetUnitValueForFaction(hero.Clan);
                     var persuasionDowryFormatted = persuasionDowryValue.ToString(Constants.WholeNumberFormat);
-                    MarriagePrices.AddPair(Texts.PersuasionDowry, persuasionDowryFormatted);
+                    DowrySection.Items.AddPair(Texts.PersuasionDowry, persuasionDowryFormatted);
                 }
 
                 if (Settings.HeroBarterDowry)
                 {
                     var heroToMainHero = new MarriageBarterable(mainHero, PartyBase.MainParty, mainHero, hero);
                     int dowry = -heroToMainHero.GetUnitValueForFaction(hero.Clan);
-                    MarriagePrices.AddPair(Texts.BarterDowry, dowry.ToString(Constants.WholeNumberFormat));
+                    DowrySection.Items.AddPair(Texts.BarterDowry, dowry.ToString(Constants.WholeNumberFormat));
                 }
             }
 
@@ -159,7 +157,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
                     MarriageBarterable heroToClanHero = new MarriageBarterable(mainHero, PartyBase.MainParty, clanHero, hero);
                     int dowry = -heroToClanHero.GetUnitValueForFaction(hero.Clan);
                     var relation = CampaignUIHelper.GetHeroRelationToHeroText(clanHero, mainHero, false);
-                    MarriagePrices.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString(Constants.WholeNumberFormat));
+                    DowrySection.Items.AddPair($"{clanHero.Name} ({relation}):", dowry.ToString(Constants.WholeNumberFormat));
                 }
             }
         }

@@ -2,11 +2,11 @@
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Library;
 using Bannerlord.UIExtenderEx.Attributes;
 using System.Linq;
 using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.DictionarySection;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 {
@@ -19,20 +19,17 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
         {
             _kingdom = vm.Obj as Kingdom;
 
-            KingdomInfo = new MBBindingList<StringPairItemVM>();
+            InfoSection = new DictionarySectionVM();
+
             CapturedHeroes = new MBBindingList<HeroVM>();
             ImprisonedHeroes = new MBBindingList<HeroVM>();
 
-            KingdomInfoText = "";
             CapturedHeroesText = "";
             ImprisonedHeroesText = "";
         }
 
         [DataSourceProperty]
-        public string KingdomInfoText { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> KingdomInfo { get; set; }
+        public DictionarySectionVM InfoSection { get; set; }
 
         [DataSourceProperty]
         public string CapturedHeroesText { get; set; }
@@ -48,11 +45,11 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
 
         public override void OnRefresh()
         {
-            KingdomInfoText = Texts.Info.ToString();
+            InfoSection.Title = Texts.Info.ToString();
             CapturedHeroesText = Texts.CapturedHeroes.ToString();
             ImprisonedHeroesText = Texts.ImprisonedHeroes.ToString();
 
-            KingdomInfo.Clear();
+            InfoSection.Items.Clear();
             CapturedHeroes.Clear();
             ImprisonedHeroes.Clear();
 
@@ -64,13 +61,13 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaFactionPage
             if (Settings.KingdomBank)
             {
                 var kingdomBank = GetFormattedKingdomBank(_kingdom);
-                KingdomInfo.AddPair(Texts.KingdomBank, kingdomBank);
+                InfoSection.Items.AddPair(Texts.KingdomBank, kingdomBank);
             }
 
             if (Settings.KingdomClansWealthSum)
             {
                 var sumOfClanWealth = CalculateSumOfClanWealth(_kingdom);
-                KingdomInfo.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
+                InfoSection.Items.AddPair(Texts.SumOfClanWealth, sumOfClanWealth);
             }
 
             if (Settings.CapturedHeroes)

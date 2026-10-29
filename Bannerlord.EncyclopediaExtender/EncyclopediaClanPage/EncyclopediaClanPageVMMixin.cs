@@ -4,11 +4,11 @@ using Bannerlord.UIExtenderEx.Attributes;
 using TaleWorlds.CampaignSystem.BarterSystem.Barterables;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core.ViewModelCollection.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using Bannerlord.UIExtenderEx.ViewModels;
 using Bannerlord.EncyclopediaExtender.Configuration;
+using Bannerlord.EncyclopediaExtender.DictionarySection;
 
 namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 {
@@ -21,21 +21,16 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
         {
             _clan = vm.Obj as Clan;
 
-            DefectionText = "";
-            DefectionInfo = new MBBindingList<StringPairItemVM>();
+            DefectionSection = new();
         }
 
         [DataSourceProperty]
-        public string DefectionText { get; set; }
-
-        [DataSourceProperty]
-        public MBBindingList<StringPairItemVM> DefectionInfo { get; set; }
+        public DictionarySectionVM DefectionSection { get; set; }
 
         public override void OnRefresh()
         {
-            DefectionText = Texts.Defection.ToString();
-
-            DefectionInfo.Clear();
+            DefectionSection.Title = Texts.Defection.ToString();
+            DefectionSection.Items.Clear();
 
             if (_clan is null || ViewModel is null)
             {
@@ -86,7 +81,9 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
 
                     if (Settings.ClanDefectionPrice)
                     {
-                        DefectionInfo.AddPair(Texts.DefectionPrice, barterValue.ToString(Constants.WholeNumberFormat));
+                        DefectionSection.Items.AddPair(
+                            Texts.DefectionPrice,
+                            barterValue.ToString(Constants.WholeNumberFormat));
                     }
 
                     if (Settings.ClanCashToPersuade)
@@ -94,7 +91,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                         var cashRequired = barterValue > 2000000f
                             ? Texts.HappyWithCurrentLiege.ToString()
                             : Math.Max(0, barterValue * 3 - 750000).ToString(Constants.WholeNumberFormat);
-                        DefectionInfo.AddPair(Texts.CashRequiredToPersuade, cashRequired);
+                        DefectionSection.Items.AddPair(Texts.CashRequiredToPersuade, cashRequired);
                     }
                 }
 
@@ -104,7 +101,7 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaClanPage
                     GameTexts.SetVariable("NUMBER", defectionChance.ToString(Constants.DecimalNumberFormat));
 
                     var defectionChanceFormatted = GameTexts.FindText("str_NUMBER_percent", null);
-                    DefectionInfo.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
+                    DefectionSection.Items.AddPair(Texts.DailyDefectionChance, defectionChanceFormatted);
                 }
             }
 
