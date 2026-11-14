@@ -17,7 +17,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage.PrefabExtensions
       WidthSizePolicy=""StretchToParent""
       Text=""@AttributesText""
       HorizontalAlignment=""Center""
-      ClipContents=""false"" />
+      ClipContents=""false""
+      IsVisible=""@IsAttributesTextVisible"" />
 
   <GridWidget
       DataSource=""{{Attributes}}""

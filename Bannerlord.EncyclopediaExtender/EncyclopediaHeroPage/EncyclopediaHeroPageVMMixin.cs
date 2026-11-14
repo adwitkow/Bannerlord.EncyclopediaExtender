@@ -50,12 +50,15 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
         [DataSourceProperty]
         public MBBindingList<ExtenderAttributeVM> Attributes { get; set; }
 
+        [DataSourceProperty]
+        public bool IsAttributesTextVisible { get; set; }
+
         public EncyclopediaHeroPageVMMixin(EncyclopediaHeroPageVM vm) : base(vm)
         {
             _hero = vm.Obj as Hero;
 
             DowrySection = new();
-
+            
             HeroItems = new MBBindingList<SPItemVM>();
             PerkColumns = new MBBindingList<PerkColumnVM>();
             Attributes = new MBBindingList<ExtenderAttributeVM>();
@@ -242,6 +245,8 @@ namespace Bannerlord.EncyclopediaExtender.EncyclopediaHeroPage
 
         private void AddAttributes(Hero hero)
         {
+            IsAttributesTextVisible = Settings.HeroAttributes;
+
             if (!Settings.HeroAttributes)
             {
                 return;
