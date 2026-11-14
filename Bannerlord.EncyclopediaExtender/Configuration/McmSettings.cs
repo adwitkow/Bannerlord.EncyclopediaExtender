@@ -1,9 +1,9 @@
-﻿
-using MCM.Abstractions;
+﻿using MCM.Abstractions;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Bannerlord.EncyclopediaExtender.Configuration;
 
@@ -53,15 +53,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanId
     {
         get => _clanId;
-        set
-        {
-            if (_clanId != value)
-            {
-                _clanId = value;
-                Settings.ClanId = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanId, ref Settings.ClanId, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Cash, Order = 1, RequireRestart = false)]
@@ -69,15 +61,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanCash
     {
         get => _clanCash;
-        set
-        {
-            if (_clanCash != value)
-            {
-                _clanCash = value;
-                Settings.ClanCash = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanCash, ref Settings.ClanCash, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Debt, Order = 2, RequireRestart = false)]
@@ -85,15 +69,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanDebt
     {
         get => _clanDebt;
-        set
-        {
-            if (_clanDebt != value)
-            {
-                _clanDebt = value;
-                Settings.ClanDebt = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanDebt, ref Settings.ClanDebt, value);
     }
 
     [SettingPropertyBool(Texts.Ids.ShareOfKingdomWealth, Order = 3, RequireRestart = false)]
@@ -101,15 +77,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanShareOfKingdomWealth
     {
         get => _clanShareOfKingdomWealth;
-        set
-        {
-            if (_clanShareOfKingdomWealth != value)
-            {
-                _clanShareOfKingdomWealth = value;
-                Settings.ClanShareOfKingdomWealth = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanShareOfKingdomWealth, ref Settings.ClanShareOfKingdomWealth, value);
     }
 
     [SettingPropertyBool(Texts.Ids.NominalTotalWealth, Order = 4, RequireRestart = false)]
@@ -117,15 +85,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanTotalWealth
     {
         get => _clanTotalWealth;
-        set
-        {
-            if (_clanTotalWealth != value)
-            {
-                _clanTotalWealth = value;
-                Settings.ClanTotalWealth = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanTotalWealth, ref Settings.ClanTotalWealth, value);
     }
 
     [SettingPropertyBool(Texts.Ids.DefectionPrice, Order = 5, RequireRestart = false)]
@@ -133,15 +93,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanDefectionPrice
     {
         get => _clanDefectionPrice;
-        set
-        {
-            if (_clanDefectionPrice != value)
-            {
-                _clanDefectionPrice = value;
-                Settings.ClanDefectionPrice = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanDefectionPrice, ref Settings.ClanDefectionPrice, value);
     }
 
     [SettingPropertyBool(Texts.Ids.CashRequiredToPersuade, Order = 6, RequireRestart = false)]
@@ -149,15 +101,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanCashToPersuade
     {
         get => _clanCashToPersuade;
-        set
-        {
-            if (_clanCashToPersuade != value)
-            {
-                _clanCashToPersuade = value;
-                Settings.ClanCashToPersuade = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanCashToPersuade, ref Settings.ClanCashToPersuade, value);
     }
 
     [SettingPropertyBool(Texts.Ids.DailyDefectionChance, Order = 7, RequireRestart = false)]
@@ -165,15 +109,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanDefectionChance
     {
         get => _clanDefectionChance;
-        set
-        {
-            if (_clanDefectionChance != value)
-            {
-                _clanDefectionChance = value;
-                Settings.ClanDefectionChance = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanDefectionChance, ref Settings.ClanDefectionChance, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Renown, Order = 8, RequireRestart = false)]
@@ -181,17 +117,8 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ClanRenown
     {
         get => _clanRenown;
-        set
-        {
-            if (_clanRenown != value)
-            {
-                _clanRenown = value;
-                Settings.ClanRenown = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _clanRenown, ref Settings.ClanRenown, value);
     }
-
     #endregion
 
     #region Kingdom
@@ -200,15 +127,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool KingdomId
     {
         get => _kingdomId;
-        set
-        {
-            if (_kingdomId != value)
-            {
-                _kingdomId = value;
-                Settings.KingdomId = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _kingdomId, ref Settings.KingdomId, value);
     }
 
     [SettingPropertyBool(Texts.Ids.KingdomBank, Order = 1, RequireRestart = false)]
@@ -216,15 +135,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool KingdomBank
     {
         get => _kingdomBank;
-        set
-        {
-            if (_kingdomBank != value)
-            {
-                _kingdomBank = value;
-                Settings.KingdomBank = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _kingdomBank, ref Settings.KingdomBank, value);
     }
 
     [SettingPropertyBool(Texts.Ids.SumOfClanWealth, Order = 2, RequireRestart = false)]
@@ -232,15 +143,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool KingdomClansWealthSum
     {
         get => _kingdomClansWealthSum;
-        set
-        {
-            if (_kingdomClansWealthSum != value)
-            {
-                _kingdomClansWealthSum = value;
-                Settings.KingdomClansWealthSum = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _kingdomClansWealthSum, ref Settings.KingdomClansWealthSum, value);
     }
 
     [SettingPropertyBool(Texts.Ids.CapturedHeroes, Order = 3, RequireRestart = false)]
@@ -248,15 +151,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool CapturedHeroes
     {
         get => _capturedHeroes;
-        set
-        {
-            if (_capturedHeroes != value)
-            {
-                _capturedHeroes = value;
-                Settings.CapturedHeroes = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _capturedHeroes, ref Settings.CapturedHeroes, value);
     }
 
     [SettingPropertyBool(Texts.Ids.ImprisonedHeroes, Order = 4, RequireRestart = false)]
@@ -264,15 +159,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool ImprisonedHeroes
     {
         get => _imprisonedHeroes;
-        set
-        {
-            if (_imprisonedHeroes != value)
-            {
-                _imprisonedHeroes = value;
-                Settings.ImprisonedHeroes = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _imprisonedHeroes, ref Settings.ImprisonedHeroes, value);
     }
     #endregion
 
@@ -282,15 +169,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroId
     {
         get => _heroId;
-        set
-        {
-            if (_heroId != value)
-            {
-                _heroId = value;
-                Settings.HeroId = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroId, ref Settings.HeroId, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Level, Order = 1, RequireRestart = false)]
@@ -298,15 +177,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroLevel
     {
         get => _heroLevel;
-        set
-        {
-            if (_heroLevel != value)
-            {
-                _heroLevel = value;
-                Settings.HeroLevel = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroLevel, ref Settings.HeroLevel, value);
     }
 
     [SettingPropertyBool(Texts.Ids.EquipmentSaleValue, Order = 2, RequireRestart = false)]
@@ -314,15 +185,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroEquipmentSaleValue
     {
         get => _heroEquipmentSaleValue;
-        set
-        {
-            if (_heroEquipmentSaleValue != value)
-            {
-                _heroEquipmentSaleValue = value;
-                Settings.HeroEquipmentSaleValue = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroEquipmentSaleValue, ref Settings.HeroEquipmentSaleValue, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Prisoner, Order = 3, RequireRestart = false)]
@@ -330,15 +193,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroImprisonment
     {
         get => _heroImprisonment;
-        set
-        {
-            if (_heroImprisonment != value)
-            {
-                _heroImprisonment = value;
-                Settings.HeroImprisonment = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroImprisonment, ref Settings.HeroImprisonment, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Army, Order = 4, RequireRestart = false)]
@@ -346,15 +201,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroArmy
     {
         get => _heroArmy;
-        set
-        {
-            if (_heroArmy != value)
-            {
-                _heroArmy = value;
-                Settings.HeroArmy = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroArmy, ref Settings.HeroArmy, value);
     }
 
     [SettingPropertyBool(Texts.Ids.PersuasionDowry, Order = 5, RequireRestart = false)]
@@ -362,15 +209,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroPersuasionDowry
     {
         get => _heroPersuasionDowry;
-        set
-        {
-            if (_heroPersuasionDowry != value)
-            {
-                _heroPersuasionDowry = value;
-                Settings.HeroPersuasionDowry = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroPersuasionDowry, ref Settings.HeroPersuasionDowry, value);
     }
 
     [SettingPropertyBool(Texts.Ids.BarterDowry, Order = 6, RequireRestart = false)]
@@ -378,15 +217,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroBarterDowry
     {
         get => _heroBarterDowry;
-        set
-        {
-            if (_heroBarterDowry != value)
-            {
-                _heroBarterDowry = value;
-                Settings.HeroBarterDowry = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroBarterDowry, ref Settings.HeroBarterDowry, value);
     }
 
     [SettingPropertyBool(Texts.Ids.ClanMemberDowries, Order = 7, RequireRestart = false)]
@@ -394,15 +225,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroClanMemberDowry
     {
         get => _heroClanMemberDowry;
-        set
-        {
-            if (_heroClanMemberDowry != value)
-            {
-                _heroClanMemberDowry = value;
-                Settings.HeroClanMemberDowry = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroClanMemberDowry, ref Settings.HeroClanMemberDowry, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Equipment, Order = 8, RequireRestart = false)]
@@ -410,15 +233,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroEquipmentList
     {
         get => _heroEquipmentList;
-        set
-        {
-            if (_heroEquipmentList != value)
-            {
-                _heroEquipmentList = value;
-                Settings.HeroEquipmentList = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroEquipmentList, ref Settings.HeroEquipmentList, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Perks, Order = 9, RequireRestart = false)]
@@ -426,15 +241,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroPerks
     {
         get => _heroPerks;
-        set
-        {
-            if (_heroPerks != value)
-            {
-                _heroPerks = value;
-                Settings.HeroPerks = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroPerks, ref Settings.HeroPerks, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Attributes, Order = 10, RequireRestart = false)]
@@ -442,15 +249,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool HeroAttributes
     {
         get => _heroAttributes;
-        set
-        {
-            if (_heroAttributes != value)
-            {
-                _heroAttributes = value;
-                Settings.HeroAttributes = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _heroAttributes, ref Settings.HeroAttributes, value);
     }
     #endregion
 
@@ -460,15 +259,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool SettlementId
     {
         get => _settlementId;
-        set
-        {
-            if (_settlementId != value)
-            {
-                _settlementId = value;
-                Settings.SettlementId = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _settlementId, ref Settings.SettlementId, value);
     }
 
     [SettingPropertyBool(Texts.Ids.Production, Order = 1, RequireRestart = false)]
@@ -476,15 +267,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool SettlementProducedItems
     {
         get => _settlementProducedItems;
-        set
-        {
-            if (_settlementProducedItems != value)
-            {
-                _settlementProducedItems = value;
-                Settings.SettlementProducedItems = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _settlementProducedItems, ref Settings.SettlementProducedItems, value);
     }
 
     [SettingPropertyBool(Texts.Ids.TradeBoundSettlement, Order = 2, RequireRestart = false)]
@@ -492,15 +275,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool TradeBoundSettlement
     {
         get => _tradeBoundSettlement;
-        set
-        {
-            if (_tradeBoundSettlement != value)
-            {
-                _tradeBoundSettlement = value;
-                Settings.TradeBoundSettlement = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _tradeBoundSettlement, ref Settings.TradeBoundSettlement, value);
     }
 
     [SettingPropertyBool(Texts.Ids.TradeBoundVillages, Order = 3, RequireRestart = false)]
@@ -508,15 +283,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     public bool TradeBoundVillages
     {
         get => _tradeBoundVillages;
-        set
-        {
-            if (_tradeBoundVillages != value)
-            {
-                _tradeBoundVillages = value;
-                Settings.TradeBoundVillages = value;
-                OnPropertyChanged();
-            }
-        }
+        set => Set(ref _tradeBoundVillages, ref Settings.TradeBoundVillages, value);
     }
     #endregion
 
@@ -577,5 +344,20 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
             _tradeBoundSettlement = value,
             _tradeBoundVillages = value,
         };
+    }
+
+    private void Set(
+        ref bool field,
+        ref bool proxyField,
+        bool value,
+        [CallerMemberName] string? name = null)
+    {
+        proxyField = value;
+
+        if (field != value)
+        {
+            field = value;
+            OnPropertyChanged(name);
+        }
     }
 }
